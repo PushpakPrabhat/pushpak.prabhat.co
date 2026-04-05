@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blender on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
+    <link>http://localhost:1313/tags/blender/</link>
+    <description>Recent content in Blender on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 28 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/blender/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>5 Blender Tips That Changed My 3D Workflow</title>
+      <link>http://localhost:1313/posts/blender-tips/</link>
+      <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/blender-tips/</guid>
+      <description>After years of working with Blender for 3D animation, these five tips completely transformed my productivity and output quality.</description>
+    </item>
+  </channel>
+</rss>

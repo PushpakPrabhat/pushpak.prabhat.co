@@ -1,0 +1,24 @@
+{{ $profile := .Site.Data.profile }}
+<aside class="profile-card" id="sidebar-profile-card">
+  <div class="profile-card__banner"></div>
+  <div class="profile-card__avatar-wrapper">
+    <a href="/#profile">
+      <img 
+        src="{{ .Site.Params.profileImage }}" 
+        alt="{{ $profile.name }}" 
+        class="profile-card__avatar"
+        loading="lazy"
+      >
+    </a>
+  </div>
+  <div class="profile-card__info">
+    <h2 class="profile-card__name">
+      <a href="/#profile">{{ $profile.name }}</a>
+    </h2>
+    <p class="profile-card__headline">{{ $profile.headline }}</p>
+  </div>
+  <div class="profile-card__actions">
+    <a href="{{ $profile.linkedinUrl | default "#" }}" target="_blank" class="btn btn--primary profile-card__btn">Follow</a>
+    <button class="btn btn--outline profile-card__btn" onclick="openChat()">Message</button>
+  </div>
+</aside>

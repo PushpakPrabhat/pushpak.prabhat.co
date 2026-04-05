@@ -1,0 +1,48 @@
+{{ $profile := .Site.Data.profile }}
+<aside class="layout__sidebar-right" id="sidebar-right">
+  <!-- Skills Widget -->
+  <div class="sidebar-widget">
+    <h3 class="sidebar-widget__title">Skills</h3>
+    {{ range first 5 $profile.skills }}
+    <div class="sidebar-widget__item">
+      <span class="sidebar-widget__item-icon">⚡</span>
+      <div>
+        <div class="sidebar-widget__item-text">{{ .name }}</div>
+        <div class="sidebar-widget__item-sub">{{ .endorsements }} endorsements</div>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+  
+  <!-- Quick Links -->
+  <div class="sidebar-widget">
+    <h3 class="sidebar-widget__title">Quick Links</h3>
+    {{ with .Site.Params.social }}
+    {{ with .linkedin }}
+    <div class="sidebar-widget__item">
+      <span class="sidebar-widget__item-icon">🔗</span>
+      <div>
+        <a href="{{ . }}" target="_blank" rel="noopener" class="sidebar-widget__item-text">LinkedIn Profile</a>
+      </div>
+    </div>
+    {{ end }}
+    {{ with .github }}
+    <div class="sidebar-widget__item">
+      <span class="sidebar-widget__item-icon">💻</span>
+      <div>
+        <a href="{{ . }}" target="_blank" rel="noopener" class="sidebar-widget__item-text">GitHub</a>
+      </div>
+    </div>
+    {{ end }}
+    {{ end }}
+    <div class="sidebar-widget__item">
+      <span class="sidebar-widget__item-icon">📧</span>
+      <div>
+        <a href="mailto:{{ .Site.Params.contactEmail }}" class="sidebar-widget__item-text">Email Me</a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  {{ partial "footer.html" . }}
+</aside>

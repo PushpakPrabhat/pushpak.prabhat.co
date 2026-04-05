@@ -1,0 +1,51 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}">
+<meta name="author" content="{{ .Site.Params.author }}">
+
+<!-- Open Graph -->
+<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+{{ with .Params.image }}<meta property="og:image" content="{{ . }}">{{ end }}
+{{ with .Params.featured_image }}<meta property="og:image" content="{{ . }}">{{ end }}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}">
+
+<!-- Canonical -->
+<link rel="canonical" href="{{ .Permalink }}">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+
+<!-- CSS -->
+{{ $mainCSS := resources.Get "css/main.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $mainCSS.RelPermalink }}">
+
+{{ $componentsCSS := resources.Get "css/components.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $componentsCSS.RelPermalink }}">
+
+{{ $responsiveCSS := resources.Get "css/responsive.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $responsiveCSS.RelPermalink }}">
+
+<!-- Firebase Config Meta Tags -->
+{{ with .Site.Params.firebase }}
+<meta name="firebase-api-key" content="{{ .apiKey }}">
+<meta name="firebase-auth-domain" content="{{ .authDomain }}">
+<meta name="firebase-project-id" content="{{ .projectId }}">
+<meta name="firebase-storage-bucket" content="{{ .storageBucket }}">
+<meta name="firebase-messaging-sender-id" content="{{ .messagingSenderId }}">
+<meta name="firebase-app-id" content="{{ .appId }}">
+{{ end }}
+
+<!-- Firebase SDK (compat v9) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>

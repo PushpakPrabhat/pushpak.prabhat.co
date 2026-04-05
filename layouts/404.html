@@ -1,0 +1,15 @@
+{{ define "main" }}
+<div class="error-page">
+  <div class="error-page__card">
+    <div class="error-page__illustration">
+      {{ partial "icons.html" (dict "icon" "linkedin-logo" "size" "48") }}
+    </div>
+    <div class="error-page__code">404</div>
+    <h1 class="error-page__title">Page not found</h1>
+    <p class="error-page__desc">
+      The page you're looking for doesn't exist. The link you followed may be broken, or the page may have been removed.
+    </p>
+    <a href="/" class="btn btn--primary">Go to homepage</a>
+  </div>
+</div>
+{{ end }}

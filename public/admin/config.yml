@@ -1,0 +1,142 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# For local development, uncomment:
+# local_backend: true
+
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+# Slug settings
+slug:
+  encoding: "ascii"
+  clean_accents: true
+
+collections:
+  # ===== PHOTOS =====
+  - name: "photos"
+    label: "Photos"
+    label_singular: "Photo"
+    folder: "content/photos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Type", name: "type", widget: "hidden", default: "photos" }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Sketches", value: "sketches" }
+          - { label: "Digital Paintings", value: "digital-paintings" }
+          - { label: "Illustrations", value: "illustrations" }
+          - { label: "UI/UX", value: "ui-ux" }
+      - { label: "Image", name: "image", widget: "image", required: true }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # ===== VIDEOS =====
+  - name: "videos"
+    label: "Videos"
+    label_singular: "Video"
+    folder: "content/videos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Type", name: "type", widget: "hidden", default: "videos" }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Promotional Videos", value: "promotional" }
+          - { label: "Motion Graphics", value: "motion-graphics" }
+          - { label: "3D Animation", value: "3d-animation" }
+          - { label: "2D Animation", value: "2d-animation" }
+          - { label: "Motion Posters", value: "motion-posters" }
+          - { label: "Shorts / Reels", value: "shorts-reels" }
+      - label: "Video Type"
+        name: "videoType"
+        widget: "select"
+        options:
+          - { label: "YouTube", value: "youtube" }
+          - { label: "Google Drive", value: "gdrive" }
+          - { label: "Direct Upload", value: "file" }
+      - { label: "Video URL", name: "videoUrl", widget: "string", hint: "YouTube URL, Google Drive embed URL, or direct video file URL" }
+      - { label: "Thumbnail", name: "thumbnail", widget: "image", required: false }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # ===== BLOG POSTS =====
+  - name: "posts"
+    label: "Blog Posts"
+    label_singular: "Blog Post"
+    folder: "content/posts"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Type", name: "type", widget: "hidden", default: "posts" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - { label: "Featured Image", name: "featured_image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # ===== PROFILE DATA =====
+  - name: "settings"
+    label: "Settings"
+    files:
+      - label: "Profile"
+        name: "profile"
+        file: "data/profile.yaml"
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Location", name: "location", widget: "string" }
+          - { label: "Company", name: "company", widget: "string" }
+          - { label: "Connections", name: "connections", widget: "number" }
+          - { label: "Followers", name: "followers", widget: "number" }
+          - { label: "Contact Info", name: "contactInfo", widget: "string" }
+          - { label: "About", name: "about", widget: "text" }
+          - label: "Experience"
+            name: "experience"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Company", name: "company", widget: "string" }
+              - { label: "Type", name: "type", widget: "string" }
+              - { label: "Start Date", name: "startDate", widget: "string" }
+              - { label: "End Date", name: "endDate", widget: "string" }
+              - { label: "Duration", name: "duration", widget: "string" }
+              - { label: "Location", name: "location", widget: "string" }
+              - { label: "Skills", name: "skills", widget: "string", required: false }
+              - { label: "Logo", name: "logo", widget: "string", hint: "Emoji or image path" }
+          - label: "Education"
+            name: "education"
+            widget: "list"
+            fields:
+              - { label: "School", name: "school", widget: "string" }
+              - { label: "Degree", name: "degree", widget: "string" }
+              - { label: "Year", name: "year", widget: "string" }
+              - { label: "Logo", name: "logo", widget: "string", hint: "Emoji or image path" }
+          - label: "Interests"
+            name: "interests"
+            widget: "list"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Icon", name: "icon", widget: "string", hint: "Emoji" }
+          - label: "Skills"
+            name: "skills"
+            widget: "list"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Endorsements", name: "endorsements", widget: "number" }

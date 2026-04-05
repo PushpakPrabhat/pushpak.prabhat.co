@@ -1,0 +1,22 @@
+{{ define "main" }}
+<div class="layout">
+  <div class="layout__sidebar-left">
+    {{ partial "profile-card.html" . }}
+  </div>
+  <div class="layout__main">
+    {{ partial "feed-tabs.html" . }}
+    <div id="feed-items">
+      {{ range .Pages }}
+        {{ if eq .Type "photos" }}
+          {{ partial "photo-card.html" . }}
+        {{ else if eq .Type "videos" }}
+          {{ partial "video-card.html" . }}
+        {{ else if eq .Type "posts" }}
+          {{ partial "post-card.html" . }}
+        {{ end }}
+      {{ end }}
+    </div>
+  </div>
+  {{ partial "sidebar-right.html" . }}
+</div>
+{{ end }}

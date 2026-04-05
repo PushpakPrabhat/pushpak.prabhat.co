@@ -1,0 +1,58 @@
+baseURL = "https://pushpak.prabhat.co/"
+languageCode = "en-us"
+title = "Pushpak Prabhat | Animation & Interactive Technology"
+summaryLength = 30
+
+[params]
+  description = "Portfolio of Pushpak Prabhat — Motion Designer, Animator & Interactive Technology specialist. Browse sketches, digital paintings, motion graphics, 3D animation and more."
+  author = "Pushpak Prabhat"
+  headline = "Animation | Interactive Technology"
+  location = "Gurugram, Haryana, India"
+  company = "ET Money"
+  connections = 169
+  followers = 197
+  profileImage = "/images/profile.jpg"
+  bannerImage = "/images/banner.jpg"
+  contactEmail = "pushpak@prabhat.co"
+  
+  # Firebase config — replace with your project values
+  [params.firebase]
+    apiKey = "YOUR_API_KEY"
+    authDomain = "YOUR_PROJECT.firebaseapp.com"
+    projectId = "YOUR_PROJECT_ID"
+    storageBucket = "YOUR_PROJECT.appspot.com"
+    messagingSenderId = "YOUR_SENDER_ID"
+    appId = "YOUR_APP_ID"
+
+  # Social links
+  [params.social]
+    linkedin = "https://www.linkedin.com/in/pushpunk/"
+    github = "https://github.com/pushpunk"
+    twitter = ""
+    instagram = ""
+    behance = ""
+    dribbble = ""
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[outputs]
+  home = ["HTML", "JSON"]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "profile"
+    name = "Profile"
+    url = "/#profile"
+    weight = 2

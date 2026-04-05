@@ -1,0 +1,54 @@
+{{ define "main" }}
+<div class="layout" id="main-layout">
+  <!-- Left Sidebar (hidden when profile is open) -->
+  <div class="layout__sidebar-left" id="sidebar-left">
+    {{ partial "profile-card.html" . }}
+  </div>
+  
+  <!-- Main Feed -->
+  <div class="layout__main" id="feed">
+    <!-- Profile Section (shown/hidden via JS) -->
+    <div id="profile-section" style="display: none;">
+      {{ partial "profile-full.html" . }}
+    </div>
+    
+    <!-- Feed Section -->
+    <div id="feed-section">
+      {{ partial "feed-tabs.html" . }}
+      
+      <!-- Feed Items Container -->
+      <div id="feed-items">
+        {{/* Collect all content and sort by date */}}
+        {{ $allPhotos := where .Site.RegularPages "Type" "photos" }}
+        {{ $allVideos := where .Site.RegularPages "Type" "videos" }}
+        {{ $allPosts := where .Site.RegularPages "Type" "posts" }}
+        
+        {{/* Merge all into one collection sorted by date */}}
+        {{ $all := $allPhotos | append $allVideos | append $allPosts }}
+        {{ $sorted := sort $all "Date" "desc" }}
+        
+        {{ range $index, $item := $sorted }}
+          {{ if eq .Type "photos" }}
+            {{ partial "photo-card.html" . }}
+          {{ else if eq .Type "videos" }}
+            {{ partial "video-card.html" . }}
+          {{ else if eq .Type "posts" }}
+            {{ partial "post-card.html" . }}
+          {{ end }}
+        {{ end }}
+      </div>
+      
+      <!-- Load More -->
+      <div class="load-more-wrapper" id="load-more-wrapper">
+        <button class="load-more-btn" id="load-more-btn" onclick="loadMore()">
+          Show more results
+          <span>↓</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Right Sidebar -->
+  {{ partial "sidebar-right.html" . }}
+</div>
+{{ end }}

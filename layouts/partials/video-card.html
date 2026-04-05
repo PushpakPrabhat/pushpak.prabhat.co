@@ -1,0 +1,78 @@
+{{ $profile := .Site.Data.profile }}
+{{ $id := .File.ContentBaseName }}
+{{ $videoUrl := .Params.videoUrl }}
+{{ $videoType := .Params.videoType | default "file" }}
+<article class="feed-item feed-item--video" data-type="videos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-video-url="{{ $videoUrl }}" data-video-type="{{ $videoType }}" id="item-{{ $id }}">
+  <!-- Header -->
+  <div class="feed-item__header">
+    <a href="/#profile"><img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy"></a>
+    <div class="feed-item__meta">
+      <div class="feed-item__author">
+        <a href="/#profile" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
+        <span class="feed-item__author-badge">{{ partial "icons.html" (dict "icon" "verified" "size" "16") }}</span>
+      </div>
+      <div class="feed-item__author-subtitle">{{ $profile.headline }}</div>
+      <div class="feed-item__time">
+        {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}
+      </div>
+    </div>
+    <div class="feed-item__menu-wrapper">
+      <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "dots" "size" "20") }}</button>
+      <div class="feed-menu" id="feed-menu-{{ $id }}">
+        <button class="feed-menu__item" onclick="copyPostLink('{{ $id }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
+        <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pdf" "size" "18") }} Save as PDF</button>
+        {{ if or (eq $videoType "youtube") (eq $videoType "gdrive") }}
+        <button class="feed-menu__item" onclick="window.open('{{ $videoUrl }}', '_blank')">{{ partial "icons.html" (dict "icon" "external-link" "size" "18") }} Open original video</button>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+  
+  <!-- Content -->
+  <div class="feed-item__content">
+    <p class="feed-item__text">
+      {{ .Content | plainify | truncate 200 }}
+      {{ if gt (len (.Content | plainify)) 200 }}
+      <span class="see-more" onclick="this.parentElement.textContent = '{{ .Content | plainify | htmlEscape }}'">...more</span>
+      {{ end }}
+    </p>
+  </div>
+  
+  <!-- Video -->
+  <div class="feed-item__video-wrapper" onclick="openVideoViewer('videos', '{{ .Params.category }}', '{{ $id }}')">
+    {{ if eq $videoType "youtube" }}
+      {{ $videoID := "" }}
+      {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
+        {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+      {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
+        {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+      {{ end }}
+      <iframe 
+        src="https://www.youtube.com/embed/{{ $videoID }}" 
+        title="{{ .Title }}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+      <span class="video-type-badge video-type-badge--youtube">▶ YouTube</span>
+    {{ else if eq $videoType "gdrive" }}
+      <iframe 
+        src="{{ $videoUrl }}" 
+        title="{{ .Title }}"
+        allow="autoplay; encrypted-media" 
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+      <span class="video-type-badge video-type-badge--gdrive">📁 Google Drive</span>
+    {{ else }}
+      <video controls preload="metadata" poster="{{ .Params.thumbnail }}">
+        <source src="{{ $videoUrl }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    {{ end }}
+    <span class="feed-item__category-badge">{{ .Params.category | humanize }}</span>
+  </div>
+  
+  <!-- Interactions -->
+  {{ partial "interactions.html" (dict "id" $id "type" "video" "showSave" true "videoUrl" $videoUrl "videoType" $videoType "context" $) }}
+</article>

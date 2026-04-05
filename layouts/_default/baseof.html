@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+  {{- partial "head.html" . -}}
+</head>
+<body>
+  {{- partial "header.html" . -}}
+  
+  <main id="main-content">
+    {{ block "main" . }}{{ end }}
+  </main>
+  
+  <!-- ===== MEDIA VIEWER (Images) ===== -->
+  <div class="media-viewer" id="media-viewer" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="media-viewer__overlay"></div>
+    <div class="media-viewer__topbar">
+      <span class="media-viewer__counter" id="mv-counter">1 / 1</span>
+      <div class="media-viewer__actions">
+        <button class="media-viewer__btn" id="mv-zoom-in" title="Zoom in">{{ partial "icons.html" (dict "icon" "zoom-in" "size" "22") }}</button>
+        <button class="media-viewer__btn" id="mv-zoom-out" title="Zoom out">{{ partial "icons.html" (dict "icon" "zoom-out" "size" "22") }}</button>
+        <button class="media-viewer__btn" id="mv-download" title="Download">{{ partial "icons.html" (dict "icon" "download" "size" "22") }}</button>
+        <button class="media-viewer__btn" id="mv-fullscreen" title="Fullscreen">{{ partial "icons.html" (dict "icon" "fullscreen" "size" "22") }}</button>
+        <button class="media-viewer__btn" id="mv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
+      </div>
+    </div>
+    <button class="media-viewer__nav media-viewer__nav--prev" id="mv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "chevron-left" "size" "36") }}</button>
+    <button class="media-viewer__nav media-viewer__nav--next" id="mv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "chevron-right" "size" "36") }}</button>
+    <div class="media-viewer__content" id="mv-content">
+      <img id="mv-img" src="" alt="" draggable="false">
+    </div>
+  </div>
+
+  <!-- ===== VIDEO VIEWER ===== -->
+  <div class="video-viewer" id="video-viewer" role="dialog" aria-modal="true" aria-label="Video viewer">
+    <div class="media-viewer__overlay"></div>
+    <div class="media-viewer__topbar">
+      <span class="media-viewer__counter" id="vv-counter">1 / 1</span>
+      <div class="media-viewer__actions">
+        <button class="media-viewer__btn" id="vv-fullscreen" title="Fullscreen">{{ partial "icons.html" (dict "icon" "fullscreen" "size" "22") }}</button>
+        <button class="media-viewer__btn" id="vv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
+      </div>
+    </div>
+    <button class="media-viewer__nav media-viewer__nav--prev" id="vv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "chevron-left" "size" "36") }}</button>
+    <button class="media-viewer__nav media-viewer__nav--next" id="vv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "chevron-right" "size" "36") }}</button>
+    <div class="media-viewer__content" id="vv-content">
+      <div id="vv-embed"></div>
+    </div>
+  </div>
+
+  <!-- ===== CHAT WIDGET (LinkedIn Messaging style) ===== -->
+  <div class="chat-widget" id="chat-widget">
+    <!-- Header bar (always visible when open) -->
+    <div class="chat-widget__header" onclick="toggleChatMinimize()">
+      <div class="chat-widget__header-left">
+        <div class="chat-widget__avatar-wrapper">
+          <img src="{{ .Site.Params.profileImage }}" alt="Profile" class="chat-widget__avatar">
+          <span class="chat-widget__online-dot"></span>
+        </div>
+        <span class="chat-widget__title">Messaging</span>
+      </div>
+      <div class="chat-widget__header-actions">
+        <button class="chat-widget__header-btn" onclick="event.stopPropagation();" title="New message">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17 2H7a1 1 0 00-1 1v2H4a1 1 0 00-1 1v14a1 1 0 001 1h10a1 1 0 001-1v-2h2a1 1 0 001-1V3a1 1 0 00-1-1zM13 19H5V7h8v12zm3-3h-2V6a1 1 0 00-1-1H8V4h8v12z"/><line x1="7" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="13" x2="11" y2="13" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <button class="chat-widget__header-btn chat-widget__chevron" id="chat-chevron" onclick="event.stopPropagation(); toggleChatMinimize()">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Onboarding (ask name/contact) -->
+    <div class="chat-widget__onboarding" id="chat-onboarding">
+      <div class="chat-widget__search-bar">
+        <span class="chat-widget__search-icon">{{ partial "icons.html" (dict "icon" "search" "size" "14") }}</span>
+        <input type="text" class="chat-widget__search-input" placeholder="Search messages" disabled>
+      </div>
+      <div class="chat-widget__promo-list">
+        <p class="chat-widget__onboarding-text">Say hi! Enter your name and contact to start chatting.</p>
+        <input type="text" class="chat-widget__input" id="chat-name" placeholder="Your name" maxlength="50">
+        <input type="text" class="chat-widget__input" id="chat-contact" placeholder="Email or phone number" maxlength="100">
+        <button class="chat-widget__start-btn" onclick="startChat()">Start Chat</button>
+      </div>
+    </div>
+    <!-- Chat Body (shown after onboarding) -->
+    <div class="chat-widget__body" id="chat-body" style="display:none;">
+      <div class="chat-widget__messages" id="chat-messages"></div>
+      <div class="chat-widget__footer">
+        <input type="text" class="chat-widget__msg-input" id="chat-msg-input" placeholder="Write a message..." maxlength="500" onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <button class="chat-widget__send-btn" onclick="sendChatMessage()">{{ partial "icons.html" (dict "icon" "send" "size" "18") }}</button>
+      </div>
+    </div>
+  </div>
+  <!-- Chat FAB (mobile/collapsed) -->
+  <button class="chat-fab" id="chat-fab" onclick="openChat(event)" aria-label="Open chat">
+    {{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}
+    <span class="chat-fab__badge" id="chat-fab-badge" style="display:none;">0</span>
+  </button>
+
+  <!-- Profile Preview Modal -->
+  <div class="profile-preview-modal" id="profile-preview-modal">
+    <div class="profile-preview-modal__overlay" onclick="closeProfilePreview()"></div>
+    <div class="profile-preview-modal__content">
+      <button class="profile-preview-modal__close" onclick="closeProfilePreview()">✕</button>
+      <img id="profile-preview-img" src="" alt="Preview">
+    </div>
+  </div>
+
+  <!-- Mobile Chat Page (full screen, replaces widget on mobile) -->
+  <div class="mobile-chat-page" id="mobile-chat-page">
+    <div class="mobile-chat-page__header">
+      <button class="mobile-chat-page__back" onclick="closeMobileChat()">←</button>
+      <span class="mobile-chat-page__title">Messaging</span>
+    </div>
+    <div class="mobile-chat-page__body">
+      <!-- Onboarding -->
+      <div class="mobile-chat-page__onboarding" id="mobile-chat-onboarding">
+        <p class="mobile-chat-page__onboarding-text">Say hi! Enter your name and contact to start chatting.</p>
+        <input type="text" class="chat-widget__input" id="mobile-chat-name" placeholder="Your name" maxlength="50">
+        <input type="text" class="chat-widget__input" id="mobile-chat-contact" placeholder="Email or phone number" maxlength="100">
+        <button class="chat-widget__start-btn" onclick="startMobileChat()">Start Chat</button>
+      </div>
+      <!-- Messages -->
+      <div class="mobile-chat-page__messages" id="mobile-chat-messages" style="display:none;"></div>
+    </div>
+    <div class="mobile-chat-page__footer" id="mobile-chat-footer" style="display:none;">
+      <input type="text" class="chat-widget__msg-input" id="mobile-chat-msg-input" placeholder="Write a message..." maxlength="500" onkeypress="if(event.key==='Enter') sendMobileChatMessage()">
+      <button class="chat-widget__send-btn" onclick="sendMobileChatMessage()">{{ partial "icons.html" (dict "icon" "send" "size" "18") }}</button>
+    </div>
+  </div>
+  
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+  
+  <!-- Mobile Bottom Nav (matching LinkedIn UI from screenshot) -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <div class="mobile-nav__items">
+      <a href="/" class="mobile-nav__item mobile-nav__item--active" id="mob-nav-home">
+        <span class="mobile-nav__item-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M23 9v2h-2v7a3 3 0 01-3 3h-4v-6h-4v6H6a3 3 0 01-3-3v-7H1V9l11-7 5 3.18V2h3v5.09z"/></svg>
+        </span>
+        <span>Home</span>
+      </a>
+      <a href="/#network" class="mobile-nav__item" id="mob-nav-network">
+        <span class="mobile-nav__item-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 16v6H3v-6a3 3 0 013-3h3a3 3 0 013 3zm5.5-3A3.5 3.5 0 1014 9.5a3.5 3.5 0 003.5 3.5zm1 2h-2a2.5 2.5 0 00-2.5 2.5V22h7v-4.5a2.5 2.5 0 00-2.5-2.5zM7.5 2A4.5 4.5 0 1012 6.5 4.49 4.49 0 007.5 2z"/></svg>
+        </span>
+        <span>My Network</span>
+      </a>
+      <a href="#" class="mobile-nav__item" id="mob-nav-post">
+        <span class="mobile-nav__item-icon mobile-nav__post-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-3 10h-3v3a1 1 0 01-2 0v-3H8a1 1 0 010-2h3V8a1 1 0 012 0v3h3a1 1 0 010 2z"/></svg>
+        </span>
+        <span>Post</span>
+      </a>
+      <a href="#" class="mobile-nav__item" id="mob-nav-notifications">
+        <span class="mobile-nav__item-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M22 19h-8.28a2 2 0 01-3.44 0H2v-1a4.52 4.52 0 011.17-2.83l1-1.17H4a2.51 2.51 0 01-2.5-2.5V8a7 7 0 0114 0v3.5A2.51 2.51 0 0113 14h-.17l1 1.17A4.52 4.52 0 0115 18z"/></svg>
+        </span>
+        <span class="mobile-nav__notif-wrapper">Notifications<span class="mobile-nav__badge">16</span></span>
+      </a>
+      <a href="#" class="mobile-nav__item" id="mob-nav-jobs">
+        <span class="mobile-nav__item-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17 6V5a3 3 0 00-3-3h-4a3 3 0 00-3 3v1H2v4a3 3 0 003 3h14a3 3 0 003-3V6zM9 5a1 1 0 011-1h4a1 1 0 011 1v1H9zm13 9v5a3 3 0 01-3 3H5a3 3 0 01-3-3v-5h8v1a1 1 0 002 0v-1z"/></svg>
+        </span>
+        <span>Jobs</span>
+      </a>
+    </div>
+  </nav>
+
+  {{ $firebaseJS := resources.Get "js/firebase.js" | minify | fingerprint }}
+  <script src="{{ $firebaseJS.RelPermalink }}"></script>
+
+  {{ $mainJS := resources.Get "js/main.js" | minify | fingerprint }}
+  <script src="{{ $mainJS.RelPermalink }}"></script>
+  
+  {{ $interactionsJS := resources.Get "js/interactions.js" | minify | fingerprint }}
+  <script src="{{ $interactionsJS.RelPermalink }}"></script>
+</body>
+</html>

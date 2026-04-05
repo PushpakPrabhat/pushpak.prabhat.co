@@ -1,0 +1,145 @@
+{{ $profile := .Site.Data.profile }}
+<section class="profile-full" id="profile">
+  <!-- Banner -->
+  <div class="profile-full__banner" onclick="openProfilePreview('{{ .Site.Params.bannerImage }}')">
+    {{ with .Site.Params.bannerImage }}
+    <img src="{{ . }}" alt="Cover photo">
+    {{ end }}
+  </div>
+  
+  <!-- Header -->
+  <div class="profile-full__header">
+    <div class="profile-full__avatar-wrapper" onclick="openProfilePreview('{{ .Site.Params.profileImage }}')">
+      <img 
+        src="{{ .Site.Params.profileImage }}" 
+        alt="{{ $profile.name }}" 
+        class="profile-full__avatar"
+      >
+    </div>
+    
+    <div class="profile-full__company">
+      <span class="profile-full__company-logo">💰</span>
+      <span>{{ .Site.Params.company }}</span>
+    </div>
+    
+    <h1 class="profile-full__name">{{ $profile.name }}</h1>
+    <p class="profile-full__headline">{{ $profile.headline }}</p>
+    <p class="profile-full__location">{{ $profile.location }} · <a class="profile-full__contact" href="#">{{ $profile.contactInfo }}</a></p>
+    <p class="profile-full__connections"><span>{{ $profile.followers }} followers</span> · <span>{{ $profile.connections }} connections</span></p>
+    
+    <div class="profile-full__actions">
+      <a href="{{ .Site.Params.social.linkedin }}" target="_blank" rel="noopener" class="btn btn--primary" id="btn-follow">
+        {{ partial "icons.html" (dict "icon" "linkedin-logo" "size" "18") }} Follow
+      </a>
+      <button class="btn btn--outline" id="btn-message" onclick="openChat(event)">
+        {{ partial "icons.html" (dict "icon" "messaging" "size" "18") }} Message
+      </button>
+      <button class="btn btn--ghost" id="btn-more">More</button>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="profile-section" id="about-section">
+  <h2 class="profile-section__title">About</h2>
+  <p class="profile-section__text">{{ $profile.about }}</p>
+</section>
+
+<!-- Featured -->
+<section class="featured-section" id="featured-section">
+  <h2 class="featured-section__title">Featured</h2>
+  {{ $allPhotos := where .Site.RegularPages "Type" "photos" }}
+  {{ $allVideos := where .Site.RegularPages "Type" "videos" }}
+  {{ $allPosts := where .Site.RegularPages "Type" "posts" }}
+  {{ $all := $allPhotos | append $allVideos | append $allPosts }}
+  {{ $sorted := sort $all "Date" "desc" }}
+  {{ $featured := first 1 $sorted }}
+  {{ range $featured }}
+  <div class="featured-card" onclick="window.location.href='{{ .Permalink }}'">
+    {{ if .Params.image }}
+    <img src="{{ .Params.image }}" alt="{{ .Title }}" class="featured-card__image">
+    {{ else if .Params.featured_image }}
+    <img src="{{ .Params.featured_image }}" alt="{{ .Title }}" class="featured-card__image">
+    {{ else }}
+    <div class="featured-card__image" style="background: linear-gradient(135deg, #0a66c2, #283e4a); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">📄</div>
+    {{ end }}
+    <div class="featured-card__info">
+      <div class="featured-card__title">{{ .Title }}</div>
+      <div class="featured-card__type">{{ .Type | humanize }} · {{ .Date.Format "Jan 2006" }}</div>
+    </div>
+  </div>
+  {{ end }}
+  <button class="featured-section__see-all" onclick="showAllFeatured()">Show all featured →</button>
+</section>
+
+<!-- Experience -->
+<section class="profile-section" id="experience-section">
+  <h2 class="profile-section__title">Experience</h2>
+  {{ range $profile.experience }}
+  <div class="experience-item">
+    {{ if .logoImage }}
+    <img src="{{ .logoImage }}" alt="{{ .company }}" class="experience-item__logo-img">
+    {{ else }}
+    <div class="experience-item__logo">{{ .logo }}</div>
+    {{ end }}
+    <div class="experience-item__info">
+      <div class="experience-item__title">{{ .title }}</div>
+      {{ with .designation }}
+      <div class="experience-item__designation">{{ . }}</div>
+      {{ end }}
+      <div class="experience-item__company">{{ .company }} · {{ .type }}</div>
+      <div class="experience-item__duration">{{ .startDate }} - {{ .endDate }} · {{ .duration }}</div>
+      <div class="experience-item__location">{{ .location }}</div>
+      {{ with .description }}
+      <div class="experience-item__description truncated">{{ . }}</div>
+      <button class="see-more-toggle" onclick="toggleExpDescription(this)">...see more</button>
+      {{ end }}
+      {{ with .skills }}
+      <div class="experience-item__skills">♦ {{ . }}</div>
+      {{ end }}
+      {{ with .roles }}
+      <div class="experience-item__roles">
+        {{ range . }}
+        <div class="experience-item__role">
+          <div class="experience-item__role-title">{{ .title }}</div>
+          <div class="experience-item__role-date">{{ .startDate }} - {{ .endDate }}</div>
+          {{ with .description }}
+          <div class="experience-item__description truncated">{{ . }}</div>
+          <button class="see-more-toggle" onclick="toggleExpDescription(this)">...see more</button>
+          {{ end }}
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+</section>
+
+<!-- Education -->
+<section class="profile-section" id="education-section">
+  <h2 class="profile-section__title">Education</h2>
+  {{ range $profile.education }}
+  <div class="education-item">
+    <div class="education-item__logo">{{ .logo }}</div>
+    <div class="education-item__info">
+      <div class="education-item__school">{{ .school }}</div>
+      <div class="education-item__degree">{{ .degree }}</div>
+      <div class="education-item__year">{{ .year }}</div>
+    </div>
+  </div>
+  {{ end }}
+</section>
+
+<!-- Interests -->
+<section class="profile-section" id="interests-section">
+  <h2 class="profile-section__title">Interests</h2>
+  <div class="interests-grid">
+    {{ range $profile.interests }}
+    <span class="interest-tag">
+      <span class="interest-tag__icon">{{ .icon }}</span>
+      {{ .name }}
+    </span>
+    {{ end }}
+  </div>
+</section>

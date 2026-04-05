@@ -1,0 +1,39 @@
+{{ define "main" }}
+<div class="layout">
+  <div class="layout__sidebar-left">
+    {{ partial "profile-card.html" . }}
+  </div>
+  <div class="layout__main">
+    <article class="feed-item" style="opacity: 1;">
+      <div class="feed-item__header">
+        <a href="/#profile">
+          <img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Data.profile.name }}" class="feed-item__avatar">
+        </a>
+        <div class="feed-item__meta">
+          <div class="feed-item__author">
+            <a href="/#profile" style="color: inherit; text-decoration: none;">{{ .Site.Data.profile.name }}</a>
+            <span class="feed-item__author-badge">{{ partial "icons.html" (dict "icon" "verified" "size" "16") }}</span>
+          </div>
+          <div class="feed-item__author-subtitle">{{ .Site.Data.profile.headline }}</div>
+          <div class="feed-item__time">
+            {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}
+          </div>
+        </div>
+        <a href="/" class="btn btn--ghost" style="margin-left: auto;">← Back</a>
+      </div>
+      <div class="feed-item__content" style="padding-bottom: 16px;">
+        <div class="feed-item__text">{{ .Content }}</div>
+      </div>
+      {{ with .Params.image }}
+      <div class="feed-item__image-wrapper" onclick="openMediaViewer('photos', '{{ $.Params.category }}', '{{ $.File.ContentBaseName }}')">
+        <img src="{{ . }}" alt="{{ $.Title }}" class="feed-item__image">
+        <span class="feed-item__category-badge">{{ $.Params.category | humanize }}</span>
+      </div>
+      {{ end }}
+      {{ $id := .File.ContentBaseName }}
+      {{ partial "interactions.html" (dict "id" $id "type" "photo" "showSave" true "context" $) }}
+    </article>
+  </div>
+  {{ partial "sidebar-right.html" . }}
+</div>
+{{ end }}

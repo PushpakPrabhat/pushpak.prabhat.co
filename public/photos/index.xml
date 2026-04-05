@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Photos on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
+    <link>http://localhost:1313/photos/</link>
+    <description>Recent content in Photos on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 28 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/photos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fantasy Character Sketch</title>
+      <link>http://localhost:1313/photos/fantasy-character-sketch/</link>
+      <pubDate>Sat, 28 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/photos/fantasy-character-sketch/</guid>
+      <description>&lt;p&gt;Working on some fantasy character concepts. This sketch explores dynamic poses and intricate armor details. Part of a 30-day character design challenge! 🎨✏️&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Cyberpunk City Digital Painting</title>
+      <link>http://localhost:1313/photos/cyberpunk-city-painting/</link>
+      <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/photos/cyberpunk-city-painting/</guid>
+      <description>&lt;p&gt;Exploring cyberpunk aesthetics with this digital painting. Love how the neon lights create depth in the composition. Created using Photoshop and Procreate. 🌃💜&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Brand Identity Illustration Set</title>
+      <link>http://localhost:1313/photos/brand-identity-illustration/</link>
+      <pubDate>Sun, 22 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/photos/brand-identity-illustration/</guid>
+      <description>&lt;p&gt;Just completed this illustration set for a brand identity project. The brief was to create modern, inclusive visuals that resonate with Gen Z. Super happy with how the color palette turned out! 🎨&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Fintech App Dashboard Redesign</title>
+      <link>http://localhost:1313/photos/fintech-dashboard-redesign/</link>
+      <pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/photos/fintech-dashboard-redesign/</guid>
+      <description>&lt;p&gt;Excited to share my latest UI/UX project — a dashboard redesign for a fintech application. The focus was on making complex financial data easy to understand at a glance. Used Figma for prototyping. 📊💡&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Urban Architecture Pencil Study</title>
+      <link>http://localhost:1313/photos/urban-architecture-sketch/</link>
+      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/photos/urban-architecture-sketch/</guid>
+      <description>&lt;p&gt;Quick urban sketching session during lunch break. Really enjoying the perspective challenges of modern architecture. 🏗️&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Mountain Sunset Digital Art</title>
+      <link>http://localhost:1313/photos/mountain-sunset-art/</link>
+      <pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/photos/mountain-sunset-art/</guid>
+      <description>&lt;p&gt;Painted this during a relaxing weekend session. Mountains and sunsets never get old as subjects! 🏔️🌅&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>E-commerce Mobile App UI</title>
+      <link>http://localhost:1313/photos/ecommerce-mobile-ui/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/photos/ecommerce-mobile-ui/</guid>
+      <description>&lt;p&gt;Designed this e-commerce mobile experience with a focus on micro-interactions. Every swipe and tap should feel delightful! 📱✨&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

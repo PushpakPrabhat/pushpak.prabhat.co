@@ -1,0 +1,21 @@
+{{/* JSON output for search and API */}}
+{{ $allPhotos := where .Site.RegularPages "Type" "photos" }}
+{{ $allVideos := where .Site.RegularPages "Type" "videos" }}
+{{ $allPosts := where .Site.RegularPages "Type" "posts" }}
+{{ $all := $allPhotos | append $allVideos | append $allPosts }}
+{{ $sorted := sort $all "Date" "desc" }}
+
+[
+{{ range $index, $item := $sorted }}
+  {{ if $index }},{{ end }}
+  {
+    "title": {{ .Title | jsonify }},
+    "type": {{ .Type | jsonify }},
+    "category": {{ .Params.category | jsonify }},
+    "date": {{ .Date.Format "2006-01-02" | jsonify }},
+    "permalink": {{ .Permalink | jsonify }},
+    "summary": {{ .Summary | plainify | jsonify }},
+    "content": {{ .Content | plainify | truncate 300 | jsonify }}
+  }
+{{ end }}
+]

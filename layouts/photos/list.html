@@ -1,0 +1,16 @@
+{{ define "main" }}
+<div class="layout">
+  <div class="layout__sidebar-left">
+    {{ partial "profile-card.html" . }}
+  </div>
+  <div class="layout__main">
+    {{ partial "feed-tabs.html" . }}
+    <div id="feed-items">
+      {{ range .Pages.ByDate.Reverse }}
+        {{ partial "photo-card.html" . }}
+      {{ end }}
+    </div>
+  </div>
+  {{ partial "sidebar-right.html" . }}
+</div>
+{{ end }}
