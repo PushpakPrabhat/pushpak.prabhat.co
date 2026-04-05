@@ -32,7 +32,7 @@
 <link rel="stylesheet" href="/css/main.min.2e23794e7c92d01398fcf2a3fad274ab1ad8b48a94d93bdccfc0b0d4bf9f222e.css">
 
 
-<link rel="stylesheet" href="/css/components.min.e28a38f6f20a23dee2ceec546513e6685778fd6aa8cce8448096071683dd6831.css">
+<link rel="stylesheet" href="/css/components.min.ab55efffc82fe9dac32a4586be18a282cfe5fc0324ea093fe145068467a98fc4.css">
 
 
 <link rel="stylesheet" href="/css/responsive.min.2af32cf1803273a47d79d800fc7f61f4dbd66aa572f0f1e569b6aa19978ff4c3.css">
@@ -314,7 +314,7 @@
 <div class="interactions" id="interactions-motion-design-future">
   
   <div class="interactions__stats">
-    <div class="interactions__reactions">
+    <div class="interactions__reactions" style="cursor: pointer;" onclick="showReactionsModal('motion-design-future')" title="View reactions">
       <span class="interactions__reaction-icons" id="reaction-icons-motion-design-future">
         
       </span>
@@ -766,6 +766,24 @@
   </div>
   
   
+  <div class="reactions-modal" id="reactions-modal">
+    <div class="reactions-modal__overlay" onclick="closeReactionsModal()"></div>
+    <div class="reactions-modal__content">
+      <div class="reactions-modal__header">
+        <h3 class="reactions-modal__title">Reactions</h3>
+        <button class="reactions-modal__close" onclick="closeReactionsModal()">✕</button>
+      </div>
+      <div class="reactions-modal__tabs" id="reactions-modal-tabs">
+        
+      </div>
+      <div class="reactions-modal__body" id="reactions-modal-body">
+        
+        <div style="padding: 24px; text-align: center; color: var(--color-text-secondary);">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  
   <div class="toast" id="toast"></div>
   
   
@@ -808,7 +826,7 @@
   <script src="/js/firebase.min.dc3792a2694a42e910ff8a8df971fcbbbdbfa9d9943a8d9c10195dff867578cd.js"></script>
 
   
-  <script src="/js/main.min.e78d6f60d8cbb8d1a1761312f57c66c282df01ae89ad44dc81bc9868da0d39d7.js"></script>
+  <script src="/js/main.min.147dc9f0099680ab5e24f7655856e0c5009b22621d9c58b5bd83146837d2631e.js"></script>
   
   
   <script src="/js/interactions.min.e71b8963d726840cd9e0b150ed9323a76e3000c1c981a46d2f65094267790a13.js"></script>

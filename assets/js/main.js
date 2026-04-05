@@ -603,7 +603,7 @@
                  </div>
                  <div>
                    <div class="reactions-modal__user-name">LinkedIn Member</div>
-                   <div class="reactions-modal__user-desc">Appreciated this post</div>
+                   <div class="reactions-modal__user-desc">Reacted with ${r.charAt(0).toUpperCase() + r.slice(1)} on this post</div>
                  </div>
                </div>
              `;
