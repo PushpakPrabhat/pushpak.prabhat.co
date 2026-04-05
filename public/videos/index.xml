@@ -2,59 +2,59 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Videos on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
-    <link>/videos/</link>
+    <link>http://192.168.1.104:1313/videos/</link>
     <description>Recent content in Videos on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 30 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/videos/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://192.168.1.104:1313/videos/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ET Money Brand Promo</title>
-      <link>/videos/et-money-promo/</link>
+      <link>http://192.168.1.104:1313/videos/et-money-promo/</link>
       <pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>/videos/et-money-promo/</guid>
+      <guid>http://192.168.1.104:1313/videos/et-money-promo/</guid>
       <description>&lt;p&gt;Just finished this promotional piece for ET Money! The challenge was to make investment features feel exciting and accessible. Used After Effects and Cinema 4D for the 3D elements. 🎬💰&lt;/p&gt;</description>
     </item>
     <item>
       <title>Data Visualization Motion Graphics</title>
-      <link>/videos/data-viz-motion/</link>
+      <link>http://192.168.1.104:1313/videos/data-viz-motion/</link>
       <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>/videos/data-viz-motion/</guid>
+      <guid>http://192.168.1.104:1313/videos/data-viz-motion/</guid>
       <description>&lt;p&gt;Created this data visualization animation for a client presentation. Transforming numbers into visual stories is what I love doing most. After Effects + custom expressions = magic ✨📊&lt;/p&gt;</description>
     </item>
     <item>
       <title>Abstract 3D Loop Animation</title>
-      <link>/videos/abstract-3d-loop/</link>
+      <link>http://192.168.1.104:1313/videos/abstract-3d-loop/</link>
       <pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>/videos/abstract-3d-loop/</guid>
+      <guid>http://192.168.1.104:1313/videos/abstract-3d-loop/</guid>
       <description>&lt;p&gt;Another satisfying loop! This 3D animation explores organic forms meeting geometric precision. Rendered in Blender Cycles with custom shader nodes. 🧊🎨&lt;/p&gt;</description>
     </item>
     <item>
       <title>Educational Explainer Animation</title>
-      <link>/videos/educational-explainer/</link>
+      <link>http://192.168.1.104:1313/videos/educational-explainer/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>/videos/educational-explainer/</guid>
+      <guid>http://192.168.1.104:1313/videos/educational-explainer/</guid>
       <description>&lt;p&gt;Created this 2D explainer for an ed-tech platform. The character animation was done frame-by-frame to give it that hand-crafted feel. Some things AI can&amp;rsquo;t replace! ✌️🎞️&lt;/p&gt;</description>
     </item>
     <item>
       <title>Movie Poster Motion Design</title>
-      <link>/videos/movie-motion-poster/</link>
+      <link>http://192.168.1.104:1313/videos/movie-motion-poster/</link>
       <pubDate>Sun, 08 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>/videos/movie-motion-poster/</guid>
+      <guid>http://192.168.1.104:1313/videos/movie-motion-poster/</guid>
       <description>&lt;p&gt;Motion posters are one of my favorite things to create. Taking a static image and adding subtle parallax, particles, and lighting effects to bring it to life. This one has a cinematic dark mood. 🎬🌙&lt;/p&gt;</description>
     </item>
     <item>
       <title>Quick Tips: After Effects Expressions</title>
-      <link>/videos/ae-expressions-short/</link>
+      <link>http://192.168.1.104:1313/videos/ae-expressions-short/</link>
       <pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>/videos/ae-expressions-short/</guid>
+      <guid>http://192.168.1.104:1313/videos/ae-expressions-short/</guid>
       <description>&lt;p&gt;Quick tip! 5 After Effects expressions every motion designer should know. Save this for later! 💡⚡&lt;/p&gt;&#xA;&lt;p&gt;#MotionDesign #AfterEffects #Tutorial&lt;/p&gt;</description>
     </item>
     <item>
       <title>Logo Reveal 3D Animation</title>
-      <link>/videos/logo-reveal-3d/</link>
+      <link>http://192.168.1.104:1313/videos/logo-reveal-3d/</link>
       <pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>/videos/logo-reveal-3d/</guid>
+      <guid>http://192.168.1.104:1313/videos/logo-reveal-3d/</guid>
       <description>&lt;p&gt;This 3D logo reveal was a fun project combining Blender and After Effects. The metallic shader work was particularly challenging but rewarding! 🎯&lt;/p&gt;</description>
     </item>
   </channel>

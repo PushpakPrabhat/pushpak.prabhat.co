@@ -585,6 +585,36 @@
   gap: -2px;
 }
 
+.interactions__reaction-icons {
+  display: flex;
+  align-items: center;
+}
+
+.interactions__reaction-icons img {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  display: block;
+  margin-left: -5px;
+  border: 2px solid var(--color-surface);
+  position: relative;
+  background: var(--color-surface);
+  box-sizing: content-box;
+}
+
+.interactions__reaction-icons img:first-child {
+  margin-left: 0;
+  z-index: 3;
+}
+
+.interactions__reaction-icons img:nth-child(2) {
+  z-index: 2;
+}
+
+.interactions__reaction-icons img:nth-child(3) {
+  z-index: 1;
+}
+
 .interactions__reaction-icon {
   width: 18px;
   height: 18px;

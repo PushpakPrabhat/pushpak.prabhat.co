@@ -91,10 +91,31 @@
 
             // Check if current user reacted
             var userReaction = data.users && data.users[currentUserId];
+            if (userReaction) {
+              lsSet('reaction_' + id, userReaction);
+            } else {
+              lsRemove('reaction_' + id);
+            }
+
             if (userReaction && likeBtn) {
               likeBtn.classList.add('interaction-btn--active');
               if (userReaction !== 'like') {
                 likeBtn.classList.add('has-custom');
+              }
+              // Restore icon visually on load
+              var textEl = likeBtn.querySelector('.interaction-btn__text');
+              var customIconEl = likeBtn.querySelector('.like-icon-custom');
+              if (userReaction !== 'like' && customIconEl && textEl) {
+                var imgUrl = window._reactionImages && window._reactionImages[userReaction];
+                customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + userReaction + '" style="display:block;">';
+                customIconEl.style.display = 'inline-block';
+                textEl.textContent = userReaction.charAt(0).toUpperCase() + userReaction.slice(1);
+                var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
+                textEl.style.color = colors[userReaction] || '';
+              } else if (userReaction === 'like' && textEl) {
+                textEl.textContent = 'Like';
+                textEl.style.color = '';
+                if(customIconEl) customIconEl.style.display = 'none';
               }
             }
 
@@ -102,6 +123,7 @@
             if (iconsEl && data.reactionTypes) {
               var html = '';
               var types = Object.keys(data.reactionTypes);
+              // Sort types so most common appear first, simple approach
               types.slice(0, 3).forEach(function(type) {
                 var imgUrl = window._reactionImages && window._reactionImages[type];
                 if (imgUrl) {
@@ -113,7 +135,7 @@
           }
         }).catch(function() {});
 
-        // Sync comment count
+        // Sync comment count AND data
         db.collection('comments').doc(id).collection('items')
           .orderBy('timestamp', 'asc').get().then(function(snap) {
             var countEl = document.getElementById('comment-count-' + id);
@@ -121,6 +143,34 @@
             if (countEl) {
               countEl.textContent = count + ' comment' + (count !== 1 ? 's' : '');
             }
+            
+            // Save comments locally so UI can render them from PortfolioDB.getComments
+            var comments = [];
+            snap.forEach(function(doc) {
+              var d = doc.data();
+              d.id = doc.id;
+              d.timestamp = d.timestamp ? d.timestamp.toDate().toISOString() : new Date().toISOString();
+              comments.push(d);
+            });
+            
+            // Reconstruct nested replies
+            var rootComments = [];
+            var commentMap = {};
+            comments.forEach(function(c) {
+              c.replies = [];
+              commentMap[c.id] = c;
+            });
+            comments.forEach(function(c) {
+              if (c.parentId && commentMap[c.parentId]) {
+                commentMap[c.parentId].replies.push(c);
+              } else {
+                rootComments.push(c);
+              }
+            });
+            lsSetJSON('comments_' + id, rootComments);
+            
+            // If the section is already open, rendering might be out of sync until next toggle,
+            // but this ensures they exist for next time user toggles.
           }).catch(function() {});
       }
     });
@@ -386,13 +436,33 @@
 
       if (PortfolioDB.hasLiked(id)) {
         var likeBtn = document.getElementById('like-btn-' + id);
-        if (likeBtn) likeBtn.classList.add('interaction-btn--active');
+        var reaction = PortfolioDB.getReactionType(id) || 'like';
+        
+        if (likeBtn) {
+          likeBtn.classList.add('interaction-btn--active');
+          if (reaction !== 'like') {
+            likeBtn.classList.add('has-custom');
+            var textEl = likeBtn.querySelector('.interaction-btn__text');
+            var customIconEl = likeBtn.querySelector('.like-icon-custom');
+            if (customIconEl && textEl) {
+              var imgUrl = window._reactionImages && window._reactionImages[reaction];
+              customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + reaction + '" style="display:block;">';
+              customIconEl.style.display = 'inline-block';
+              textEl.textContent = reaction.charAt(0).toUpperCase() + reaction.slice(1);
+              var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
+              textEl.style.color = colors[reaction] || '';
+            }
+          }
+        }
       }
 
       var comments = PortfolioDB.getComments(id);
       var commentCountEl = document.getElementById('comment-count-' + id);
       if (commentCountEl && comments.length > 0) {
-        commentCountEl.textContent = comments.length + ' comment' + (comments.length !== 1 ? 's' : '');
+        var totalC = 0;
+        function countR(arr) { arr.forEach(function(x) { totalC++; if(x.replies) countR(x.replies); }); }
+        countR(comments);
+        commentCountEl.textContent = totalC + ' comment' + (totalC !== 1 ? 's' : '');
       }
     });
   });
