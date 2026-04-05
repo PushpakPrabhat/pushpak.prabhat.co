@@ -1,137 +1,145 @@
-name: "Pushpak Prabhat"
-headline: "Animation | Interactive Technology"
-location: "Gurugram, Haryana, India"
-company: "ET Money"
+name: Pushpak Prabhat
+headline: Animation | Interactive Technology
+location: Gurugram, Haryana, India
+company: ET Money
 connections: 169
 followers: 197
-contactInfo: "Contact info"
+contactInfo: Contact info
+about: >
+  Motion designer with a passion for visual storytelling. I create smooth,
+  engaging animations that capture attention and make ideas easy to understand.
 
-about: |
-  Motion designer with a passion for visual storytelling. I create smooth, engaging animations that capture attention and make ideas easy to understand.
   I love the entire creative process and am always pushing myself to learn new things.
+
   Looking for new opportunities to create and collaborate. Feel free to reach out!
-
 experience:
-  - title: "Assistant Manager"
-    designation: "Motion Design Lead"
-    company: "ET Money"
-    type: "Full-time"
-    startDate: "Jan 2026"
-    endDate: "Present"
-    duration: "4 mos"
-    location: "Gurugram, Haryana, India · On-site"
-    logo: "💰"
-    description: "Leading motion design initiatives for ET Money's marketing and product teams. Creating promotional videos, UI animations, and brand content that drives user engagement."
+  - endDate: Present
+    logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3hEnJugSlJFc_Hz3zHqos4BjOhLCUPkS-Hg&s
+    startDate: Jan 2026
+    duration: 4 mos
+    location: Gurugram, Haryana, India · On-site
+    designation: Motion Design Lead
+    title: Assistant Manager
+    type: Full-time
+    description: Leading motion design initiatives for ET Money's marketing and
+      product teams. Creating promotional videos, UI animations, and brand
+      content that drives user engagement.
+    company: ET Money
     roles:
-      - title: "Motion Design Lead"
-        startDate: "Jan 2026"
-        endDate: "Present"
-        description: "Spearheading the motion design strategy for the brand. Conceptualizing and producing high-quality promotional content across digital platforms."
-
-  - title: "Lead Motion Designer"
-    designation: "Creative Direction"
-    company: "PrepInsta"
-    type: "Full-time"
-    startDate: "Jun 2025"
-    endDate: "Present"
-    duration: "11 mos"
-    location: "Gurugram, Haryana, India · On-site"
-    logo: "🎬"
-    description: "Leading a team of designers to create educational content animations, promotional videos, and interactive visual experiences for PrepInsta's platform."
+      - title: Motion Design Lead
+        startDate: Jan 2026
+        endDate: Present
+        description: Spearheading the motion design strategy for the brand.
+          Conceptualizing and producing high-quality promotional content across
+          digital platforms.
+  - endDate: Present
+    logo: 🎬
+    startDate: Jun 2025
+    duration: 11 mos
+    location: Gurugram, Haryana, India · On-site
+    designation: Creative Direction
+    title: Lead Motion Designer
+    type: Full-time
+    description: Leading a team of designers to create educational content
+      animations, promotional videos, and interactive visual experiences for
+      PrepInsta's platform.
+    company: PrepInsta
     roles:
-      - title: "Lead Motion Designer"
-        startDate: "Jun 2025"
-        endDate: "Present"
-        description: "Managing end-to-end motion design pipeline. Created over 100+ educational animation assets for the platform."
-
-  - title: "Creative Lead"
-    company: "pushpunk.com"
-    type: "Part-time"
-    startDate: "Jun 2025"
-    endDate: "Present"
-    duration: "11 mos"
-    location: "Gurugram, Haryana, India · On-site"
-    logo: "🎨"
-    description: "Running a creative studio focused on motion graphics, 3D animation, and interactive web experiences. Working with clients across entertainment, education, and tech industries."
-
-  - title: "Frontend Web Developer"
-    company: "Freelance"
-    type: "Freelance"
-    startDate: "Feb 2019"
-    endDate: "Present"
-    duration: "7 yrs 3 mos"
-    location: "Remote"
-    skills: "JavaScript, HTML5 and +2 skills"
-    logo: "💻"
-    description: "Building responsive websites, interactive web applications, and creative coding projects. Specializing in portfolio sites, landing pages, and interactive experiences using modern web technologies."
-
-  - title: "Senior Animator"
-    company: "Unacademy"
-    type: "Full-time"
-    startDate: "Jul 2022"
-    endDate: "Jun 2025"
-    duration: "3 yrs"
-    location: "Chandigarh, India · On-site"
-    skills: "Motion Graphics, Animation and +2 skills"
-    logo: "🎓"
-    description: "Created engaging educational animations and motion graphics content for one of India's largest edtech platforms. Worked on explainer videos, course thumbnails, and platform UI animations."
+      - title: Lead Motion Designer
+        startDate: Jun 2025
+        endDate: Present
+        description: Managing end-to-end motion design pipeline. Created over 100+
+          educational animation assets for the platform.
+  - endDate: Present
+    logo: 🎨
+    startDate: Jun 2025
+    duration: 11 mos
+    location: Gurugram, Haryana, India · On-site
+    title: Creative Lead
+    type: Part-time
+    description: Running a creative studio focused on motion graphics, 3D animation,
+      and interactive web experiences. Working with clients across
+      entertainment, education, and tech industries.
+    company: pushpunk.com
+  - skills: JavaScript, HTML5 and +2 skills
+    endDate: Present
+    logo: 💻
+    startDate: Feb 2019
+    duration: 7 yrs 3 mos
+    location: Remote
+    title: Frontend Web Developer
+    type: Freelance
+    description: Building responsive websites, interactive web applications, and
+      creative coding projects. Specializing in portfolio sites, landing pages,
+      and interactive experiences using modern web technologies.
+    company: Freelance
+  - skills: Motion Graphics, Animation and +2 skills
+    endDate: Jun 2025
+    logo: 🎓
+    startDate: Jul 2022
+    duration: 3 yrs
+    location: Chandigarh, India · On-site
+    title: Senior Animator
+    type: Full-time
+    description: Created engaging educational animations and motion graphics content
+      for one of India's largest edtech platforms. Worked on explainer videos,
+      course thumbnails, and platform UI animations.
+    company: Unacademy
     roles:
-      - title: "Senior Animator"
-        startDate: "Jan 2024"
-        endDate: "Jun 2025"
-        description: "Led animation projects for key educational verticals. Mentored junior animators and established animation guidelines for the team."
-      - title: "Motion Graphics Designer"
-        startDate: "Jul 2022"
-        endDate: "Dec 2023"
-        description: "Created motion graphics content for marketing campaigns and educational content. Produced 200+ animated assets."
-
+      - title: Senior Animator
+        startDate: Jan 2024
+        endDate: Jun 2025
+        description: Led animation projects for key educational verticals. Mentored
+          junior animators and established animation guidelines for the team.
+      - title: Motion Graphics Designer
+        startDate: Jul 2022
+        endDate: Dec 2023
+        description: Created motion graphics content for marketing campaigns and
+          educational content. Produced 200+ animated assets.
 education:
-  - school: "Chandigarh University"
-    degree: "Bachelor of Computer Applications (BCA)"
-    year: "2019 - 2022"
-    logo: "🏫"
-
-  - school: "KV Dharmshala"
-    degree: "Higher Secondary (12th)"
-    year: "2017 - 2019"
-    logo: "📚"
-
+  - school: Chandigarh University
+    degree: Bachelor of Computer Applications (BCA)
+    year: 2019 - 2022
+    logo: 🏫
+  - school: KV Dharmshala
+    degree: Higher Secondary (12th)
+    year: 2017 - 2019
+    logo: 📚
 interests:
-  - name: "Motion Design"
-    icon: "🎬"
-  - name: "3D Animation"
-    icon: "🧊"
-  - name: "UI/UX Design"
-    icon: "🎨"
-  - name: "Web Development"
-    icon: "💻"
-  - name: "Visual Storytelling"
-    icon: "📖"
-  - name: "Interactive Technology"
-    icon: "⚡"
-  - name: "Digital Art"
-    icon: "🖌️"
-  - name: "Video Editing"
-    icon: "🎥"
-  - name: "Creative Coding"
-    icon: "🧪"
-  - name: "Photography"
-    icon: "📷"
-
+  - name: Motion Design
+    icon: 🎬
+  - name: 3D Animation
+    icon: 🧊
+  - name: UI/UX Design
+    icon: 🎨
+  - name: Web Development
+    icon: 💻
+  - name: Visual Storytelling
+    icon: 📖
+  - name: Interactive Technology
+    icon: ⚡
+  - name: Digital Art
+    icon: 🖌️
+  - name: Video Editing
+    icon: 🎥
+  - name: Creative Coding
+    icon: 🧪
+  - name: Photography
+    icon: 📷
 skills:
-  - name: "After Effects"
+  - name: After Effects
     endorsements: 12
-  - name: "Premiere Pro"
+  - name: Premiere Pro
     endorsements: 8
-  - name: "Blender"
+  - name: Blender
     endorsements: 6
-  - name: "Figma"
+  - name: Figma
     endorsements: 10
-  - name: "JavaScript"
+  - name: JavaScript
     endorsements: 7
-  - name: "HTML/CSS"
+  - name: HTML/CSS
     endorsements: 9
-  - name: "Photoshop"
+  - name: Photoshop
     endorsements: 5
-  - name: "Illustrator"
+  - name: Illustrator
     endorsements: 4
