@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moderator Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="mods.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="login-card__logo">🛡️</div>
+      <h1 class="login-card__title">Moderator Dashboard</h1>
+      <p class="login-card__subtitle">Sign in with your admin credentials</p>
+      <div class="login-card__form">
+        <input type="email" class="login-input" id="login-email" placeholder="Email address" value="prabhat.pushpak@gmail.com">
+        <input type="password" class="login-input" id="login-password" placeholder="Password">
+        <button class="login-btn" id="login-btn" onclick="adminLogin()">Sign In</button>
+        <p class="login-card__error" id="login-error"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" style="display:none;">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar__header">
+        <span class="sidebar__title">🛡️ Mod Panel</span>
+      </div>
+      <div class="sidebar__nav">
+        <button class="sidebar__item active" data-tab="chat" onclick="switchDashTab('chat')">
+          <span class="sidebar__icon">💬</span><span>Live Chat</span>
+        </button>
+        <button class="sidebar__item" data-tab="comments" onclick="switchDashTab('comments')">
+          <span class="sidebar__icon">📝</span><span>Comments</span>
+        </button>
+        <button class="sidebar__item" data-tab="reactions" onclick="switchDashTab('reactions')">
+          <span class="sidebar__icon">👍</span><span>Reactions</span>
+        </button>
+        <button class="sidebar__item" data-tab="users" onclick="switchDashTab('users')">
+          <span class="sidebar__icon">👥</span><span>Users</span>
+        </button>
+      </div>
+      <div class="sidebar__footer">
+        <a href="/" class="sidebar__link">← Back to Site</a>
+        <button class="sidebar__link" onclick="adminLogout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <!-- TAB: LIVE CHAT -->
+      <div class="dash-tab active" id="tab-chat">
+        <div class="chat-studio" id="chat-studio">
+          <div class="chat-studio__list">
+            <div class="chat-studio__list-header"><h2>Conversations</h2></div>
+            <div class="chat-studio__conversations" id="conversations">
+              <div class="empty-state">No conversations yet</div>
+            </div>
+          </div>
+          <div class="chat-studio__thread">
+            <div class="chat-studio__thread-header" id="thread-header">
+              <button class="thread-back-btn" onclick="closeThread()" title="Back">←</button>
+              <span class="thread-header__text">Select a conversation</span>
+            </div>
+            <div class="chat-studio__messages" id="thread-messages"></div>
+            <div class="chat-typing-indicator" id="admin-typing-indicator" style="display:none;">
+              <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+            </div>
+            <div class="chat-studio__input" id="thread-input" style="display:none;">
+              <input type="text" id="admin-chat-input" placeholder="Reply..." onkeypress="if(event.key==='Enter') sendAdminReply()">
+              <button onclick="sendAdminReply()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: COMMENTS -->
+      <div class="dash-tab" id="tab-comments">
+        <div class="dash-header">
+          <h2>Comment Moderation</h2>
+          <input type="text" class="dash-search" id="comment-search" placeholder="Search comments..." oninput="filterComments()">
+        </div>
+        <div class="dash-table-wrap">
+          <table class="dash-table">
+            <thead><tr><th>User</th><th>Comment</th><th>Post</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="comments-tbody"><tr><td colspan="5" class="empty-state">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: REACTIONS -->
+      <div class="dash-tab" id="tab-reactions">
+        <div class="dash-header"><h2>Reaction Tracker</h2></div>
+        <div class="reactions-grid" id="reactions-grid">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </div>
+
+      <!-- TAB: USERS -->
+      <div class="dash-tab" id="tab-users">
+        <div class="dash-header"><h2>User Management</h2></div>
+        <div class="dash-table-wrap">
+          <table class="dash-table">
+            <thead><tr><th></th><th>Name</th><th>Email</th><th>Last Seen</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="users-tbody"><tr><td colspan="6" class="empty-state">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile tab bar -->
+  <div class="dash-mobile-tabs" id="dash-mobile-tabs" style="display:none;">
+    <div class="dash-mobile-tabs__items">
+      <button class="dash-mobile-tab active" onclick="switchDashTab('chat')"><span class="dash-mobile-tab__icon">💬</span>Chat</button>
+      <button class="dash-mobile-tab" onclick="switchDashTab('comments')"><span class="dash-mobile-tab__icon">📝</span>Comments</button>
+      <button class="dash-mobile-tab" onclick="switchDashTab('reactions')"><span class="dash-mobile-tab__icon">👍</span>Reactions</button>
+      <button class="dash-mobile-tab" onclick="switchDashTab('users')"><span class="dash-mobile-tab__icon">👥</span>Users</button>
+    </div>
+  </div>
+
+  <script src="mods.js"></script>
+</body>
+</html>

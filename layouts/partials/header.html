@@ -5,9 +5,9 @@
       {{ partial "icons.html" (dict "icon" "linkedin-logo" "size" "34") }}
     </a>
     
-    <!-- Mobile: Profile pic on LEFT (replaces logo on mobile) -->
-    <a href="/#profile" class="nav__profile-link-left">
-      <img src="{{ .Site.Params.profileImage }}" alt="Profile" class="nav__profile-pic">
+    <!-- Mobile: Profile pic on LEFT (default head icon, replaced by user's Google pic on sign-in) -->
+    <a href="#" class="nav__profile-link-left" id="mobile-profile-btn" onclick="toggleProfileMenu(event)">
+      <img src="data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='128' height='128' rx='64' fill='%23e7e7e7'/%3E%3Cpath d='M64 72c13.25 0 24-10.75 24-24S77.25 24 64 24 40 34.75 40 48s10.75 24 24 24zm0 8c-16 0-48 8-48 24v8h96v-8c0-16-32-24-48-24z' fill='%23666'/%3E%3C/svg%3E" alt="Profile" class="nav__profile-pic" id="mobile-profile-pic">
     </a>
     
     <!-- Search -->
@@ -37,24 +37,36 @@
         <span class="nav__item-label">Jobs</span>
       </a>
       <a href="#" class="nav__item" id="nav-messaging" onclick="openChat(event)">
-        <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}</span>
+        <span class="nav__item-icon nav__item-icon--messaging">
+          {{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}
+          <span class="nav__unread-dot" id="desktop-unread-dot" style="display:none;"></span>
+        </span>
         <span class="nav__item-label">Messaging</span>
       </a>
       <a href="#" class="nav__item" id="nav-notifications">
         <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "notifications" "size" "24") }}</span>
         <span class="nav__item-label">Notifications</span>
-        <span class="nav__item-badge">16</span>
       </a>
       
       <div class="nav__divider"></div>
       
-      <a href="/#profile" class="nav__item" id="nav-me">
-        <img src="{{ .Site.Params.profileImage }}" alt="Profile" class="nav__profile-pic">
-        <span class="nav__item-label">Me ▾</span>
+      <!-- Desktop: Me button with user's pic / sign in option -->
+      <a href="#" class="nav__item" id="nav-me" onclick="toggleProfileMenu(event)">
+        <img src="data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='128' height='128' rx='64' fill='%23e7e7e7'/%3E%3Cpath d='M64 72c13.25 0 24-10.75 24-24S77.25 24 64 24 40 34.75 40 48s10.75 24 24 24zm0 8c-16 0-48 8-48 24v8h96v-8c0-16-32-24-48-24z' fill='%23666'/%3E%3C/svg%3E" alt="Profile" class="nav__profile-pic" id="desktop-profile-pic">
+        <span class="nav__item-label" id="desktop-me-label">Me ▾</span>
       </a>
     </nav>
     
-    <!-- Mobile: messaging icon on RIGHT -->
-    <a href="#" class="nav__mobile-msg" aria-label="Messages" onclick="openChat(event)">{{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}</a>
+    <!-- Mobile: messaging icon on RIGHT with unread dot -->
+    <a href="#" class="nav__mobile-msg" aria-label="Messages" onclick="openChat(event)">
+      {{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}
+      <span class="nav__unread-dot" id="mobile-header-unread-dot" style="display:none;"></span>
+    </a>
   </div>
 </header>
+
+<!-- Profile/Account Dropdown Menu (shared desktop + mobile) -->
+<div class="account-dropdown" id="account-dropdown" style="display:none;">
+  <div class="account-dropdown__content" id="account-dropdown-content">
+  </div>
+</div>

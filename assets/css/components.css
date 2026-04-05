@@ -2863,3 +2863,169 @@
 .profile-full__banner {
   cursor: pointer;
 }
+
+/* ========== TYPING INDICATOR ========== */
+.chat-typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ========== ONLINE/OFFLINE PRESENCE DOT ========== */
+.chat-widget__online-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #999;
+  border: 2px solid var(--color-surface);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transition: background 0.3s;
+}
+
+.chat-widget__online-dot.online {
+  background: #057642;
+}
+
+/* ========== UNREAD DOT ========== */
+.nav__unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e74c3c;
+  position: absolute;
+  top: -2px;
+  right: -2px;
+}
+
+.nav__item-icon--messaging {
+  position: relative;
+}
+
+.nav__mobile-msg {
+  position: relative;
+}
+
+/* ========== MOBILE CHAT HEADER ========== */
+.mobile-chat-page__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mobile-chat-page__header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.mobile-chat-page__avatar-wrapper {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.mobile-chat-page__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mobile-chat-page__avatar-wrapper .chat-widget__online-dot {
+  width: 10px;
+  height: 10px;
+  bottom: -1px;
+  right: -1px;
+}
+
+.mobile-chat-page__header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-chat-page__status {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+/* ========== ACCOUNT DROPDOWN ========== */
+.account-dropdown {
+  position: fixed;
+  top: 52px;
+  right: 16px;
+  z-index: 9999;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 260px;
+  overflow: hidden;
+}
+
+.account-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  color: var(--color-text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.account-dropdown__item:hover {
+  background: var(--color-hover);
+}
+
+.account-dropdown__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.account-dropdown__divider {
+  height: 1px;
+  background: var(--color-border);
+}
+
+@media (max-width: 767px) {
+  .account-dropdown {
+    top: 52px;
+    right: auto;
+    left: 8px;
+    min-width: 240px;
+  }
+}

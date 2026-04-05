@@ -1,26 +1,32 @@
 /**
  * LinkedIn Portfolio — Firebase / Data Layer
  * 
- * Uses Firebase Firestore when configured, falls back to localStorage.
- * Setup: create a Firebase project, enable Firestore + Anonymous Auth,
- * then add your config to hugo.toml [params.firebase].
+ * Uses Firebase Firestore for data, Auth for Google Sign-In,
+ * and Realtime Database for presence (online/offline/typing).
+ * Falls back to localStorage when Firebase is not configured.
  */
 
 (function() {
   'use strict';
 
   const STORAGE_PREFIX = 'pp_portfolio_';
+  const ADMIN_EMAIL = 'prabhat.pushpak@gmail.com';
+  const CHAT_MSG_LIMIT = 25;
+
   let db = null;
+  let rtdb = null;
   let auth = null;
-  let currentUserId = null;
+  let currentUser = null;
   let firebaseReady = false;
+  let chatUnsubscribe = null;
+  let presenceRef = null;
+  let typingTimeout = null;
 
   // ============================
   // Firebase Initialization
   // ============================
   function initFirebase() {
     try {
-      // Read config from meta tags
       const apiKey = document.querySelector('meta[name="firebase-api-key"]')?.content;
       const authDomain = document.querySelector('meta[name="firebase-auth-domain"]')?.content;
       const projectId = document.querySelector('meta[name="firebase-project-id"]')?.content;
@@ -41,7 +47,8 @@
         projectId: projectId,
         storageBucket: document.querySelector('meta[name="firebase-storage-bucket"]')?.content || '',
         messagingSenderId: document.querySelector('meta[name="firebase-messaging-sender-id"]')?.content || '',
-        appId: document.querySelector('meta[name="firebase-app-id"]')?.content || ''
+        appId: document.querySelector('meta[name="firebase-app-id"]')?.content || '',
+        databaseURL: 'https://' + projectId + '-default-rtdb.firebaseio.com'
       };
 
       if (!firebase.apps.length) {
@@ -51,32 +58,175 @@
       db = firebase.firestore();
       auth = firebase.auth();
 
-      // Anonymous sign-in
-      auth.signInAnonymously().then(function(cred) {
-        currentUserId = cred.user.uid;
-        firebaseReady = true;
-        console.info('[PortfolioDB] Firebase ready. User:', currentUserId);
-        // Re-initialize page data from Firestore
-        syncPageData();
-      }).catch(function(err) {
-        console.warn('[PortfolioDB] Auth failed, using localStorage:', err.message);
+      // Init Realtime Database for presence
+      if (firebase.database) {
+        rtdb = firebase.database();
+      }
+
+      // Listen for auth state changes
+      auth.onAuthStateChanged(function(user) {
+        if (user) {
+          currentUser = {
+            uid: user.uid,
+            name: user.displayName || 'User',
+            photo: user.photoURL || '',
+            email: user.email || ''
+          };
+          firebaseReady = true;
+          console.info('[PortfolioDB] Signed in as:', currentUser.name);
+
+          // Save/update user profile in Firestore
+          saveUserProfile(user);
+
+          // Set up presence
+          setupPresence(user.uid);
+
+          // Sync page data
+          syncPageData();
+
+          // Dispatch event so main.js can update UI
+          window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: currentUser } }));
+        } else {
+          currentUser = null;
+          console.info('[PortfolioDB] Not signed in. Viewing as guest.');
+
+          // Still sync page data for viewing (read-only)
+          if (db) syncPageData();
+
+          window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: null } }));
+        }
       });
 
+      // Handle redirect result (for when signInWithRedirect is used as fallback)
+      handleRedirectResult();
+
     } catch (e) {
-      console.warn('[PortfolioDB] Firebase init error, using localStorage:', e.message);
+      console.warn('[PortfolioDB] Firebase init error:', e.message);
     }
   }
 
   // ============================
-  // Sync page data from Firestore
+  // User Profile Management
+  // ============================
+  function saveUserProfile(user) {
+    if (!db || !user) return;
+    db.collection('users').doc(user.uid).set({
+      displayName: user.displayName || 'User',
+      email: user.email || '',
+      photoURL: user.photoURL || '',
+      lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(function() {});
+  }
+
+  // ============================
+  // Presence System (Realtime DB)
+  // ============================
+  function setupPresence(uid) {
+    if (!rtdb) return;
+
+    presenceRef = rtdb.ref('presence/' + uid);
+
+    // Set online status
+    presenceRef.set({
+      online: true,
+      typing: false,
+      lastSeen: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    // On disconnect, set offline
+    presenceRef.onDisconnect().set({
+      online: false,
+      typing: false,
+      lastSeen: firebase.database.ServerValue.TIMESTAMP
+    });
+  }
+
+  function setTyping(isTyping) {
+    if (!presenceRef) return;
+    presenceRef.update({ typing: isTyping });
+  }
+
+  // ============================
+  // Idle Detection / Quota Protection
+  // ============================
+  function setupIdleDetection() {
+    if (!rtdb) return;
+
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        // Tab hidden — disconnect to free up connection slot
+        if (rtdb) {
+          try { firebase.database().goOffline(); } catch(e) {}
+        }
+      } else {
+        // Tab visible — reconnect
+        if (rtdb) {
+          try { firebase.database().goOnline(); } catch(e) {}
+        }
+        // Re-set presence
+        if (currentUser) {
+          setupPresence(currentUser.uid);
+        }
+      }
+    });
+  }
+
+  // ============================
+  // Google Sign-In (popup with redirect fallback)
+  // ============================
+  function signInWithGoogle() {
+    if (!auth) {
+      alert('Firebase not configured. Please try again later.');
+      return Promise.reject(new Error('No auth'));
+    }
+    var provider = new firebase.auth.GoogleAuthProvider();
+    return auth.signInWithPopup(provider).catch(function(err) {
+      // If popup was blocked or domain not authorized, try redirect
+      if (err.code === 'auth/popup-blocked' || 
+          err.code === 'auth/unauthorized-domain' ||
+          err.code === 'auth/operation-not-supported-in-this-environment') {
+        console.info('[PortfolioDB] Popup failed, trying redirect...');
+        return auth.signInWithRedirect(provider);
+      }
+      throw err;
+    });
+  }
+
+  // Handle redirect result on page load
+  function handleRedirectResult() {
+    if (!auth) return;
+    auth.getRedirectResult().then(function(result) {
+      if (result && result.user) {
+        console.info('[PortfolioDB] Redirect sign-in successful:', result.user.displayName);
+      }
+    }).catch(function(err) {
+      console.warn('[PortfolioDB] Redirect result error:', err.message);
+    });
+  }
+
+  function signOut() {
+    if (!auth) return Promise.resolve();
+    // Clean up presence
+    if (presenceRef) {
+      presenceRef.set({
+        online: false,
+        typing: false,
+        lastSeen: firebase.database.ServerValue.TIMESTAMP
+      });
+    }
+    return auth.signOut();
+  }
+
+  // ============================
+  // Sync page data from Firestore (read-only, no auth required)
   // ============================
   function syncPageData() {
     document.querySelectorAll('.feed-item').forEach(function(item) {
       var id = item.dataset.id;
       if (!id) return;
 
-      // Sync like count + user's reaction
       if (db) {
+        // Sync reactions
         db.collection('reactions').doc(id).get().then(function(doc) {
           if (doc.exists) {
             var data = doc.data();
@@ -90,32 +240,35 @@
             }
 
             // Check if current user reacted
-            var userReaction = data.users && data.users[currentUserId];
-            if (userReaction) {
-              lsSet('reaction_' + id, userReaction);
-            } else {
-              lsRemove('reaction_' + id);
-            }
-
-            if (userReaction && likeBtn) {
-              likeBtn.classList.add('interaction-btn--active');
-              if (userReaction !== 'like') {
-                likeBtn.classList.add('has-custom');
+            if (currentUser) {
+              var userReaction = data.users && data.users[currentUser.uid];
+              if (userReaction) {
+                lsSet('reaction_' + id, userReaction);
+                lsSet('liked_' + id, 'true');
+              } else {
+                lsRemove('reaction_' + id);
+                lsRemove('liked_' + id);
               }
-              // Restore icon visually on load
-              var textEl = likeBtn.querySelector('.interaction-btn__text');
-              var customIconEl = likeBtn.querySelector('.like-icon-custom');
-              if (userReaction !== 'like' && customIconEl && textEl) {
-                var imgUrl = window._reactionImages && window._reactionImages[userReaction];
-                customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + userReaction + '" style="display:block;">';
-                customIconEl.style.display = 'inline-block';
-                textEl.textContent = userReaction.charAt(0).toUpperCase() + userReaction.slice(1);
-                var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
-                textEl.style.color = colors[userReaction] || '';
-              } else if (userReaction === 'like' && textEl) {
-                textEl.textContent = 'Like';
-                textEl.style.color = '';
-                if(customIconEl) customIconEl.style.display = 'none';
+
+              if (userReaction && likeBtn) {
+                likeBtn.classList.add('interaction-btn--active');
+                if (userReaction !== 'like') {
+                  likeBtn.classList.add('has-custom');
+                }
+                var textEl = likeBtn.querySelector('.interaction-btn__text');
+                var customIconEl = likeBtn.querySelector('.like-icon-custom');
+                if (userReaction !== 'like' && customIconEl && textEl) {
+                  var imgUrl = window._reactionImages && window._reactionImages[userReaction];
+                  customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + userReaction + '" style="display:block;">';
+                  customIconEl.style.display = 'inline-block';
+                  textEl.textContent = userReaction.charAt(0).toUpperCase() + userReaction.slice(1);
+                  var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
+                  textEl.style.color = colors[userReaction] || '';
+                } else if (userReaction === 'like' && textEl) {
+                  textEl.textContent = 'Like';
+                  textEl.style.color = '';
+                  if (customIconEl) customIconEl.style.display = 'none';
+                }
               }
             }
 
@@ -123,9 +276,8 @@
             if (iconsEl && data.reactionTypes) {
               var html = '';
               var types = Object.keys(data.reactionTypes);
-              // Sort types so most common appear first
               types.sort(function(a, b) {
-                 return data.reactionTypes[b] - data.reactionTypes[a];
+                return data.reactionTypes[b] - data.reactionTypes[a];
               });
               types.slice(0, 3).forEach(function(type) {
                 var imgUrl = window._reactionImages && window._reactionImages[type];
@@ -138,7 +290,7 @@
           }
         }).catch(function() {});
 
-        // Sync comment count AND data
+        // Sync comments
         db.collection('comments').doc(id).collection('items')
           .orderBy('timestamp', 'asc').get().then(function(snap) {
             var countEl = document.getElementById('comment-count-' + id);
@@ -146,8 +298,7 @@
             if (countEl) {
               countEl.textContent = count + ' comment' + (count !== 1 ? 's' : '');
             }
-            
-            // Save comments locally so UI can render them from PortfolioDB.getComments
+
             var comments = [];
             snap.forEach(function(doc) {
               var d = doc.data();
@@ -155,8 +306,7 @@
               d.timestamp = d.timestamp ? d.timestamp.toDate().toISOString() : new Date().toISOString();
               comments.push(d);
             });
-            
-            // Reconstruct nested replies
+
             var rootComments = [];
             var commentMap = {};
             comments.forEach(function(c) {
@@ -171,9 +321,6 @@
               }
             });
             lsSetJSON('comments_' + id, rootComments);
-            
-            // If the section is already open, rendering might be out of sync until next toggle,
-            // but this ensures they exist for next time user toggles.
           }).catch(function() {});
       }
     });
@@ -205,6 +352,52 @@
   // ============================
   window.PortfolioDB = {
 
+    // --- Auth ---
+
+    getCurrentUser: function() {
+      return currentUser;
+    },
+
+    isSignedIn: function() {
+      return !!currentUser;
+    },
+
+    requireAuth: function() {
+      if (currentUser) return Promise.resolve(currentUser);
+      return signInWithGoogle().then(function() {
+        return currentUser;
+      });
+    },
+
+    signOut: function() {
+      return signOut();
+    },
+
+    getAdminEmail: function() {
+      return ADMIN_EMAIL;
+    },
+
+    // --- Presence ---
+
+    setTyping: function(isTyping) {
+      if (typingTimeout) clearTimeout(typingTimeout);
+      setTyping(isTyping);
+      if (isTyping) {
+        typingTimeout = setTimeout(function() {
+          setTyping(false);
+        }, 2000);
+      }
+    },
+
+    watchPresence: function(uid, callback) {
+      if (!rtdb) return function() {};
+      var ref = rtdb.ref('presence/' + uid);
+      ref.on('value', function(snap) {
+        callback(snap.val());
+      });
+      return function() { ref.off(); };
+    },
+
     // --- Likes / Reactions ---
 
     getLikes: function(contentId) {
@@ -220,6 +413,8 @@
     },
 
     toggleLike: function(contentId, reactionType) {
+      if (!currentUser) return { liked: false, count: this.getLikes(contentId) };
+
       var liked = this.hasLiked(contentId);
       var count = this.getLikes(contentId);
       var currentReaction = this.getReactionType(contentId) || 'like';
@@ -238,33 +433,34 @@
       lsSet('likes_' + contentId, count.toString());
 
       // Firestore sync
-      if (firebaseReady && db && currentUserId) {
+      if (firebaseReady && db && currentUser) {
+        var userProfile = { name: currentUser.name, photo: currentUser.photo };
         var ref = db.collection('reactions').doc(contentId);
         db.runTransaction(function(tx) {
           return tx.get(ref).then(function(doc) {
-            var data = doc.exists ? doc.data() : { count: 0, users: {}, reactionTypes: {} };
-            var oldUserReaction = data.users[currentUserId];
-            
+            var data = doc.exists ? doc.data() : { count: 0, users: {}, reactionTypes: {}, userProfiles: {} };
+            if (!data.userProfiles) data.userProfiles = {};
+            var oldUserReaction = data.users[currentUser.uid];
+
             if (liked && !isSwapping) {
-              // Remove reaction
               data.count = Math.max(0, (data.count || 0) - 1);
-              delete data.users[currentUserId];
+              delete data.users[currentUser.uid];
+              delete data.userProfiles[currentUser.uid];
               if (oldUserReaction && data.reactionTypes[oldUserReaction]) {
                 data.reactionTypes[oldUserReaction] = Math.max(0, data.reactionTypes[oldUserReaction] - 1);
                 if (data.reactionTypes[oldUserReaction] === 0) delete data.reactionTypes[oldUserReaction];
               }
             } else {
-              // Add or Swap reaction
               if (!liked || !oldUserReaction) {
-                 data.count = (data.count || 0) + 1;
+                data.count = (data.count || 0) + 1;
               } else if (oldUserReaction && oldUserReaction !== newReaction) {
-                 // Swap old reaction out
-                 if (data.reactionTypes[oldUserReaction]) {
-                    data.reactionTypes[oldUserReaction] = Math.max(0, data.reactionTypes[oldUserReaction] - 1);
-                    if (data.reactionTypes[oldUserReaction] === 0) delete data.reactionTypes[oldUserReaction];
-                 }
+                if (data.reactionTypes[oldUserReaction]) {
+                  data.reactionTypes[oldUserReaction] = Math.max(0, data.reactionTypes[oldUserReaction] - 1);
+                  if (data.reactionTypes[oldUserReaction] === 0) delete data.reactionTypes[oldUserReaction];
+                }
               }
-              data.users[currentUserId] = newReaction;
+              data.users[currentUser.uid] = newReaction;
+              data.userProfiles[currentUser.uid] = userProfile;
               data.reactionTypes[newReaction] = (data.reactionTypes[newReaction] || 0) + 1;
             }
             tx.set(ref, data);
@@ -274,7 +470,7 @@
         });
       }
 
-      return { liked: !liked, count: count };
+      return { liked: liked && !isSwapping ? false : true, count: count };
     },
 
     // --- Comments ---
@@ -284,11 +480,15 @@
     },
 
     addComment: function(contentId, text, parentId) {
+      if (!currentUser) return null;
+
       var comments = this.getComments(contentId);
       var comment = {
         id: Date.now().toString(),
         text: text,
-        author: lsGet('chat_name', '') || 'Guest User',
+        author: currentUser.name,
+        authorPhoto: currentUser.photo,
+        authorUid: currentUser.uid,
         timestamp: new Date().toISOString(),
         likes: 0,
         likedBy: [],
@@ -297,7 +497,6 @@
       };
 
       if (parentId) {
-        // Add as reply to parent
         function addReply(list) {
           for (var i = 0; i < list.length; i++) {
             if (list[i].id === parentId) {
@@ -316,11 +515,14 @@
 
       lsSetJSON('comments_' + contentId, comments);
 
-      // Firestore sync
       if (firebaseReady && db) {
+        // Create/update parent doc so mods dashboard can find it
+        db.collection('comments').doc(contentId).set({ updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
         db.collection('comments').doc(contentId).collection('items').doc(comment.id).set({
           text: comment.text,
           author: comment.author,
+          authorPhoto: comment.authorPhoto,
+          authorUid: comment.authorUid,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           likes: 0,
           likedBy: [],
@@ -335,7 +537,7 @@
 
     toggleCommentLike: function(commentId, contentId) {
       var comments = this.getComments(contentId);
-      var userId = currentUserId || 'local_user';
+      var userId = currentUser ? currentUser.uid : 'local_user';
       var result = { liked: false, likes: 0 };
 
       function findAndToggle(list) {
@@ -363,18 +565,17 @@
       findAndToggle(comments);
       lsSetJSON('comments_' + contentId, comments);
 
-      // Firestore sync
       if (firebaseReady && db) {
         var ref = db.collection('comments').doc(contentId).collection('items').doc(commentId);
         ref.get().then(function(doc) {
           if (doc.exists) {
             var data = doc.data();
             var likedBy = data.likedBy || [];
-            var idx = likedBy.indexOf(currentUserId);
+            var idx = likedBy.indexOf(userId);
             if (idx >= 0) {
               likedBy.splice(idx, 1);
             } else {
-              likedBy.push(currentUserId);
+              likedBy.push(userId);
             }
             ref.update({ likedBy: likedBy, likes: likedBy.length });
           }
@@ -384,31 +585,104 @@
       return result;
     },
 
-    // --- Chat ---
+    // --- Chat (Real-time with Firestore) ---
 
-    getChatMessages: function() {
-      return lsGetJSON('chat_msgs', []);
+    sendChatMessage: function(text) {
+      if (!currentUser || !db) return;
+
+      var msg = {
+        text: text,
+        type: 'user',
+        authorName: currentUser.name,
+        authorPhoto: currentUser.photo,
+        authorUid: currentUser.uid,
+        conversationId: currentUser.uid,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      db.collection('chat_messages').add(msg).catch(function(err) {
+        console.warn('[PortfolioDB] Chat send error:', err.message);
+      });
     },
 
-    saveChatMessage: function(msg) {
-      var msgs = this.getChatMessages();
-      msgs.push(msg);
-      lsSetJSON('chat_msgs', msgs);
+    getAdminEmail: function() {
+      return 'prabhat.pushpak@gmail.com';
+    },
 
-      // Firestore sync
-      if (firebaseReady && db) {
-        db.collection('chat_messages').add({
-          text: msg.text,
-          type: msg.type,
-          author: lsGet('chat_name', 'Guest'),
-          contact: lsGet('chat_contact', ''),
-          userId: currentUserId || 'anonymous',
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).catch(function() {});
+    watchPresence: function(uid, callback) {
+      if (!rtdb) return function() {};
+      var ref = rtdb.ref('presence/' + uid);
+      var listener = ref.on('value', function(snap) {
+        callback(snap.val());
+      });
+      return function() {
+        ref.off('value', listener);
+      };
+    },
+
+    listenToChat: function(callback) {
+      if (!db || !currentUser) {
+        console.warn('[PortfolioDB] listenToChat: no db or user');
+        return function() {};
       }
+
+      // Unsubscribe from previous listener
+      if (chatUnsubscribe) {
+        chatUnsubscribe();
+      }
+
+      // Use desc + limit to get latest msgs, then reverse for display order
+      var query = db.collection('chat_messages')
+        .where('conversationId', '==', currentUser.uid)
+        .orderBy('timestamp', 'desc')
+        .limit(CHAT_MSG_LIMIT);
+
+      chatUnsubscribe = query.onSnapshot(function(snap) {
+        var messages = [];
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          d.id = doc.id;
+          d.timestamp = d.timestamp ? d.timestamp.toDate() : new Date();
+          messages.push(d);
+        });
+        // Reverse to show oldest first
+        messages.reverse();
+        callback(messages);
+      }, function(err) {
+        console.warn('[PortfolioDB] Chat listener error:', err.message);
+        // If index missing, try without ordering
+        if (err.code === 'failed-precondition') {
+          console.info('[PortfolioDB] Falling back to unordered chat query');
+          var fallback = db.collection('chat_messages')
+            .where('conversationId', '==', currentUser.uid)
+            .limit(CHAT_MSG_LIMIT);
+          chatUnsubscribe = fallback.onSnapshot(function(snap) {
+            var messages = [];
+            snap.forEach(function(doc) {
+              var d = doc.data();
+              d.id = doc.id;
+              d.timestamp = d.timestamp ? d.timestamp.toDate() : new Date();
+              messages.push(d);
+            });
+            messages.sort(function(a, b) { return a.timestamp - b.timestamp; });
+            callback(messages);
+          });
+        }
+      });
+
+      return chatUnsubscribe;
     },
 
-    // --- Saved / Shares (unchanged, localStorage only) ---
+    // Mark chat as read (for unread tracking)
+    markChatRead: function(latestMsgTime) {
+      if (!db || !currentUser) return;
+      var newTime = latestMsgTime || Date.now();
+      localStorage.setItem('chat_read_' + currentUser.uid, newTime.toString());
+      db.collection('chat_read').doc(currentUser.uid).set({
+        lastRead: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    },
+
 
     isSaved: function(contentId) {
       return lsGet('saved_' + contentId, null) === 'true';
@@ -432,12 +706,13 @@
   };
 
   // ============================
-  // Page load: init Firebase then restore UI
+  // Page load
   // ============================
   document.addEventListener('DOMContentLoaded', function() {
     initFirebase();
+    setupIdleDetection();
 
-    // Restore from localStorage immediately (Firebase will override later)
+    // Restore from localStorage immediately
     document.querySelectorAll('.feed-item').forEach(function(item) {
       var id = item.dataset.id;
       if (!id) return;
@@ -451,7 +726,7 @@
       if (PortfolioDB.hasLiked(id)) {
         var likeBtn = document.getElementById('like-btn-' + id);
         var reaction = PortfolioDB.getReactionType(id) || 'like';
-        
+
         if (likeBtn) {
           likeBtn.classList.add('interaction-btn--active');
           if (reaction !== 'like') {

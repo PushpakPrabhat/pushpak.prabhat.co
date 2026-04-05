@@ -53,10 +53,10 @@
     <div class="chat-widget__header" onclick="toggleChatMinimize()">
       <div class="chat-widget__header-left">
         <div class="chat-widget__avatar-wrapper">
-          <img src="{{ .Site.Params.profileImage }}" alt="Profile" class="chat-widget__avatar">
-          <span class="chat-widget__online-dot"></span>
+          <img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="chat-widget__avatar">
+          <span class="chat-widget__online-dot" id="chat-admin-dot"></span>
         </div>
-        <span class="chat-widget__title">Messaging</span>
+        <span class="chat-widget__title">{{ .Site.Params.author }}</span>
       </div>
       <div class="chat-widget__header-actions">
         <button class="chat-widget__header-btn" onclick="event.stopPropagation();" title="New message">
@@ -67,22 +67,23 @@
         </button>
       </div>
     </div>
-    <!-- Onboarding (ask name/contact) -->
+    <!-- Onboarding (Google Sign-In) -->
     <div class="chat-widget__onboarding" id="chat-onboarding">
       <div class="chat-widget__search-bar">
         <span class="chat-widget__search-icon">{{ partial "icons.html" (dict "icon" "search" "size" "14") }}</span>
         <input type="text" class="chat-widget__search-input" placeholder="Search messages" disabled>
       </div>
       <div class="chat-widget__promo-list">
-        <p class="chat-widget__onboarding-text">Say hi! Enter your name and contact to start chatting.</p>
-        <input type="text" class="chat-widget__input" id="chat-name" placeholder="Your name" maxlength="50">
-        <input type="text" class="chat-widget__input" id="chat-contact" placeholder="Email or phone number" maxlength="100">
-        <button class="chat-widget__start-btn" onclick="startChat()">Start Chat</button>
+        <p class="chat-widget__onboarding-text">Sign in with Google to start a live chat conversation.</p>
+        <button class="chat-widget__start-btn" onclick="startChat()">Sign in with Google to Chat</button>
       </div>
     </div>
-    <!-- Chat Body (shown after onboarding) -->
+    <!-- Chat Body (shown after sign-in) -->
     <div class="chat-widget__body" id="chat-body" style="display:none;">
       <div class="chat-widget__messages" id="chat-messages"></div>
+      <div class="chat-typing-indicator" id="chat-typing-indicator" style="display:none;">
+        <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+      </div>
       <div class="chat-widget__footer">
         <input type="text" class="chat-widget__msg-input" id="chat-msg-input" placeholder="Write a message..." maxlength="500" onkeypress="if(event.key==='Enter') sendChatMessage()">
         <button class="chat-widget__send-btn" onclick="sendChatMessage()">{{ partial "icons.html" (dict "icon" "send" "size" "18") }}</button>
@@ -108,18 +109,28 @@
   <div class="mobile-chat-page" id="mobile-chat-page">
     <div class="mobile-chat-page__header">
       <button class="mobile-chat-page__back" onclick="closeMobileChat()">←</button>
-      <span class="mobile-chat-page__title">Messaging</span>
+      <div class="mobile-chat-page__header-info">
+        <div class="mobile-chat-page__avatar-wrapper">
+          <img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="mobile-chat-page__avatar">
+          <span class="chat-widget__online-dot" id="mobile-chat-admin-dot"></span>
+        </div>
+        <div class="mobile-chat-page__header-text">
+          <span class="mobile-chat-page__title">{{ .Site.Params.author }}</span>
+          <span class="mobile-chat-page__status" id="mobile-chat-status">Offline</span>
+        </div>
+      </div>
     </div>
     <div class="mobile-chat-page__body">
       <!-- Onboarding -->
       <div class="mobile-chat-page__onboarding" id="mobile-chat-onboarding">
-        <p class="mobile-chat-page__onboarding-text">Say hi! Enter your name and contact to start chatting.</p>
-        <input type="text" class="chat-widget__input" id="mobile-chat-name" placeholder="Your name" maxlength="50">
-        <input type="text" class="chat-widget__input" id="mobile-chat-contact" placeholder="Email or phone number" maxlength="100">
-        <button class="chat-widget__start-btn" onclick="startMobileChat()">Start Chat</button>
+        <p class="mobile-chat-page__onboarding-text">Sign in with Google to start a live chat conversation.</p>
+        <button class="chat-widget__start-btn" onclick="startMobileChat()">Sign in with Google to Chat</button>
       </div>
       <!-- Messages -->
       <div class="mobile-chat-page__messages" id="mobile-chat-messages" style="display:none;"></div>
+      <div class="chat-typing-indicator" id="mobile-chat-typing-indicator" style="display:none;">
+        <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+      </div>
     </div>
     <div class="mobile-chat-page__footer" id="mobile-chat-footer" style="display:none;">
       <input type="text" class="chat-widget__msg-input" id="mobile-chat-msg-input" placeholder="Write a message..." maxlength="500" onkeypress="if(event.key==='Enter') sendMobileChatMessage()">
@@ -171,9 +182,9 @@
       </a>
       <a href="#" class="mobile-nav__item" id="mob-nav-notifications">
         <span class="mobile-nav__item-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M22 19h-8.28a2 2 0 01-3.44 0H2v-1a4.52 4.52 0 011.17-2.83l1-1.17H4a2.51 2.51 0 01-2.5-2.5V8a7 7 0 0114 0v3.5A2.51 2.51 0 0113 14h-.17l1 1.17A4.52 4.52 0 0115 18z"/></svg>
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M22 19h-8.28a2 2 0 11-3.44 0H2v-1a4.52 4.52 0 011.17-2.83l1-1.17h15.7l1 1.17A4.42 4.42 0 0122 18zM18.21 7.44A6.27 6.27 0 0012 2a6.27 6.27 0 00-6.21 5.44L5 13h14z"/></svg>
         </span>
-        <span class="mobile-nav__notif-wrapper">Notifications<span class="mobile-nav__badge">16</span></span>
+        <span class="mobile-nav__notif-wrapper">Notifications</span>
       </a>
       <a href="#" class="mobile-nav__item" id="mob-nav-jobs">
         <span class="mobile-nav__item-icon">

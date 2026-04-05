@@ -411,19 +411,16 @@
       if (!isMobile) {
         btn.addEventListener('click', () => toggleLike(contentId));
 
-        // Show popup on hover with delay
         wrapper.addEventListener('mouseenter', () => {
           clearTimeout(hideTimeout);
           hoverTimeout = setTimeout(() => popup.classList.add('show'), 400);
         });
-        // Delay hiding so user can move to popup
         wrapper.addEventListener('mouseleave', () => {
           clearTimeout(hoverTimeout);
           hideTimeout = setTimeout(() => {
             popup.classList.remove('show');
           }, 300);
         });
-        // Keep popup open when hovering over it
         popup.addEventListener('mouseenter', () => {
           clearTimeout(hideTimeout);
         });
@@ -475,6 +472,17 @@
     });
   }
 
+  // Auth-gated toggleLike
+  function toggleLike(contentId) {
+    if (!PortfolioDB.isSignedIn()) {
+      PortfolioDB.requireAuth().then(function() {
+        applyReaction(contentId, 'like');
+      }).catch(function() {});
+      return;
+    }
+    applyReaction(contentId, 'like');
+  }
+
   // Reaction image URLs (LinkedIn CDN and custom SVGs)
   const reactionImages = {
     'like': 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%230a66c2%22%2F%3E%3Cg%20transform%3D%22translate%288%2C%208%29%20scale%281%29%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M19.46%2011l-3.91-3.91a7%207%200%2001-1.69-2.74l-.49-1.47A2.76%202.76%200%200010.76%201%202.75%202.75%200%20008%203.74v1.12a9.19%209.19%200%2000.46%202.85L8.89%209H4.12A2.12%202.12%200%20002%2011.12a2.16%202.16%200%2000.92%201.76A2.11%202.11%200%20002%2014.62a2.14%202.14%200%20001.28%202%202%202%200%2000-.28%201%202.12%202.12%200%20002%202.12v.14A2.12%202.12%200%20007.12%2022h7.49a8.08%208.08%200%20003.58-.84l.31-.16H21V11z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E',
@@ -488,9 +496,15 @@
   window._reactionImages = reactionImages;
 
   function applyReaction(contentId, reaction) {
+    if (!PortfolioDB.isSignedIn()) {
+      PortfolioDB.requireAuth().then(function() {
+        applyReaction(contentId, reaction);
+      }).catch(function() {});
+      return;
+    }
+
     let result = PortfolioDB.toggleLike(contentId, reaction);
     
-    // update localStorage with chosen reaction type (optional, but good for persistence)
     localStorage.setItem('pp_portfolio_reaction_' + contentId, reaction);
 
     const btn = document.getElementById('like-btn-' + contentId);
@@ -530,7 +544,6 @@
         }
         showToast(`You reacted with ${reaction}!`);
       } else {
-        // Unliked
         btn.classList.remove('interaction-btn--active');
         btn.classList.remove('has-custom');
         const textEl = btn.querySelector('.interaction-btn__text');
@@ -539,7 +552,6 @@
       }
     }
     
-    // Fallback UI update if firebase is slow/offline
     if (countEl) {
       if (result.count === 0) {
         countEl.textContent = '0 Reactions';
@@ -588,21 +600,25 @@
         
         function renderUsers(filterType) {
            let usersHtml = '';
+           const profiles = data.userProfiles || {};
+           const defaultPic = 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20128%20128%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2264%22%20fill%3D%22%23e7e7e7%22%2F%3E%3Cpath%20d%3D%22M64%2072c13.25%200%2024-10.75%2024-24S77.25%2024%2064%2024%2040%2034.75%2040%2048s10.75%2024%2024%2024zm0%208c-16%200-48%208-48%2024v8h96v-8c0-16-32-24-48-24z%22%20fill%3D%22%23666%22%2F%3E%3C%2Fsvg%3E';
            Object.keys(data.users || {}).forEach(uid => {
              const r = data.users[uid];
              if (filterType !== 'all' && r !== filterType) return;
              
              const rImg = window._reactionImages && window._reactionImages[r];
-             const pImg = 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20128%20128%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2264%22%20fill%3D%22%23e7e7e7%22%2F%3E%3Cpath%20d%3D%22M64%2072c13.25%200%2024-10.75%2024-24S77.25%2024%2064%2024%2040%2034.75%2040%2048s10.75%2024%2024%2024zm0%208c-16%200-48%208-48%2024v8h96v-8c0-16-32-24-48-24z%22%20fill%3D%22%23666%22%2F%3E%3C%2Fsvg%3E';
+             const profile = profiles[uid] || {};
+             const pImg = profile.photo || defaultPic;
+             const pName = profile.name || 'LinkedIn Member';
              
              usersHtml += `
                <div class="reactions-modal__user">
                  <div style="position: relative;">
-                   <img src="${pImg}" class="reactions-modal__user-pic" alt="User avatar">
+                   <img src="${pImg}" class="reactions-modal__user-pic" alt="${pName}" referrerpolicy="no-referrer">
                    <img src="${rImg}" class="reactions-modal__user-icon" alt="${r}">
                  </div>
                  <div>
-                   <div class="reactions-modal__user-name">LinkedIn Member</div>
+                   <div class="reactions-modal__user-name">${pName}</div>
                    <div class="reactions-modal__user-desc">Reacted with ${r.charAt(0).toUpperCase() + r.slice(1)} on this post</div>
                  </div>
                </div>
@@ -891,8 +907,11 @@
     }, 2000);
   };
 
-  // ======================== Chat Widget ========================
+  // ======================== Chat Widget (Real-time Firebase) ========================
   let chatOpen = false;
+  let chatListenerActive = false;
+  let adminPresenceUnsub = null;
+  let lastMessageCount = 0;
 
   window.openChat = function(e) {
     if (e) e.preventDefault();
@@ -902,6 +921,9 @@
       chatOpen = true;
       const fab = document.getElementById('chat-fab');
       if (fab) fab.style.display = 'none';
+      // Clear unread dots and mark as read
+      hideUnreadDots();
+      if (PortfolioDB.markChatRead) PortfolioDB.markChatRead(latestMsgTime);
     }
   };
 
@@ -920,91 +942,271 @@
     if (widget) widget.classList.toggle('minimized');
   };
 
+  // Sign in with Google to start chatting
   window.startChat = function() {
-    const name = document.getElementById('chat-name')?.value.trim();
-    const contact = document.getElementById('chat-contact')?.value.trim();
-    if (!name) { showToast('Please enter your name'); return; }
-    if (!contact) { showToast('Please enter email or phone'); return; }
-
-    // Store in localStorage
-    localStorage.setItem('pp_chat_name', name);
-    localStorage.setItem('pp_chat_contact', contact);
-
-    document.getElementById('chat-onboarding').style.display = 'none';
-    document.getElementById('chat-body').style.display = 'flex';
-
-    // Add welcome message
-    addChatBubble('Hi ' + name + '! 👋 Thanks for reaching out. I\'ll get back to you soon.', 'received');
-
-    // Store message in localStorage for persistence
-    saveChatLocally({ text: 'Hi ' + name + '! 👋 Thanks for reaching out. I\'ll get back to you soon.', type: 'received', time: Date.now() });
+    if (!PortfolioDB.isSignedIn()) {
+      PortfolioDB.requireAuth().then(function() {
+        initChatAfterAuth();
+      }).catch(function(err) {
+        if (err && err.code !== 'auth/popup-closed-by-user') {
+          showToast('Sign-in required to chat');
+        }
+      });
+    } else {
+      initChatAfterAuth();
+    }
   };
 
+  let latestMsgTime = 0;
+
+  function initChatAfterAuth() {
+    const user = PortfolioDB.getCurrentUser();
+    if (!user) return;
+
+    // Desktop
+    const onb = document.getElementById('chat-onboarding');
+    const body = document.getElementById('chat-body');
+    if (onb) onb.style.display = 'none';
+    if (body) body.style.display = 'flex';
+
+    // Mobile
+    const mOnb = document.getElementById('mobile-chat-onboarding');
+    const mMsgs = document.getElementById('mobile-chat-messages');
+    const mFooter = document.getElementById('mobile-chat-footer');
+    if (mOnb) mOnb.style.display = 'none';
+    if (mMsgs) mMsgs.style.display = 'flex';
+    if (mFooter) mFooter.style.display = 'flex';
+
+    // Start real-time listener
+    if (!chatListenerActive) {
+      chatListenerActive = true;
+      PortfolioDB.listenToChat(function(messages) {
+        renderChatMessages(messages);
+        
+        var lsKey = 'chat_read_' + user.uid;
+        var lr = parseInt(localStorage.getItem(lsKey) || '0', 10);
+        
+        var hasUnread = false;
+        messages.forEach(function(m) {
+          var ts = m.timestamp ? (m.timestamp instanceof Date ? m.timestamp.getTime() : new Date(m.timestamp).getTime()) : Date.now();
+          if (ts > latestMsgTime) latestMsgTime = ts;
+          if (m.type === 'admin' && ts > lr) hasUnread = true;
+        });
+
+        if (hasUnread && !chatOpen) {
+          showUnreadDots();
+        } else if (chatOpen || !hasUnread) {
+          hideUnreadDots();
+          if (hasUnread && chatOpen && PortfolioDB.markChatRead) {
+            PortfolioDB.markChatRead(latestMsgTime);
+          }
+        }
+      });
+    }
+
+    // Watch admin presence for online/typing status
+    watchAdminPresence();
+  }
+
+  function renderChatMessages(messages) {
+    const container = document.getElementById('chat-messages');
+    const mContainer = document.getElementById('mobile-chat-messages');
+
+    if (container) {
+      container.innerHTML = '';
+      messages.forEach(function(msg) {
+        const type = msg.type === 'admin' ? 'received' : 'sent';
+        addChatBubble(msg.text, type, msg.timestamp, container);
+      });
+    }
+
+    if (mContainer) {
+      mContainer.innerHTML = '';
+      messages.forEach(function(msg) {
+        const type = msg.type === 'admin' ? 'received' : 'sent';
+        addChatBubble(msg.text, type, msg.timestamp, mContainer);
+      });
+    }
+  }
+
+  function watchAdminPresence() {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+      const fdb = firebase.firestore();
+      fdb.collection('users').where('email', '==', PortfolioDB.getAdminEmail()).limit(1).get().then(function(snap) {
+        if (!snap.empty) {
+          const adminUid = snap.docs[0].id;
+          if (adminPresenceUnsub) adminPresenceUnsub();
+          adminPresenceUnsub = PortfolioDB.watchPresence(adminUid, function(presence) {
+            updateAdminStatus(presence);
+          });
+        }
+      }).catch(function() {});
+    }
+  }
+
+  function updateAdminStatus(presence) {
+    // Desktop chat dot
+    var chatDot = document.getElementById('chat-admin-dot');
+    // Mobile chat dots
+    var mobileDot = document.getElementById('mobile-chat-admin-dot');
+    var statusText = document.getElementById('mobile-chat-status');
+
+    // Typing indicators
+    var typingEl = document.getElementById('chat-typing-indicator');
+    var mTypingEl = document.getElementById('mobile-chat-typing-indicator');
+
+    var isOnline = presence && presence.online;
+
+    [chatDot, mobileDot].forEach(function(dot) {
+      if (dot) {
+        dot.classList.toggle('online', isOnline);
+      }
+    });
+
+    if (statusText) {
+      statusText.textContent = isOnline ? 'Online' : 'Offline';
+      statusText.style.color = isOnline ? '#057642' : '';
+    }
+
+    if (presence && presence.typing) {
+      if (typingEl) typingEl.style.display = 'flex';
+      if (mTypingEl) mTypingEl.style.display = 'flex';
+    } else {
+      if (typingEl) typingEl.style.display = 'none';
+      if (mTypingEl) mTypingEl.style.display = 'none';
+    }
+  }
+
+  // Unread dots
+  function showUnreadDots() {
+    ['desktop-unread-dot', 'mobile-header-unread-dot', 'mobile-nav-unread-dot'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'block';
+    });
+    // Also show on FAB badge
+    var fab = document.getElementById('chat-fab-badge');
+    if (fab) { fab.style.display = 'flex'; fab.textContent = '!'; }
+  }
+
+  function hideUnreadDots() {
+    ['desktop-unread-dot', 'mobile-header-unread-dot', 'mobile-nav-unread-dot'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    var fab = document.getElementById('chat-fab-badge');
+    if (fab) fab.style.display = 'none';
+  }
+
   window.sendChatMessage = function() {
+    if (!PortfolioDB.isSignedIn()) {
+      showToast('Please sign in to chat');
+      return;
+    }
     const input = document.getElementById('chat-msg-input');
     const text = input?.value.trim();
     if (!text) return;
-
-    addChatBubble(text, 'sent');
-    saveChatLocally({ text, type: 'sent', time: Date.now() });
+    PortfolioDB.sendChatMessage(text);
     input.value = '';
-
-    // Auto-reply after delay
-    setTimeout(() => {
-      const reply = 'Thanks for your message! I\'ll respond as soon as possible. 🙏';
-      addChatBubble(reply, 'received');
-      saveChatLocally({ text: reply, type: 'received', time: Date.now() });
-    }, 1500);
   };
 
-  function addChatBubble(text, type) {
-    const container = document.getElementById('chat-messages');
+  // Typing indicator for visitor
+  document.addEventListener('DOMContentLoaded', function() {
+    var typingTimer;
+    function handleTyping() {
+      if (PortfolioDB.isSignedIn()) {
+        PortfolioDB.setTyping(true);
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function() {
+          PortfolioDB.setTyping(false);
+        }, 2000);
+      }
+    }
+
+    var chatInput = document.getElementById('chat-msg-input');
+    if (chatInput) {
+      chatInput.addEventListener('input', handleTyping);
+    }
+    var mobileChatInput = document.getElementById('mobile-chat-msg-input');
+    if (mobileChatInput) {
+      mobileChatInput.addEventListener('input', handleTyping);
+    }
+  });
+
+  function addChatBubble(text, type, timestamp, container) {
     if (!container) return;
-    const bubble = document.createElement('div');
+    var bubble = document.createElement('div');
     bubble.className = 'chat-bubble chat-bubble--' + type;
     bubble.textContent = text;
-    const time = document.createElement('span');
+    var time = document.createElement('span');
     time.className = 'chat-bubble__time';
-    time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    var d = timestamp instanceof Date ? timestamp : new Date();
+    time.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     bubble.appendChild(time);
     container.appendChild(bubble);
     container.scrollTop = container.scrollHeight;
   }
 
-  function saveChatLocally(msg) {
-    try {
-      const msgs = JSON.parse(localStorage.getItem('pp_chat_msgs') || '[]');
-      msgs.push(msg);
-      localStorage.setItem('pp_chat_msgs', JSON.stringify(msgs));
-    } catch(e) {}
-  }
+  // ======================== Profile / Account Menu ========================
+  window.toggleProfileMenu = function(e) {
+    if (e) e.preventDefault();
+    var dropdown = document.getElementById('account-dropdown');
+    if (!dropdown) return;
 
-  // Load existing chat on page load (desktop widget + mobile page)
-  document.addEventListener('DOMContentLoaded', function() {
-    const name = localStorage.getItem('pp_chat_name');
-    if (name) {
-      // Desktop widget
-      const onb = document.getElementById('chat-onboarding');
-      const body = document.getElementById('chat-body');
-      if (onb) onb.style.display = 'none';
-      if (body) body.style.display = 'flex';
+    if (dropdown.style.display === 'none' || !dropdown.style.display) {
+      var content = document.getElementById('account-dropdown-content');
+      var user = PortfolioDB.getCurrentUser ? PortfolioDB.getCurrentUser() : null;
 
-      // Mobile page
-      const mOnb = document.getElementById('mobile-chat-onboarding');
-      const mMsgs = document.getElementById('mobile-chat-messages');
-      const mFooter = document.getElementById('mobile-chat-footer');
-      if (mOnb) mOnb.style.display = 'none';
-      if (mMsgs) mMsgs.style.display = 'flex';
-      if (mFooter) mFooter.style.display = 'flex';
+      if (user) {
+        content.innerHTML = 
+          '<div class="account-dropdown__item" style="cursor:default;">' +
+            '<img src="' + (user.photo || '') + '" class="account-dropdown__avatar" referrerpolicy="no-referrer">' +
+            '<div><strong>' + user.name + '</strong><br><span style="font-size:12px;color:var(--color-text-secondary);">' + (user.email || '') + '</span></div>' +
+          '</div>' +
+          '<div class="account-dropdown__divider"></div>' +
+          '<button class="account-dropdown__item" onclick="PortfolioDB.signOut().then(function(){location.reload();})">' +
+            '\ud83d\udeaa Sign Out' +
+          '</button>';
+      } else {
+        content.innerHTML = 
+          '<button class="account-dropdown__item" onclick="PortfolioDB.requireAuth().catch(function(){}); toggleProfileMenu();">' +
+            '\ud83d\udd11 Sign in with Google' +
+          '</button>';
+      }
+      dropdown.style.display = 'block';
+    } else {
+      dropdown.style.display = 'none';
+    }
+  };
 
-      // Load messages in both
-      try {
-        const msgs = JSON.parse(localStorage.getItem('pp_chat_msgs') || '[]');
-        msgs.forEach(m => {
-          addChatBubble(m.text, m.type);
-          addMobileChatBubble(m.text, m.type);
-        });
-      } catch(e) {}
+  // Close dropdown on outside click
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#nav-me, #mobile-profile-btn, #account-dropdown')) {
+      var dropdown = document.getElementById('account-dropdown');
+      if (dropdown) dropdown.style.display = 'none';
+    }
+  });
+
+  // On auth state change — update UI everywhere
+  window.addEventListener('authStateChanged', function(e) {
+    var user = e.detail.user;
+    if (user) {
+      // Update profile pics in header to show user's Google profile pic
+      var desktopPic = document.getElementById('desktop-profile-pic');
+      var mobilePic = document.getElementById('mobile-profile-pic');
+      if (desktopPic && user.photo) desktopPic.src = user.photo;
+      if (mobilePic && user.photo) mobilePic.src = user.photo;
+
+      // Update Me label
+      var meLabel = document.getElementById('desktop-me-label');
+      if (meLabel) meLabel.textContent = user.name.split(' ')[0] + ' \u25be';
+
+      // Update chat onboarding — auto-skip if already signed in
+      document.querySelectorAll('.chat-widget__start-btn').forEach(function(btn) {
+        btn.textContent = 'Start Chat as ' + user.name;
+      });
+
+      // Auto-init chat (show chat body, hide onboarding)
+      initChatAfterAuth();
     }
   });
 
@@ -1043,7 +1245,6 @@
     if (isMobileDevice()) {
       openMobileChat();
     } else {
-      // Desktop widget
       const widget = document.getElementById('chat-widget');
       if (widget) {
         widget.classList.add('open');
@@ -1065,61 +1266,31 @@
   };
 
   window.startMobileChat = function() {
-    const name = document.getElementById('mobile-chat-name')?.value.trim();
-    const contact = document.getElementById('mobile-chat-contact')?.value.trim();
-    if (!name) { showToast('Please enter your name'); return; }
-    if (!contact) { showToast('Please enter email or phone'); return; }
-
-    localStorage.setItem('pp_chat_name', name);
-    localStorage.setItem('pp_chat_contact', contact);
-
-    document.getElementById('mobile-chat-onboarding').style.display = 'none';
-    document.getElementById('mobile-chat-messages').style.display = 'flex';
-    document.getElementById('mobile-chat-footer').style.display = 'flex';
-
-    // Also set desktop widget
-    const onb = document.getElementById('chat-onboarding');
-    const body = document.getElementById('chat-body');
-    if (onb) onb.style.display = 'none';
-    if (body) body.style.display = 'flex';
-
-    const welcome = 'Hi ' + name + '! 👋 Thanks for reaching out. I\'ll get back to you soon.';
-    addMobileChatBubble(welcome, 'received');
-    addChatBubble(welcome, 'received');
-    saveChatLocally({ text: welcome, type: 'received', time: Date.now() });
+    if (!PortfolioDB.isSignedIn()) {
+      PortfolioDB.requireAuth().then(function() {
+        initChatAfterAuth();
+        openMobileChat();
+      }).catch(function() {
+        showToast('Sign-in required to chat');
+      });
+    } else {
+      initChatAfterAuth();
+    }
   };
 
   window.sendMobileChatMessage = function() {
+    if (!PortfolioDB.isSignedIn()) {
+      showToast('Please sign in to chat');
+      return;
+    }
     const input = document.getElementById('mobile-chat-msg-input');
     const text = input?.value.trim();
     if (!text) return;
-
-    addMobileChatBubble(text, 'sent');
-    addChatBubble(text, 'sent');
-    saveChatLocally({ text, type: 'sent', time: Date.now() });
+    PortfolioDB.sendChatMessage(text);
     input.value = '';
-
-    setTimeout(() => {
-      const reply = 'Thanks for your message! I\'ll respond as soon as possible. 🙏';
-      addMobileChatBubble(reply, 'received');
-      addChatBubble(reply, 'received');
-      saveChatLocally({ text: reply, type: 'received', time: Date.now() });
-    }, 1500);
   };
 
-  function addMobileChatBubble(text, type) {
-    const container = document.getElementById('mobile-chat-messages');
-    if (!container) return;
-    const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble chat-bubble--' + type;
-    bubble.textContent = text;
-    const time = document.createElement('span');
-    time.className = 'chat-bubble__time';
-    time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    bubble.appendChild(time);
-    container.appendChild(bubble);
-    container.scrollTop = container.scrollHeight;
-  }
+
 
   // ======================== Featured Section ========================
   window.showAllFeatured = function() {
