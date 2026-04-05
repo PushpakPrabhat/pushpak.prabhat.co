@@ -4897,5 +4897,16 @@ Looking for new opportunities to create and collaborate. Feel free to reach out!
   
   
   <script src="/js/interactions.min.e71b8963d726840cd9e0b150ed9323a76e3000c1c981a46d2f65094267790a13.js"></script>
+  <script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
 </body>
 </html>
