@@ -488,12 +488,7 @@
   window._reactionImages = reactionImages;
 
   function applyReaction(contentId, reaction) {
-    let result;
-    if (!PortfolioDB.hasLiked(contentId)) {
-      result = PortfolioDB.toggleLike(contentId);
-    } else {
-      result = { liked: true, count: PortfolioDB.getLikes(contentId) };
-    }
+    let result = PortfolioDB.toggleLike(contentId, reaction);
     
     // update localStorage with chosen reaction type (optional, but good for persistence)
     localStorage.setItem('pp_portfolio_reaction_' + contentId, reaction);
@@ -503,50 +498,143 @@
     const iconsEl = document.getElementById('reaction-icons-' + contentId);
     
     if (btn) {
-      btn.classList.add('interaction-btn--active');
-      const textEl = btn.querySelector('.interaction-btn__text');
-      const customIconEl = btn.querySelector('.like-icon-custom');
-      
-      if (reaction === 'like') {
-        btn.classList.remove('has-custom');
-        if (textEl) { textEl.textContent = 'Like'; textEl.style.color = ''; }
+      if (result.liked) {
+        btn.classList.add('interaction-btn--active');
+        const textEl = btn.querySelector('.interaction-btn__text');
+        const customIconEl = btn.querySelector('.like-icon-custom');
+        
+        if (reaction === 'like') {
+          btn.classList.remove('has-custom');
+          if (textEl) { textEl.textContent = 'Like'; textEl.style.color = ''; }
+        } else {
+          btn.classList.add('has-custom');
+          if (customIconEl) {
+            const imgUrl = reactionImages[reaction];
+            customIconEl.innerHTML = `<img src="${imgUrl}" width="20" height="20" alt="${reaction}" style="display:block;">`;
+          }
+          if (textEl) {
+            textEl.textContent = reaction.charAt(0).toUpperCase() + reaction.slice(1);
+            const colors = { 
+              celebrate: '#057642', support: '#666666', 
+              love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' 
+            };
+            textEl.style.color = colors[reaction] || '';
+          }
+        }
+        
+        const icon = btn.querySelector('.interaction-btn__icon');
+        if (icon) {
+          icon.style.animation = 'none';
+          icon.offsetHeight;
+          icon.style.animation = 'likeHeart 0.35s ease';
+        }
+        showToast(`You reacted with ${reaction}!`);
       } else {
-        btn.classList.add('has-custom');
-        if (customIconEl) {
-          const imgUrl = reactionImages[reaction];
-          customIconEl.innerHTML = `<img src="${imgUrl}" width="20" height="20" alt="${reaction}" style="display:block;">`;
-        }
-        if (textEl) {
-          textEl.textContent = reaction.charAt(0).toUpperCase() + reaction.slice(1);
-          const colors = { 
-            celebrate: '#057642', support: '#666666', 
-            love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' 
-          };
-          textEl.style.color = colors[reaction] || '';
-        }
-      }
-      
-      const icon = btn.querySelector('.interaction-btn__icon');
-      if (icon) {
-        icon.style.animation = 'none';
-        icon.offsetHeight;
-        icon.style.animation = 'likeHeart 0.35s ease';
+        // Unliked
+        btn.classList.remove('interaction-btn--active');
+        btn.classList.remove('has-custom');
+        const textEl = btn.querySelector('.interaction-btn__text');
+        if (textEl) { textEl.textContent = 'Like'; textEl.style.color = ''; }
+        showToast('Reaction removed');
       }
     }
-    // Feature 4: Show only the chosen reaction icon in the count area
-    if (iconsEl) {
-      const imgUrl = reactionImages[reaction] || reactionImages['like'];
-      iconsEl.innerHTML = `<img src="${imgUrl}" alt="${reaction}">`;
-    }
+    
+    // Fallback UI update if firebase is slow/offline
     if (countEl) {
       if (result.count === 0) {
         countEl.textContent = '0 Reactions';
+        if (iconsEl) iconsEl.innerHTML = '';
       } else {
-        countEl.textContent = result.count;
+        countEl.textContent = result.count + (result.count === 1 ? ' Reaction' : ' Reactions');
       }
     }
-    showToast(`You reacted with ${reaction}!`);
   }
+
+  // ======================== Reactions Modal ========================
+  window.showReactionsModal = function(id) {
+    const modal = document.getElementById('reactions-modal');
+    if (!modal) return;
+    
+    const tabsCont = document.getElementById('reactions-modal-tabs');
+    const bodyCont = document.getElementById('reactions-modal-body');
+    tabsCont.innerHTML = '<div class="reactions-modal__tab active">Loading...</div>';
+    bodyCont.innerHTML = '<div style="padding: 24px; text-align: center;">Loading reactions...</div>';
+    
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+      const db = firebase.firestore();
+      db.collection('reactions').doc(id).get().then(doc => {
+        if (!doc.exists) {
+          tabsCont.innerHTML = '';
+          bodyCont.innerHTML = '<div style="padding: 24px; text-align: center;">No reactions yet</div>';
+          return;
+        }
+        const data = doc.data();
+        const total = data.count || 0;
+        const types = data.reactionTypes || {};
+        
+        let tabsHtml = `<div class="reactions-modal__tab active" data-type="all">All ${total}</div>`;
+        const sortedTypes = Object.keys(types).sort((a,b) => types[b] - types[a]);
+        
+        sortedTypes.forEach(type => {
+           const count = types[type];
+           const imgUrl = window._reactionImages && window._reactionImages[type];
+           tabsHtml += `<div class="reactions-modal__tab" data-type="${type}"><img src="${imgUrl}" alt="${type}"> ${count}</div>`;
+        });
+        
+        tabsCont.innerHTML = tabsHtml;
+        
+        function renderUsers(filterType) {
+           let usersHtml = '';
+           Object.keys(data.users || {}).forEach(uid => {
+             const r = data.users[uid];
+             if (filterType !== 'all' && r !== filterType) return;
+             
+             const rImg = window._reactionImages && window._reactionImages[r];
+             const pImg = 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20128%20128%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2264%22%20fill%3D%22%23e7e7e7%22%2F%3E%3Cpath%20d%3D%22M64%2072c13.25%200%2024-10.75%2024-24S77.25%2024%2064%2024%2040%2034.75%2040%2048s10.75%2024%2024%2024zm0%208c-16%200-48%208-48%2024v8h96v-8c0-16-32-24-48-24z%22%20fill%3D%22%23666%22%2F%3E%3C%2Fsvg%3E';
+             
+             usersHtml += `
+               <div class="reactions-modal__user">
+                 <div style="position: relative;">
+                   <img src="${pImg}" class="reactions-modal__user-pic" alt="User avatar">
+                   <img src="${rImg}" class="reactions-modal__user-icon" alt="${r}">
+                 </div>
+                 <div>
+                   <div class="reactions-modal__user-name">LinkedIn Member</div>
+                   <div class="reactions-modal__user-desc">Appreciated this post</div>
+                 </div>
+               </div>
+             `;
+           });
+           bodyCont.innerHTML = usersHtml || '<div style="padding: 24px; text-align: center;">No members found for this reaction.</div>';
+        }
+        
+        renderUsers('all');
+        
+        tabsCont.querySelectorAll('.reactions-modal__tab').forEach(tab => {
+          tab.addEventListener('click', function() {
+            tabsCont.querySelectorAll('.reactions-modal__tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            renderUsers(this.dataset.type);
+          });
+        });
+      });
+    } else {
+      const total = PortfolioDB.getLikes(id);
+      tabsCont.innerHTML = `<div class="reactions-modal__tab active">All ${total}</div>`;
+      bodyCont.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--color-text-secondary);">Firebase not connected. User details unavailable.</div>';
+    }
+  };
+
+  window.closeReactionsModal = function() {
+    const modal = document.getElementById('reactions-modal');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  };
 
   // ======================== Feed Menu ========================
   function initFeedMenus() {

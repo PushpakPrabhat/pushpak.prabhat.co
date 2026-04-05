@@ -8,7 +8,7 @@
 <div class="interactions" id="interactions-{{ $id }}">
   <!-- Stats -->
   <div class="interactions__stats">
-    <div class="interactions__reactions">
+    <div class="interactions__reactions" style="cursor: pointer;" onclick="showReactionsModal('{{ $id }}')" title="View reactions">
       <span class="interactions__reaction-icons" id="reaction-icons-{{ $id }}">
         <!-- Only the chosen reaction icon will appear here via JS -->
       </span>

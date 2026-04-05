@@ -123,7 +123,10 @@
             if (iconsEl && data.reactionTypes) {
               var html = '';
               var types = Object.keys(data.reactionTypes);
-              // Sort types so most common appear first, simple approach
+              // Sort types so most common appear first
+              types.sort(function(a, b) {
+                 return data.reactionTypes[b] - data.reactionTypes[a];
+              });
               types.slice(0, 3).forEach(function(type) {
                 var imgUrl = window._reactionImages && window._reactionImages[type];
                 if (imgUrl) {
@@ -219,16 +222,18 @@
     toggleLike: function(contentId, reactionType) {
       var liked = this.hasLiked(contentId);
       var count = this.getLikes(contentId);
-      var reaction = reactionType || 'like';
+      var currentReaction = this.getReactionType(contentId) || 'like';
+      var newReaction = reactionType || 'like';
+      var isSwapping = liked && reactionType && (currentReaction !== newReaction);
 
-      if (liked) {
+      if (liked && !isSwapping) {
         count = Math.max(0, count - 1);
         lsRemove('liked_' + contentId);
         lsRemove('reaction_' + contentId);
       } else {
-        count += 1;
+        if (!liked) count += 1;
         lsSet('liked_' + contentId, 'true');
-        lsSet('reaction_' + contentId, reaction);
+        lsSet('reaction_' + contentId, newReaction);
       }
       lsSet('likes_' + contentId, count.toString());
 
@@ -238,20 +243,29 @@
         db.runTransaction(function(tx) {
           return tx.get(ref).then(function(doc) {
             var data = doc.exists ? doc.data() : { count: 0, users: {}, reactionTypes: {} };
-            if (liked) {
+            var oldUserReaction = data.users[currentUserId];
+            
+            if (liked && !isSwapping) {
               // Remove reaction
               data.count = Math.max(0, (data.count || 0) - 1);
-              var oldReaction = data.users[currentUserId];
               delete data.users[currentUserId];
-              if (oldReaction && data.reactionTypes[oldReaction]) {
-                data.reactionTypes[oldReaction] = Math.max(0, data.reactionTypes[oldReaction] - 1);
-                if (data.reactionTypes[oldReaction] === 0) delete data.reactionTypes[oldReaction];
+              if (oldUserReaction && data.reactionTypes[oldUserReaction]) {
+                data.reactionTypes[oldUserReaction] = Math.max(0, data.reactionTypes[oldUserReaction] - 1);
+                if (data.reactionTypes[oldUserReaction] === 0) delete data.reactionTypes[oldUserReaction];
               }
             } else {
-              // Add reaction
-              data.count = (data.count || 0) + 1;
-              data.users[currentUserId] = reaction;
-              data.reactionTypes[reaction] = (data.reactionTypes[reaction] || 0) + 1;
+              // Add or Swap reaction
+              if (!liked || !oldUserReaction) {
+                 data.count = (data.count || 0) + 1;
+              } else if (oldUserReaction && oldUserReaction !== newReaction) {
+                 // Swap old reaction out
+                 if (data.reactionTypes[oldUserReaction]) {
+                    data.reactionTypes[oldUserReaction] = Math.max(0, data.reactionTypes[oldUserReaction] - 1);
+                    if (data.reactionTypes[oldUserReaction] === 0) delete data.reactionTypes[oldUserReaction];
+                 }
+              }
+              data.users[currentUserId] = newReaction;
+              data.reactionTypes[newReaction] = (data.reactionTypes[newReaction] || 0) + 1;
             }
             tx.set(ref, data);
           });

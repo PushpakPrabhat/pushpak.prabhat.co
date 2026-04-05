@@ -127,6 +127,24 @@
     </div>
   </div>
   
+  <!-- Reactions Modal -->
+  <div class="reactions-modal" id="reactions-modal">
+    <div class="reactions-modal__overlay" onclick="closeReactionsModal()"></div>
+    <div class="reactions-modal__content">
+      <div class="reactions-modal__header">
+        <h3 class="reactions-modal__title">Reactions</h3>
+        <button class="reactions-modal__close" onclick="closeReactionsModal()">✕</button>
+      </div>
+      <div class="reactions-modal__tabs" id="reactions-modal-tabs">
+        <!-- Tabs appended here via JS -->
+      </div>
+      <div class="reactions-modal__body" id="reactions-modal-body">
+        <!-- List of users appended here via JS -->
+        <div style="padding: 24px; text-align: center; color: var(--color-text-secondary);">Loading...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast"></div>
   
