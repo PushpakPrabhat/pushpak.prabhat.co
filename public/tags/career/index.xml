@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Career on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
-    <link>http://localhost:1313/tags/career/</link>
+    <link>/tags/career/</link>
     <description>Recent content in Career on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 15 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/career/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/career/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>From Animator to Tech: My Journey into Interactive Technology</title>
-      <link>http://localhost:1313/posts/animator-to-tech/</link>
+      <link>/posts/animator-to-tech/</link>
       <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/animator-to-tech/</guid>
+      <guid>/posts/animator-to-tech/</guid>
       <description>How I transitioned from traditional animation to interactive technology and why I believe the two fields are converging faster than ever.</description>
     </item>
   </channel>

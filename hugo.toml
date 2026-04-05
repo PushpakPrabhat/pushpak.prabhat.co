@@ -1,4 +1,4 @@
-baseURL = "https://pushpak.prabhat.co/"
+baseURL = "/"
 languageCode = "en-us"
 title = "Pushpak Prabhat | Animation & Interactive Technology"
 summaryLength = 30
@@ -17,12 +17,12 @@ summaryLength = 30
   
   # Firebase config — replace with your project values
   [params.firebase]
-    apiKey = "YOUR_API_KEY"
-    authDomain = "YOUR_PROJECT.firebaseapp.com"
-    projectId = "YOUR_PROJECT_ID"
-    storageBucket = "YOUR_PROJECT.appspot.com"
-    messagingSenderId = "YOUR_SENDER_ID"
-    appId = "YOUR_APP_ID"
+    apiKey = "AIzaSyDxR6Dz0XoJRuswDHsGqAIs_ucBUD8-TfE"
+    authDomain = "pushpak-prabhat-co.firebaseapp.com"
+    projectId = "pushpak-prabhat-co"
+    storageBucket = "pushpak-prabhat-co.firebasestorage.app"
+    messagingSenderId = "944681087908"
+    appId = "1:944681087908:web:60db180f7c954a064a8731"
 
   # Social links
   [params.social]

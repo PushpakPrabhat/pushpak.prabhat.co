@@ -2,87 +2,87 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 29 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Branding</title>
-      <link>http://localhost:1313/tags/branding/</link>
+      <link>/tags/branding/</link>
       <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/branding/</guid>
+      <guid>/tags/branding/</guid>
       <description></description>
     </item>
     <item>
       <title>Creative</title>
-      <link>http://localhost:1313/tags/creative/</link>
+      <link>/tags/creative/</link>
       <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/creative/</guid>
+      <guid>/tags/creative/</guid>
       <description></description>
     </item>
     <item>
       <title>Motion Design</title>
-      <link>http://localhost:1313/tags/motion-design/</link>
+      <link>/tags/motion-design/</link>
       <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/motion-design/</guid>
+      <guid>/tags/motion-design/</guid>
       <description></description>
     </item>
     <item>
       <title>Animation</title>
-      <link>http://localhost:1313/tags/animation/</link>
+      <link>/tags/animation/</link>
       <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/animation/</guid>
+      <guid>/tags/animation/</guid>
       <description></description>
     </item>
     <item>
       <title>Career</title>
-      <link>http://localhost:1313/tags/career/</link>
+      <link>/tags/career/</link>
       <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/career/</guid>
+      <guid>/tags/career/</guid>
       <description></description>
     </item>
     <item>
       <title>Interactive</title>
-      <link>http://localhost:1313/tags/interactive/</link>
+      <link>/tags/interactive/</link>
       <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/interactive/</guid>
+      <guid>/tags/interactive/</guid>
       <description></description>
     </item>
     <item>
       <title>Technology</title>
-      <link>http://localhost:1313/tags/technology/</link>
+      <link>/tags/technology/</link>
       <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/technology/</guid>
+      <guid>/tags/technology/</guid>
       <description></description>
     </item>
     <item>
       <title>3d</title>
-      <link>http://localhost:1313/tags/3d/</link>
+      <link>/tags/3d/</link>
       <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/3d/</guid>
+      <guid>/tags/3d/</guid>
       <description></description>
     </item>
     <item>
       <title>Blender</title>
-      <link>http://localhost:1313/tags/blender/</link>
+      <link>/tags/blender/</link>
       <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/blender/</guid>
+      <guid>/tags/blender/</guid>
       <description></description>
     </item>
     <item>
       <title>Tips</title>
-      <link>http://localhost:1313/tags/tips/</link>
+      <link>/tags/tips/</link>
       <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/tips/</guid>
+      <guid>/tags/tips/</guid>
       <description></description>
     </item>
     <item>
       <title>Workflow</title>
-      <link>http://localhost:1313/tags/workflow/</link>
+      <link>/tags/workflow/</link>
       <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/workflow/</guid>
+      <guid>/tags/workflow/</guid>
       <description></description>
     </item>
   </channel>
