@@ -18,7 +18,7 @@ experience:
     startDate: Jan 2026
     duration: 4 mos
     location: Gurugram, Haryana, India · On-site
-    designation: Motion Design Lead
+    designation: ""
     title: Assistant Manager
     current: true
     type: Full-time
@@ -26,13 +26,7 @@ experience:
       product teams. Creating promotional videos, UI animations, and brand
       content that drives user engagement.
     company: ET Money
-    roles:
-      - title: Motion Design Lead
-        startDate: Jan 2026
-        endDate: Present
-        description: Spearheading the motion design strategy for the brand.
-          Conceptualizing and producing high-quality promotional content across
-          digital platforms.
+    roles: []
   - endDate: Present
     logo: 🎬
     startDate: Jun 2025
@@ -133,6 +127,7 @@ skills:
     icon: /images/uploads/unnamed.jpg
   - name: Premiere Pro
     endorsements: 8
+    icon: /images/uploads/unnamed.jpg
   - name: Blender
     endorsements: 6
   - name: Figma
