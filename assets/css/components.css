@@ -2636,31 +2636,27 @@
   left: 0;
   right: 0;
   bottom: 0;
-  width: 100%;
-  height: 100%;
-  height: 100dvh; /* Adjusts properly when mobile keyboard appears */
   z-index: 2500;
   background: var(--color-surface);
   display: none;
-  flex-direction: column;
 }
-
 .mobile-chat-page.open {
-  display: flex;
+  display: block; /* Removed flex */
 }
 
 .mobile-chat-page__header {
-  position: sticky;
+  position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
   z-index: 10;
-  flex-shrink: 0;
   background: var(--color-surface);
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
+  padding: 0 var(--space-lg);
   border-bottom: 1px solid var(--color-border);
-  min-height: 52px;
 }
 
 .mobile-chat-page__back {
@@ -2684,11 +2680,13 @@
 }
 
 .mobile-chat-page__body {
-  flex: 1;
+  position: absolute;
+  top: 60px;
+  bottom: 60px;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
 }
 
 .mobile-chat-page__messages {
@@ -2698,6 +2696,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  /* Smoother scrolling on mobile */
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-chat-page__onboarding {
@@ -2718,8 +2718,14 @@
 }
 
 .mobile-chat-page__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
   display: flex;
-  padding: var(--space-md) var(--space-lg);
+  align-items: center;
+  padding: 0 var(--space-lg);
   border-top: 1px solid var(--color-border);
   gap: var(--space-sm);
   background: var(--color-surface);
