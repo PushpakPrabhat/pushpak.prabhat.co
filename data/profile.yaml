@@ -15,12 +15,12 @@ about: >
 experience:
   - endDate: Present
     logo: 💲
-    startDate: Jan 2026
+    startDate: Jan 2024
     duration: 4 mos
     location: Gurugram, Haryana, India · On-site
     designation: ""
     title: Assistant Manager
-    current: true
+    current: false
     type: Full-time
     description: Leading motion design initiatives for ET Money's marketing and
       product teams. Creating promotional videos, UI animations, and brand
@@ -46,11 +46,13 @@ experience:
         description: Managing end-to-end motion design pipeline. Created over 100+
           educational animation assets for the platform.
   - endDate: Present
-    logo: 🎨
+    logo: https://pushpunk.com/Kitty.svg
     startDate: Jun 2025
+    companyUrl: https://pushpunk.com/
     duration: 11 mos
     location: Gurugram, Haryana, India · On-site
     title: Creative Lead
+    current: true
     type: Part-time
     description: Running a creative studio focused on motion graphics, 3D animation,
       and interactive web experiences. Working with clients across
