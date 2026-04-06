@@ -1341,15 +1341,43 @@
 
   function openMobileChat() {
     const page = document.getElementById('mobile-chat-page');
-    if (page) page.classList.add('open');
+    if (page) {
+      page.classList.add('open');
+      // Prevent body from scrolling behind the chat
+      document.body.style.overflow = 'hidden';
+    }
+    askNotificationPerm();
+
+    // VisualViewport fallback: reposition header/footer when keyboard resizes viewport
+    if (window.visualViewport) {
+      var chatPage = document.getElementById('mobile-chat-page');
+      function onViewportResize() {
+        if (!chatPage || !chatPage.classList.contains('open')) return;
+        var vv = window.visualViewport;
+        // Offset from top of page that the visual viewport starts
+        var offsetTop = vv.offsetTop;
+        var vpHeight = vv.height;
+        chatPage.style.top = offsetTop + 'px';
+        chatPage.style.height = vpHeight + 'px';
+      }
+      window.visualViewport.addEventListener('resize', onViewportResize);
+      window.visualViewport.addEventListener('scroll', onViewportResize);
+    }
   }
 
   window.closeMobileChat = function() {
     const page = document.getElementById('mobile-chat-page');
-    if (page) page.classList.remove('open');
+    if (page) {
+      page.classList.remove('open');
+      // Reset any visualViewport adjustments
+      page.style.top = '';
+      page.style.height = '';
+      document.body.style.overflow = '';
+    }
   };
 
   window.startMobileChat = function() {
+    askNotificationPerm();
     if (!PortfolioDB.isSignedIn()) {
       PortfolioDB.requireAuth().then(function() {
         initChatAfterAuth();
@@ -1372,6 +1400,10 @@
     if (!text) return;
     PortfolioDB.sendChatMessage(text);
     input.value = '';
+    // Keep keyboard open by refocusing immediately
+    if (input) {
+      setTimeout(function() { input.focus(); }, 50);
+    }
   };
 
 

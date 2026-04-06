@@ -2639,24 +2639,23 @@
   z-index: 2500;
   background: var(--color-surface);
   display: none;
+  flex-direction: column;
+  overflow: hidden;
 }
 .mobile-chat-page.open {
-  display: block; /* Removed flex */
+  display: flex;
 }
 
 .mobile-chat-page__header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
+  flex-shrink: 0;
   z-index: 10;
   background: var(--color-surface);
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  padding: 0 var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   border-bottom: 1px solid var(--color-border);
+  min-height: 52px;
 }
 
 .mobile-chat-page__back {
@@ -2680,13 +2679,11 @@
 }
 
 .mobile-chat-page__body {
-  position: absolute;
-  top: 60px;
-  bottom: 60px;
-  left: 0;
-  right: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .mobile-chat-page__messages {
@@ -2718,14 +2715,10 @@
 }
 
 .mobile-chat-page__footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  padding: 0 var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   border-top: 1px solid var(--color-border);
   gap: var(--space-sm);
   background: var(--color-surface);
