@@ -111,16 +111,16 @@ collections:
             name: "experience"
             widget: "list"
             fields:
+              - { label: "Company", name: "company", widget: "string" }
               - { label: "Current", name: "current", widget: "boolean", default: false, required: false }
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Designation", name: "designation", widget: "string", required: false }
-              - { label: "Company", name: "company", widget: "string" }
               - { label: "Company URL", name: "companyUrl", widget: "string", required: false }
-              - { label: "Type", name: "type", widget: "string" }
-              - { label: "Start Date", name: "startDate", widget: "string" }
-              - { label: "End Date", name: "endDate", widget: "string" }
-              - { label: "Duration", name: "duration", widget: "string" }
-              - { label: "Location", name: "location", widget: "string" }
+              - { label: "Type", name: "type", widget: "string", required: false }
+              - { label: "Start Date", name: "startDate", widget: "string", required: false }
+              - { label: "End Date", name: "endDate", widget: "string", required: false }
+              - { label: "Duration", name: "duration", widget: "string", required: false }
+              - { label: "Location", name: "location", widget: "string", required: false }
               - { label: "Description", name: "description", widget: "text", required: false }
               - { label: "Skills", name: "skills", widget: "string", required: false }
               - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Upload company logo" }
@@ -129,8 +129,8 @@ collections:
                 widget: "list"
                 required: false
                 fields:
-                  - { label: "Title", name: "title", widget: "string" }
-                  - { label: "Start Date", name: "startDate", widget: "string" }
+                  - { label: "Title", name: "title", widget: "string", required: false }
+                  - { label: "Start Date", name: "startDate", widget: "string", required: false }
                   - { label: "End Date", name: "endDate", widget: "string", required: false }
                   - { label: "Description", name: "description", widget: "text", required: false }
           - label: "Education"
