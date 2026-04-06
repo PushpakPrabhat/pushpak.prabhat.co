@@ -13,7 +13,7 @@
     storageBucket: 'pushpak-prabhat-co.firebasestorage.app',
     messagingSenderId: '944681087908',
     appId: '1:944681087908:web:60db180f7c954a064a8731',
-    databaseURL: 'https://pushpak-prabhat-co-default-rtdb.firebaseio.com'
+    databaseURL: 'https://pushpak-prabhat-co-default-rtdb.asia-southeast1.firebasedatabase.app'
   };
   const ADMIN_EMAIL = 'prabhat.pushpak@gmail.com';
   const LIMIT = 50;
@@ -75,8 +75,20 @@
   function setupPresence() {
     var uid = auth.currentUser.uid;
     adminRef = rtdb.ref('presence/' + uid);
-    adminRef.set({ online: true, typing: false, lastSeen: firebase.database.ServerValue.TIMESTAMP });
-    adminRef.onDisconnect().set({ online: false, typing: false, lastSeen: firebase.database.ServerValue.TIMESTAMP });
+
+    var connectedRef = rtdb.ref('.info/connected');
+    connectedRef.on('value', function(snap) {
+      if (snap.val() === true) {
+        adminRef.onDisconnect().set({ 
+          online: false, typing: false, lastSeen: firebase.database.ServerValue.TIMESTAMP 
+        }).then(function() {
+          adminRef.set({ 
+            online: true, typing: false, lastSeen: firebase.database.ServerValue.TIMESTAMP 
+          });
+        });
+      }
+    });
+
     // Save admin to Firestore users so visitors can find admin UID
     db.collection('users').doc(uid).set({
       displayName: 'Pushpak Prabhat', email: ADMIN_EMAIL, photoURL: '',
@@ -96,7 +108,37 @@
   }
 
   // ===== TABS =====
+  function askNotificationPerm() {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }
+
+  function playAdminNotification(title, body) {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.2);
+    } catch(e) {}
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      if (document.hidden) {
+        new Notification(title, { body: body, icon: '/images/profile/pushpak.jpg' });
+      }
+    }
+  }
+
   window.switchDashTab = function(t) {
+    if (t === 'chat') askNotificationPerm();
     qa('.dash-tab').forEach(function(x) { x.classList.remove('active'); });
     qa('.sidebar__item').forEach(function(x) { x.classList.remove('active'); });
     qa('.dash-mobile-tab').forEach(function(x) { x.classList.remove('active'); });
@@ -107,8 +149,21 @@
   };
 
   // ===== CONVERSATIONS =====
+  let initialConvsLoad = true;
   function loadConvs() {
     db.collection('chat_messages').orderBy('timestamp', 'desc').onSnapshot(function(snap) {
+      if (!initialConvsLoad) {
+        snap.docChanges().forEach(function(change) {
+          if (change.type === 'added') {
+            const data = change.doc.data();
+            if (data.type !== 'admin') {
+              playAdminNotification(data.authorName || 'Guest User', data.text);
+            }
+          }
+        });
+      }
+      initialConvsLoad = false;
+
       var cs = {}, lm = {};
       snap.forEach(function(doc) {
         var d = doc.data(); if (!d.conversationId) return;

@@ -43,6 +43,9 @@
     if (window.location.hash === '#profile') {
       toggleProfile(true);
     }
+
+    // Always watch admin presence globally
+    watchAdminPresence();
   });
 
   // ======================== Protection (right-click, long-press) ========================
@@ -670,10 +673,41 @@
     menu.classList.toggle('open');
   };
 
-  window.copyPostLink = function(id) {
-    const url = window.location.origin + '/#item-' + id;
-    navigator.clipboard.writeText(url).then(() => showToast('Link copied!')).catch(() => showToast('Could not copy link'));
+  window.copyPostLink = function(url) {
+    if (url && url.startsWith('/')) {
+      url = window.location.origin + url;
+    }
+    
+    const el = document.createElement('textarea');
+    el.value = url;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    
+    const selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+    el.select();
+    
+    let success = false;
+    try {
+      success = document.execCommand('copy');
+    } catch (err) {}
+    
+    document.body.removeChild(el);
+    if (selected) {
+      document.getSelection().removeAllRanges();
+      document.getSelection().addRange(selected);
+    }
+    
     document.querySelectorAll('.feed-menu.open').forEach(m => m.classList.remove('open'));
+    
+    if (success) {
+      showToast('Link copied!');
+    } else if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(() => showToast('Link copied!')).catch(() => showToast('Could not copy link'));
+    } else {
+      showToast('Could not copy link');
+    }
   };
 
   window.downloadImage = function(url, id) {
@@ -910,11 +944,44 @@
   // ======================== Chat Widget (Real-time Firebase) ========================
   let chatOpen = false;
   let chatListenerActive = false;
+  let chatInitialLoad = true;
   let adminPresenceUnsub = null;
   let lastMessageCount = 0;
 
+  function askNotificationPerm() {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }
+
+  function playNotification(title, body) {
+    if (document.hidden || !chatOpen) {
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+      } catch(e) {}
+    }
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      if (document.hidden) {
+        new Notification(title, { body: body, icon: '/images/profile/pushpak.jpg' });
+      }
+    }
+  }
+
   window.openChat = function(e) {
     if (e) e.preventDefault();
+    askNotificationPerm();
     const widget = document.getElementById('chat-widget');
     if (widget) {
       widget.classList.add('open');
@@ -944,6 +1011,7 @@
 
   // Sign in with Google to start chatting
   window.startChat = function() {
+    askNotificationPerm();
     if (!PortfolioDB.isSignedIn()) {
       PortfolioDB.requireAuth().then(function() {
         initChatAfterAuth();
@@ -989,9 +1057,16 @@
         var hasUnread = false;
         messages.forEach(function(m) {
           var ts = m.timestamp ? (m.timestamp instanceof Date ? m.timestamp.getTime() : new Date(m.timestamp).getTime()) : Date.now();
-          if (ts > latestMsgTime) latestMsgTime = ts;
+          if (ts > latestMsgTime) {
+            if (!chatInitialLoad && m.type === 'admin') {
+              playNotification("Pushpak Prabhat (Admin)", m.text);
+            }
+            latestMsgTime = ts;
+          }
           if (m.type === 'admin' && ts > lr) hasUnread = true;
         });
+
+        chatInitialLoad = false;
 
         if (hasUnread && !chatOpen) {
           showUnreadDots();
@@ -1004,8 +1079,7 @@
       });
     }
 
-    // Watch admin presence for online/typing status
-    watchAdminPresence();
+    // Watch admin presence for online/typing status (Moved to global init)
   }
 
   function renderChatMessages(messages) {
@@ -1032,15 +1106,25 @@
   function watchAdminPresence() {
     if (typeof firebase !== 'undefined' && firebase.firestore) {
       const fdb = firebase.firestore();
-      fdb.collection('users').where('email', '==', PortfolioDB.getAdminEmail()).limit(1).get().then(function(snap) {
+      const adminEmail = PortfolioDB.getAdminEmail();
+      console.log("[Presence] Querying for admin:", adminEmail);
+      
+      fdb.collection('users').where('email', '==', adminEmail).limit(1).get()
+      .then(function(snap) {
         if (!snap.empty) {
           const adminUid = snap.docs[0].id;
+          console.log("[Presence] Found admin UID:", adminUid);
           if (adminPresenceUnsub) adminPresenceUnsub();
           adminPresenceUnsub = PortfolioDB.watchPresence(adminUid, function(presence) {
+            console.log("[Presence] Presence callback updated:", presence);
             updateAdminStatus(presence);
           });
+        } else {
+          console.warn("[Presence] No admin found with email:", adminEmail);
         }
-      }).catch(function() {});
+      }).catch(function(err) {
+        console.error("[Presence] Query failed:", err);
+      });
     }
   }
 

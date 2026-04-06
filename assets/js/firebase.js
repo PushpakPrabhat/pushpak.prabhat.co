@@ -48,7 +48,7 @@
         storageBucket: document.querySelector('meta[name="firebase-storage-bucket"]')?.content || '',
         messagingSenderId: document.querySelector('meta[name="firebase-messaging-sender-id"]')?.content || '',
         appId: document.querySelector('meta[name="firebase-app-id"]')?.content || '',
-        databaseURL: 'https://' + projectId + '-default-rtdb.firebaseio.com'
+        databaseURL: 'https://' + projectId + '-default-rtdb.asia-southeast1.firebasedatabase.app'
       };
 
       if (!firebase.apps.length) {
@@ -125,19 +125,24 @@
     if (!rtdb) return;
 
     presenceRef = rtdb.ref('presence/' + uid);
-
-    // Set online status
-    presenceRef.set({
-      online: true,
-      typing: false,
-      lastSeen: firebase.database.ServerValue.TIMESTAMP
-    });
-
-    // On disconnect, set offline
-    presenceRef.onDisconnect().set({
-      online: false,
-      typing: false,
-      lastSeen: firebase.database.ServerValue.TIMESTAMP
+    
+    var connectedRef = rtdb.ref('.info/connected');
+    connectedRef.on('value', function(snap) {
+      if (snap.val() === true) {
+        // We are connected! Queue the disconnect payload first.
+        presenceRef.onDisconnect().set({
+          online: false,
+          typing: false,
+          lastSeen: firebase.database.ServerValue.TIMESTAMP
+        }).then(function() {
+          // Once the disconnect hook is ready, commit the online status.
+          presenceRef.set({
+            online: true,
+            typing: false,
+            lastSeen: firebase.database.ServerValue.TIMESTAMP
+          });
+        });
+      }
     });
   }
 

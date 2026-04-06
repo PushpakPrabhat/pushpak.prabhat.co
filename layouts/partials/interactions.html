@@ -61,7 +61,7 @@
       <span>Comment</span>
     </button>
     
-    <button class="interaction-btn" id="share-btn-{{ $id }}" onclick="shareContent('{{ $id }}')" aria-label="Share" style="position: relative;">
+    <button class="interaction-btn" id="share-btn-{{ $id }}" onclick="shareContent('{{ .context.Permalink }}'); event.stopPropagation();" aria-label="Share" style="position: relative;">
       <span class="interaction-btn__icon">{{ partial "icons.html" (dict "icon" "send" "size" "20") }}</span>
       <span>Share</span>
       <div class="share-tooltip" id="share-tooltip-{{ $id }}">

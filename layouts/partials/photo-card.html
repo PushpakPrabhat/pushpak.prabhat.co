@@ -17,7 +17,7 @@
     <div class="feed-item__menu-wrapper">
       <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "dots" "size" "20") }}</button>
       <div class="feed-menu" id="feed-menu-{{ $id }}">
-        <button class="feed-menu__item" onclick="copyPostLink('{{ $id }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
+        <button class="feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
         <button class="feed-menu__item" onclick="downloadImage('{{ .Params.image }}', '{{ $id }}')">{{ partial "icons.html" (dict "icon" "download" "size" "18") }} Download image</button>
         <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pdf" "size" "18") }} Save as PDF</button>
       </div>

@@ -258,9 +258,13 @@
   // ============================
   // Share
   // ============================
-  window.shareContent = function(contentId) {
-    var url = window.location.origin + '/#item-' + contentId;
+  window.shareContent = function(url) {
+    if (url && url.startsWith('/')) {
+      url = window.location.origin + url;
+    }
     
+    // Attempt tracking
+    var contentId = url.split('/').filter(Boolean).pop();
     if (navigator.share) {
       navigator.share({
         title: document.title,
@@ -269,11 +273,38 @@
         showToast('Shared! 🔗');
       }).catch(function() {});
     } else {
-      navigator.clipboard.writeText(url).then(function() {
+      var el = document.createElement('textarea');
+      el.value = url;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      
+      var selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+      el.select();
+      
+      var success = false;
+      try {
+        success = document.execCommand('copy');
+      } catch (err) {}
+      
+      document.body.removeChild(el);
+      if (selected) {
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(selected);
+      }
+      
+      if (success) {
         showToast('Link copied! 🔗');
-      }).catch(function() {
+      } else if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(function() {
+          showToast('Link copied! 🔗');
+        }).catch(function() {
+          showToast('Could not copy link');
+        });
+      } else {
         showToast('Could not copy link');
-      });
+      }
     }
     
     PortfolioDB.incrementShare(contentId);
