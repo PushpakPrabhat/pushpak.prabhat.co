@@ -59,9 +59,6 @@
         <span class="chat-widget__title">{{ .Site.Params.author }}</span>
       </div>
       <div class="chat-widget__header-actions">
-        <button class="chat-widget__header-btn" id="chat-admin-back" onclick="event.stopPropagation(); closeAdminThread()" title="Back to Inbox" style="display:none;">
-          {{ partial "icons.html" (dict "icon" "arrow-left" "size" "20") }}
-        </button>
         <button class="chat-widget__header-btn" onclick="event.stopPropagation();" title="New message">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17 2H7a1 1 0 00-1 1v2H4a1 1 0 00-1 1v14a1 1 0 001 1h10a1 1 0 001-1v-2h2a1 1 0 001-1V3a1 1 0 00-1-1zM13 19H5V7h8v12zm3-3h-2V6a1 1 0 00-1-1H8V4h8v12z"/><line x1="7" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="13" x2="11" y2="13" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
@@ -81,8 +78,6 @@
         <button class="chat-widget__start-btn" onclick="startChat()">Sign in with Google to Chat</button>
       </div>
     </div>
-    <!-- Admin Inbox (shown for admin) -->
-    <div class="chat-widget__inbox" id="chat-inbox" style="display:none;"></div>
     <!-- Chat Body (shown after sign-in) -->
     <div class="chat-widget__body" id="chat-body" style="display:none;">
       <div class="chat-widget__messages" id="chat-messages"></div>
@@ -110,9 +105,10 @@
     </div>
   </div>
 
+  <!-- Mobile Chat Page (full screen, replaces widget on mobile) -->
   <div class="mobile-chat-page" id="mobile-chat-page">
     <div class="mobile-chat-page__header">
-      <button class="mobile-chat-page__back" id="mobile-chat-back-btn" onclick="handleMobileChatBack()">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "24") }}</button>
+      <button class="mobile-chat-page__back" onclick="closeMobileChat()">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "24") }}</button>
       <div class="mobile-chat-page__header-info">
         <div class="mobile-chat-page__avatar-wrapper">
           {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="mobile-chat-page__avatar">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "mobile-chat-page__avatar" "size" "48") }}{{ end }}
@@ -130,8 +126,6 @@
         <p class="mobile-chat-page__onboarding-text">Sign in with Google to start a live chat conversation.</p>
         <button class="chat-widget__start-btn" onclick="startMobileChat()">Sign in with Google to Chat</button>
       </div>
-      <!-- Admin Inbox -->
-      <div class="mobile-chat-page__inbox" id="mobile-chat-inbox" style="display:none;"></div>
       <!-- Messages -->
       <div class="mobile-chat-page__messages" id="mobile-chat-messages" style="display:none;"></div>
       <div class="chat-typing-indicator" id="mobile-chat-typing-indicator" style="display:none;">
