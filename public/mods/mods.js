@@ -17,7 +17,7 @@
   };
   const ADMIN_EMAIL = 'prabhat.pushpak@gmail.com';
   const LIMIT = 50;
-  const AVATAR = 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20128%20128%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2264%22%20fill%3D%22%23e7e7e7%22%2F%3E%3Cpath%20d%3D%22M64%2072c13.25%200%2024-10.75%2024-24S77.25%2024%2064%2024%2040%2034.75%2040%2048s10.75%2024%2024%2024zm0%208c-16%200-48%208-48%2024v8h96v-8c0-16-32-24-48-24z%22%20fill%3D%22%23666%22%2F%3E%3C%2Fsvg%3E';
+  const AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill='%23e7e2dc' d='M0 0h128v128H0z'/%3E%3Cpath fill='%23788fa5' d='M88.41 84.67a32 32 0 1 0-48.82 0 66.13 66.13 0 0 1 48.82 0'/%3E%3Cpath fill='%239db3c8' d='M88.41 84.67a32 32 0 0 1-48.82 0A66.79 66.79 0 0 0 0 128h128a66.79 66.79 0 0 0-39.59-43.33'/%3E%3Cpath fill='%2356687a' d='M64 96a31.93 31.93 0 0 0 24.41-11.33 66.13 66.13 0 0 0-48.82 0A31.93 31.93 0 0 0 64 96'/%3E%3C/svg%3E";
   const RIMG = {
     'like': 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%230a66c2%22%2F%3E%3C%2Fsvg%3E',
     'celebrate': 'https://static.licdn.com/aero-v1/sc/h/b1dl5jk88euc7e9ri50xy5qo8',

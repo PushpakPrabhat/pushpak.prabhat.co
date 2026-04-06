@@ -111,15 +111,28 @@ collections:
             name: "experience"
             widget: "list"
             fields:
+              - { label: "Current", name: "current", widget: "boolean", default: false, required: false }
               - { label: "Title", name: "title", widget: "string" }
+              - { label: "Designation", name: "designation", widget: "string", required: false }
               - { label: "Company", name: "company", widget: "string" }
+              - { label: "Company URL", name: "companyUrl", widget: "string", required: false }
               - { label: "Type", name: "type", widget: "string" }
               - { label: "Start Date", name: "startDate", widget: "string" }
               - { label: "End Date", name: "endDate", widget: "string" }
               - { label: "Duration", name: "duration", widget: "string" }
               - { label: "Location", name: "location", widget: "string" }
+              - { label: "Description", name: "description", widget: "text", required: false }
               - { label: "Skills", name: "skills", widget: "string", required: false }
-              - { label: "Logo", name: "logo", widget: "string", hint: "Emoji or image path" }
+              - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Upload company logo" }
+              - label: "Roles"
+                name: "roles"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Start Date", name: "startDate", widget: "string" }
+                  - { label: "End Date", name: "endDate", widget: "string", required: false }
+                  - { label: "Description", name: "description", widget: "text", required: false }
           - label: "Education"
             name: "education"
             widget: "list"
@@ -127,16 +140,25 @@ collections:
               - { label: "School", name: "school", widget: "string" }
               - { label: "Degree", name: "degree", widget: "string" }
               - { label: "Year", name: "year", widget: "string" }
-              - { label: "Logo", name: "logo", widget: "string", hint: "Emoji or image path" }
+              - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Upload school logo/favicon" }
           - label: "Interests"
             name: "interests"
             widget: "list"
             fields:
               - { label: "Name", name: "name", widget: "string" }
-              - { label: "Icon", name: "icon", widget: "string", hint: "Emoji" }
+              - { label: "Icon", name: "icon", widget: "image", required: false, hint: "Upload an icon or favicon image" }
           - label: "Skills"
             name: "skills"
             widget: "list"
             fields:
               - { label: "Name", name: "name", widget: "string" }
+              - { label: "Icon", name: "icon", widget: "image", required: false, hint: "Upload an icon or favicon image" }
               - { label: "Endorsements", name: "endorsements", widget: "number" }
+          - label: "Quick Links"
+            name: "quickLinks"
+            widget: "list"
+            required: false
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }
+              - { label: "Icon", name: "icon", widget: "image", required: false, hint: "Upload an icon or favicon image" }

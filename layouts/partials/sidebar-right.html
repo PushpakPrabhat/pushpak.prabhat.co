@@ -5,7 +5,13 @@
     <h3 class="sidebar-widget__title">Skills</h3>
     {{ range first 5 $profile.skills }}
     <div class="sidebar-widget__item">
-      <span class="sidebar-widget__item-icon">⚡</span>
+      <span class="sidebar-widget__item-icon">
+        {{ if .icon }}
+        <img src="{{ .icon }}" alt="Icon" style="width:24px;height:24px;object-fit:contain;border-radius:4px;">
+        {{ else }}
+        <span style="font-size: 20px; display: inline-block; width: 24px; text-align: center;">⚡</span>
+        {{ end }}
+      </span>
       <div>
         <div class="sidebar-widget__item-text">{{ .name }}</div>
         <div class="sidebar-widget__item-sub">{{ .endorsements }} endorsements</div>
@@ -17,30 +23,20 @@
   <!-- Quick Links -->
   <div class="sidebar-widget">
     <h3 class="sidebar-widget__title">Quick Links</h3>
-    {{ with .Site.Params.social }}
-    {{ with .linkedin }}
+    {{ range $profile.quickLinks }}
     <div class="sidebar-widget__item">
-      <span class="sidebar-widget__item-icon">🔗</span>
+      <span class="sidebar-widget__item-icon">
+        {{ if .icon }}
+        <img src="{{ .icon }}" alt="{{ .title }}" style="width:24px;height:24px;object-fit:contain;border-radius:4px;">
+        {{ else }}
+        <span style="font-size: 20px; display: inline-block; width: 24px; text-align: center;">🔗</span>
+        {{ end }}
+      </span>
       <div>
-        <a href="{{ . }}" target="_blank" rel="noopener" class="sidebar-widget__item-text">LinkedIn Profile</a>
+        <a href="{{ .url }}" target="_blank" rel="noopener" class="sidebar-widget__item-text">{{ .title }}</a>
       </div>
     </div>
     {{ end }}
-    {{ with .github }}
-    <div class="sidebar-widget__item">
-      <span class="sidebar-widget__item-icon">💻</span>
-      <div>
-        <a href="{{ . }}" target="_blank" rel="noopener" class="sidebar-widget__item-text">GitHub</a>
-      </div>
-    </div>
-    {{ end }}
-    {{ end }}
-    <div class="sidebar-widget__item">
-      <span class="sidebar-widget__item-icon">📧</span>
-      <div>
-        <a href="mailto:{{ .Site.Params.contactEmail }}" class="sidebar-widget__item-text">Email Me</a>
-      </div>
-    </div>
   </div>
   
   <!-- Footer -->

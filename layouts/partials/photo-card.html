@@ -3,7 +3,7 @@
 <article class="feed-item feed-item--photo" data-type="photos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-image="{{ .Params.image }}" id="item-{{ $id }}">
   <!-- Header -->
   <div class="feed-item__header">
-    <a href="/#profile"><img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy"></a>
+    <a href="/#profile">{{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}</a>
     <div class="feed-item__meta">
       <div class="feed-item__author">
         <a href="/#profile" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
@@ -26,12 +26,9 @@
   
   <!-- Content -->
   <div class="feed-item__content">
-    <p class="feed-item__text">
-      {{ .Content | plainify | truncate 200 }}
-      {{ if gt (len (.Content | plainify)) 200 }}
-      <span class="see-more" onclick="this.parentElement.textContent = '{{ .Content | plainify | htmlEscape }}'">...more</span>
-      {{ end }}
-    </p>
+    <div class="feed-item__text js-see-more">
+      {{ .Content | plainify }}
+    </div>
   </div>
   
   <!-- Image -->
@@ -45,3 +42,4 @@
   <!-- Interactions -->
   {{ partial "interactions.html" (dict "id" $id "type" "photo" "showSave" false "imageUrl" .Params.image "context" $) }}
 </article>
+

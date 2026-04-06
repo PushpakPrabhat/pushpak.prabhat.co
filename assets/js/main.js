@@ -1159,7 +1159,7 @@
       if (user) {
         content.innerHTML = 
           '<div class="account-dropdown__item" style="cursor:default;">' +
-            '<img src="' + (user.photo || '') + '" class="account-dropdown__avatar" referrerpolicy="no-referrer">' +
+            '<img src="' + (user.photo || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill='%23e7e2dc' d='M0 0h128v128H0z'/%3E%3Cpath fill='%23788fa5' d='M88.41 84.67a32 32 0 1 0-48.82 0 66.13 66.13 0 0 1 48.82 0'/%3E%3Cpath fill='%239db3c8' d='M88.41 84.67a32 32 0 0 1-48.82 0A66.79 66.79 0 0 0 0 128h128a66.79 66.79 0 0 0-39.59-43.33'/%3E%3Cpath fill='%2356687a' d='M64 96a31.93 31.93 0 0 0 24.41-11.33 66.13 66.13 0 0 0-48.82 0A31.93 31.93 0 0 0 64 96'/%3E%3C/svg%3E") + '" class="account-dropdown__avatar" referrerpolicy="no-referrer">' +
             '<div><strong>' + user.name + '</strong><br><span style="font-size:12px;color:var(--color-text-secondary);">' + (user.email || '') + '</span></div>' +
           '</div>' +
           '<div class="account-dropdown__divider"></div>' +
@@ -1309,17 +1309,54 @@
     showToast('Showing featured posts');
   };
 
-  // ======================== Experience See More/Less ========================
-  window.toggleExpDescription = function(el) {
-    const desc = el.previousElementSibling;
-    if (!desc) return;
-    if (desc.classList.contains('truncated')) {
-      desc.classList.remove('truncated');
-      el.textContent = '...see less';
-    } else {
-      desc.classList.add('truncated');
-      el.textContent = '...see more';
-    }
+  // ======================== Text Truncation See More/Less ========================
+  window.initSeeMoreText = function() {
+    const charLimit = 160;
+    document.querySelectorAll('.js-see-more:not(.initialized-see-more)').forEach(el => {
+      el.classList.add('initialized-see-more');
+      
+      const fullText = el.textContent.trim();
+      if (fullText.length > charLimit) {
+        const truncatedText = fullText.substring(0, charLimit).trim() + '...';
+        
+        const textNode = document.createElement('span');
+        textNode.textContent = truncatedText;
+        
+        el.dataset.fullText = fullText;
+        el.dataset.truncatedText = truncatedText;
+        el.innerHTML = '';
+        el.appendChild(textNode);
+        
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'see-more-toggle';
+        toggleBtn.textContent = 'see more';
+        toggleBtn.style.color = 'var(--color-text-secondary)';
+        toggleBtn.style.background = 'transparent';
+        toggleBtn.style.border = 'none';
+        toggleBtn.style.padding = '0 0 0 2px';
+        toggleBtn.style.cursor = 'pointer';
+        toggleBtn.style.fontWeight = '600';
+        toggleBtn.style.display = 'inline';
+        
+        toggleBtn.addEventListener('click', function(e) {
+          e.stopPropagation(); // prevent card clicks
+          const isTruncated = (textNode.textContent === el.dataset.truncatedText);
+          if (isTruncated) {
+            textNode.textContent = el.dataset.fullText;
+            this.textContent = 'see less';
+          } else {
+            textNode.textContent = el.dataset.truncatedText;
+            this.textContent = 'see more';
+          }
+        });
+        
+        // Append toggle inside the element right after the text
+        el.appendChild(toggleBtn);
+      }
+    });
   };
+  
+  // Call immediately on load
+  initSeeMoreText();
 
 })();

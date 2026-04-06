@@ -129,6 +129,7 @@ interests:
 skills:
   - name: After Effects
     endorsements: 12
+    icon: /images/uploads/unnamed.jpg
   - name: Premiere Pro
     endorsements: 8
   - name: Blender
@@ -143,3 +144,14 @@ skills:
     endorsements: 5
   - name: Illustrator
     endorsements: 4
+quickLinks:
+  - title: LinkedIn Profile
+    url: https://linkedin.com/in/pushpunk
+    icon: /images/uploads/unnamed.jpg
+  - title: GitHub
+    url: https://github.com/pushpunk
+    icon: /images/uploads/unnamed.jpg
+  - title: Email Me
+    url: mailto:prabhat.pushpak@gmail.com
+    icon: /images/uploads/unnamed.jpg
+

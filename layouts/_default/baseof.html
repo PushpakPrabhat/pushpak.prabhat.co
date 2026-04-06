@@ -23,8 +23,8 @@
         <button class="media-viewer__btn" id="mv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
       </div>
     </div>
-    <button class="media-viewer__nav media-viewer__nav--prev" id="mv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "chevron-left" "size" "36") }}</button>
-    <button class="media-viewer__nav media-viewer__nav--next" id="mv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "chevron-right" "size" "36") }}</button>
+    <button class="media-viewer__nav media-viewer__nav--prev" id="mv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "36") }}</button>
+    <button class="media-viewer__nav media-viewer__nav--next" id="mv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "arrow-right" "size" "36") }}</button>
     <div class="media-viewer__content" id="mv-content">
       <img id="mv-img" src="" alt="" draggable="false">
     </div>
@@ -40,8 +40,8 @@
         <button class="media-viewer__btn" id="vv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
       </div>
     </div>
-    <button class="media-viewer__nav media-viewer__nav--prev" id="vv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "chevron-left" "size" "36") }}</button>
-    <button class="media-viewer__nav media-viewer__nav--next" id="vv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "chevron-right" "size" "36") }}</button>
+    <button class="media-viewer__nav media-viewer__nav--prev" id="vv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "36") }}</button>
+    <button class="media-viewer__nav media-viewer__nav--next" id="vv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "arrow-right" "size" "36") }}</button>
     <div class="media-viewer__content" id="vv-content">
       <div id="vv-embed"></div>
     </div>
@@ -53,7 +53,7 @@
     <div class="chat-widget__header" onclick="toggleChatMinimize()">
       <div class="chat-widget__header-left">
         <div class="chat-widget__avatar-wrapper">
-          <img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="chat-widget__avatar">
+          {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="chat-widget__avatar">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "chat-widget__avatar" "size" "48") }}{{ end }}
           <span class="chat-widget__online-dot" id="chat-admin-dot"></span>
         </div>
         <span class="chat-widget__title">{{ .Site.Params.author }}</span>
@@ -108,10 +108,10 @@
   <!-- Mobile Chat Page (full screen, replaces widget on mobile) -->
   <div class="mobile-chat-page" id="mobile-chat-page">
     <div class="mobile-chat-page__header">
-      <button class="mobile-chat-page__back" onclick="closeMobileChat()">←</button>
+      <button class="mobile-chat-page__back" onclick="closeMobileChat()">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "24") }}</button>
       <div class="mobile-chat-page__header-info">
         <div class="mobile-chat-page__avatar-wrapper">
-          <img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="mobile-chat-page__avatar">
+          {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="mobile-chat-page__avatar">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "mobile-chat-page__avatar" "size" "48") }}{{ end }}
           <span class="chat-widget__online-dot" id="mobile-chat-admin-dot"></span>
         </div>
         <div class="mobile-chat-page__header-text">
@@ -216,3 +216,4 @@
 </script>
 </body>
 </html>
+

@@ -8,7 +8,7 @@
     <article class="feed-item" style="animation-delay: 0s; opacity: 1;">
       <div class="feed-item__header">
         <a href="/#profile">
-          <img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Data.profile.name }}" class="feed-item__avatar">
+          {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Data.profile.name }}" class="feed-item__avatar">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}
         </a>
         <div class="feed-item__meta">
           <div class="feed-item__author">
@@ -20,7 +20,7 @@
             {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}
           </div>
         </div>
-        <a href="/" class="btn btn--ghost" style="margin-left: auto;">← Back</a>
+        <a href="/" class="btn btn--ghost" style="margin-left: auto; display: inline-flex; align-items: center; gap: 4px;">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "16") }} Back</a>
       </div>
       
       <div class="feed-item__content" style="padding-bottom: 16px;">
@@ -53,3 +53,4 @@
   {{ partial "sidebar-right.html" . }}
 </div>
 {{ end }}
+
