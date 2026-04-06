@@ -370,8 +370,8 @@ body {
   .chat-studio.thread-open .chat-studio__list { transform: translateX(-100%); }
   .chat-studio.thread-open .chat-studio__thread { transform: translateX(0); }
   .thread-back-btn { display: block; }
-  .chat-studio__thread-header { position: sticky; top: 0; background: var(--mod-surface); z-index: 2; }
-  .chat-studio__input { position: sticky; bottom: 0; background: var(--mod-surface); z-index: 2; }
+  .chat-studio__thread-header { flex-shrink: 0; background: var(--mod-surface); z-index: 2; }
+  .chat-studio__input { flex-shrink: 0; background: var(--mod-surface); z-index: 2; }
 
   /* Tables: card-like layout on mobile */
   .dash-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }

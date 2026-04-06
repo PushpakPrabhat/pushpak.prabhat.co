@@ -240,7 +240,29 @@
 
     // Mobile: slide to thread
     var studio = el('chat-studio');
-    if (studio) studio.classList.add('thread-open');
+    if (studio) {
+      studio.classList.add('thread-open');
+      document.body.style.overflow = 'hidden';
+      
+      // VisualViewport fallback: reposition thread when keyboard resizes viewport
+      if (window.visualViewport) {
+        if (window.onModsViewportResize) {
+          window.visualViewport.removeEventListener('resize', window.onModsViewportResize);
+          window.visualViewport.removeEventListener('scroll', window.onModsViewportResize);
+        }
+        
+        window.onModsViewportResize = function() {
+          if (!studio.classList.contains('thread-open')) return;
+          var thread = el('chat-studio__thread-mobile-anchor') || document.querySelector('.chat-studio__thread');
+          if (!thread) return;
+          var vv = window.visualViewport;
+          thread.style.top = vv.offsetTop + 'px';
+          thread.style.height = vv.height + 'px';
+        };
+        window.visualViewport.addEventListener('resize', window.onModsViewportResize);
+        window.visualViewport.addEventListener('scroll', window.onModsViewportResize);
+      }
+    }
 
     // header
     var hdr = el('thread-header');
@@ -295,7 +317,19 @@
   // Mobile: back to conversation list
   window.closeThread = function() {
     var studio = el('chat-studio');
-    if (studio) studio.classList.remove('thread-open');
+    if (studio) {
+      studio.classList.remove('thread-open');
+      document.body.style.overflow = '';
+      var thread = document.querySelector('.chat-studio__thread');
+      if (thread) {
+        thread.style.top = '';
+        thread.style.height = '';
+      }
+      if (window.visualViewport && window.onModsViewportResize) {
+        window.visualViewport.removeEventListener('resize', window.onModsViewportResize);
+        window.visualViewport.removeEventListener('scroll', window.onModsViewportResize);
+      }
+    }
   };
 
   function renderThread(msgs) {
@@ -332,6 +366,11 @@
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
     inp.value = ''; setTyping(false);
+    
+    // Keep keyboard open by refocusing immediately (mobile fix)
+    if (inp) {
+      setTimeout(function() { inp.focus(); }, 50);
+    }
   };
 
   window.editMsg = function(id, currentText) {
