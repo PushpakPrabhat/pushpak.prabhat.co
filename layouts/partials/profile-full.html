@@ -82,6 +82,25 @@
     <img src="{{ .Params.featured_image }}" alt="{{ .Title }}" class="featured-card__image">
     {{ else if .Params.thumbnail }}
     <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" class="featured-card__image">
+    {{ else if .Params.videoUrl }}
+      {{ $videoUrl := .Params.videoUrl }}
+      {{ if eq .Params.videoType "youtube" }}
+        {{ $videoID := "" }}
+        {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
+          {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+        {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
+          {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+        {{ end }}
+        {{ if $videoID }}
+        <img src="https://img.youtube.com/vi/{{ $videoID }}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/{{ $videoID }}/hqdefault.jpg'" alt="{{ .Title }}" class="featured-card__image">
+        {{ else }}
+        <div class="featured-card__image" style="background: linear-gradient(135deg, #0a66c2, #283e4a); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🎥</div>
+        {{ end }}
+      {{ else if eq .Params.videoType "file" }}
+        <video class="featured-card__image" src="{{ $videoUrl }}" preload="metadata" style="object-fit:cover;" muted playsinline></video>
+      {{ else }}
+        <div class="featured-card__image" style="background: linear-gradient(135deg, #0a66c2, #283e4a); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🎥</div>
+      {{ end }}
     {{ else }}
     <div class="featured-card__image" style="background: linear-gradient(135deg, #0a66c2, #283e4a); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">📄</div>
     {{ end }}
