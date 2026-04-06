@@ -244,6 +244,9 @@
       studio.classList.add('thread-open');
       document.body.style.overflow = 'hidden';
       
+      var mobileTabs = document.querySelector('.dash-mobile-tabs');
+      if (mobileTabs) mobileTabs.style.display = 'none';
+      
       // VisualViewport fallback: reposition thread when keyboard resizes viewport
       if (window.visualViewport) {
         if (window.onModsViewportResize) {
@@ -320,6 +323,9 @@
     if (studio) {
       studio.classList.remove('thread-open');
       document.body.style.overflow = '';
+      
+      var mobileTabs = document.querySelector('.dash-mobile-tabs');
+      if (mobileTabs) mobileTabs.style.display = '';
       var thread = document.querySelector('.chat-studio__thread');
       if (thread) {
         thread.style.top = '';
