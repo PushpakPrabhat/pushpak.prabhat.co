@@ -1359,4 +1359,45 @@
   // Call immediately on load
   initSeeMoreText();
 
+  // ======================== Dynamic Duration Calculation ========================
+  window.initDynamicDuration = function() {
+    document.querySelectorAll('.js-calc-duration').forEach(el => {
+      const startStr = el.dataset.start;
+      const endStr = el.dataset.end;
+      if (!startStr) return;
+      
+      const parseDate = (dStr) => {
+        if (!dStr || dStr.toLowerCase() === 'present' || dStr.toLowerCase() === 'current') return new Date();
+        const pd = new Date(dStr);
+        return isNaN(pd.getTime()) ? null : pd;
+      };
+
+      const startDate = parseDate(startStr);
+      let endDate = parseDate(endStr);
+      
+      if (!startDate) return;
+      if (!endDate) endDate = new Date();
+      
+      // Calculate diff in months
+      let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+      months -= startDate.getMonth();
+      months += endDate.getMonth();
+      
+      // Add 1 to make it inclusive (e.g., matching LinkedIn's Jan to Jan = 1 month logic)
+      months += 1;
+      
+      if (months <= 0) return;
+      
+      const yrs = Math.floor(months / 12);
+      const mos = months % 12;
+      
+      let durStr = '';
+      if (yrs > 0) durStr += yrs + (yrs === 1 ? ' yr' : ' yrs');
+      if (mos > 0) durStr += (yrs > 0 ? ' ' : '') + mos + (mos === 1 ? ' mo' : ' mos');
+      
+      el.textContent = ' · ' + durStr;
+    });
+  };
+  initDynamicDuration();
+
 })();

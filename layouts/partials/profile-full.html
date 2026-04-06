@@ -119,7 +119,7 @@
         {{ end }}
         · {{ .type }}
       </div>
-      <div class="experience-item__duration">{{ .startDate }} - {{ .endDate }} · {{ .duration }}</div>
+      <div class="experience-item__duration">{{ .startDate }} - {{ .endDate }}<span class="js-calc-duration" data-start="{{ .startDate }}" data-end="{{ .endDate }}">{{ if .duration }} · {{ .duration }}{{ end }}</span></div>
       <div class="experience-item__location">{{ .location }}</div>
       {{ with .description }}
       <div class="experience-item__description js-see-more">{{ . }}</div>
@@ -132,7 +132,7 @@
         {{ range . }}
         <div class="experience-item__role">
           <div class="experience-item__role-title">{{ .title }}</div>
-          <div class="experience-item__role-date">{{ .startDate }} - {{ .endDate }}</div>
+          <div class="experience-item__role-date">{{ .startDate }} - {{ .endDate }}<span class="js-calc-duration" data-start="{{ .startDate }}" data-end="{{ .endDate }}"></span></div>
           {{ with .description }}
           <div class="experience-item__description js-see-more">{{ . }}</div>
           {{ end }}
