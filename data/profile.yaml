@@ -20,6 +20,7 @@ experience:
     location: Gurugram, Haryana, India · On-site
     designation: Motion Design Lead
     title: Assistant Manager
+    current: true
     type: Full-time
     description: Leading motion design initiatives for ET Money's marketing and
       product teams. Creating promotional videos, UI animations, and brand
@@ -154,4 +155,3 @@ quickLinks:
   - title: Email Me
     url: mailto:prabhat.pushpak@gmail.com
     icon: /images/uploads/unnamed.jpg
-
