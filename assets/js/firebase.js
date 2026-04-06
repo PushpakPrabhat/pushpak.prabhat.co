@@ -592,16 +592,19 @@
 
     // --- Chat (Real-time with Firestore) ---
 
-    sendChatMessage: function(text) {
+    sendChatMessage: function(text, targetUid) {
       if (!currentUser || !db) return;
+
+      var convId = targetUid || currentUser.uid;
+      var type = (currentUser.email === this.getAdminEmail() && targetUid && targetUid !== currentUser.uid) ? 'admin' : 'user';
 
       var msg = {
         text: text,
-        type: 'user',
+        type: type,
         authorName: currentUser.name,
         authorPhoto: currentUser.photo,
         authorUid: currentUser.uid,
-        conversationId: currentUser.uid,
+        conversationId: convId,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       };
 
@@ -625,7 +628,7 @@
       };
     },
 
-    listenToChat: function(callback) {
+    listenToChat: function(targetUid, callback) {
       if (!db || !currentUser) {
         console.warn('[PortfolioDB] listenToChat: no db or user');
         return function() {};
@@ -636,9 +639,11 @@
         chatUnsubscribe();
       }
 
+      var convId = targetUid || currentUser.uid;
+
       // Use desc + limit to get latest msgs, then reverse for display order
       var query = db.collection('chat_messages')
-        .where('conversationId', '==', currentUser.uid)
+        .where('conversationId', '==', convId)
         .orderBy('timestamp', 'desc')
         .limit(CHAT_MSG_LIMIT);
 
@@ -659,7 +664,7 @@
         if (err.code === 'failed-precondition') {
           console.info('[PortfolioDB] Falling back to unordered chat query');
           var fallback = db.collection('chat_messages')
-            .where('conversationId', '==', currentUser.uid)
+            .where('conversationId', '==', convId)
             .limit(CHAT_MSG_LIMIT);
           chatUnsubscribe = fallback.onSnapshot(function(snap) {
             var messages = [];
@@ -676,6 +681,18 @@
       });
 
       return chatUnsubscribe;
+    },
+
+    listenToAllConversations: function(callback) {
+      if (!db || currentUser?.email !== this.getAdminEmail()) return function() {};
+      
+      var query = db.collection('chat_messages').orderBy('timestamp', 'desc');
+      var unsubscribe = query.onSnapshot(function(snap) {
+        callback(snap);
+      }, function(err) {
+        console.warn('[PortfolioDB] all convs listen error:', err);
+      });
+      return unsubscribe;
     },
 
     // Mark chat as read (for unread tracking)

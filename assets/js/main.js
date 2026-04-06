@@ -1026,10 +1026,17 @@
   };
 
   let latestMsgTime = 0;
+  window.activeAdminThreadUid = null;
+  let adminInboxUnsub = null;
 
   function initChatAfterAuth() {
     const user = PortfolioDB.getCurrentUser();
     if (!user) return;
+
+    if (user.email === PortfolioDB.getAdminEmail()) {
+      initAdminInbox();
+      return;
+    }
 
     // Desktop
     const onb = document.getElementById('chat-onboarding');
@@ -1081,6 +1088,153 @@
 
     // Watch admin presence for online/typing status (Moved to global init)
   }
+
+  function initAdminInbox() {
+    const user = PortfolioDB.getCurrentUser();
+    if (!user) return;
+
+    // Desktop
+    const dOnb = document.getElementById('chat-onboarding');
+    const dMsgs = document.getElementById('chat-body');
+    const dInbox = document.getElementById('chat-inbox');
+    if (dOnb) dOnb.style.display = 'none';
+    if (dMsgs) dMsgs.style.display = 'none';
+    if (dInbox) dInbox.style.display = 'flex';
+
+    // Mobile
+    const mOnb = document.getElementById('mobile-chat-onboarding');
+    const mMsgs = document.getElementById('mobile-chat-messages');
+    const mFooter = document.getElementById('mobile-chat-footer');
+    const mInbox = document.getElementById('mobile-chat-inbox');
+    if (mOnb) mOnb.style.display = 'none';
+    if (mMsgs) mMsgs.style.display = 'none';
+    if (mFooter) mFooter.style.display = 'none';
+    if (mInbox) mInbox.style.display = 'flex';
+
+    // Back buttons UI
+    const dBack = document.getElementById('chat-admin-back');
+    if (dBack) dBack.style.display = 'none';
+    const mBack = document.getElementById('mobile-chat-back-btn');
+    if (mBack) {
+      mBack.onclick = window.closeMobileChat;
+    }
+
+    if (!adminInboxUnsub) {
+      adminInboxUnsub = PortfolioDB.listenToAllConversations(function(snap) {
+        var map = {};
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          d.id = doc.id;
+          d.timestamp = d.timestamp ? d.timestamp.toDate() : new Date();
+          var cid = d.conversationId || d.authorUid;
+          if (cid && cid !== user.uid) { // Don't show admin's own test thread here
+            if (!map[cid]) map[cid] = [];
+            map[cid].push(d);
+          }
+        });
+
+        var threads = [];
+        for (var k in map) {
+          var msgs = map[k];
+          msgs.sort(function(a, b) { return b.timestamp - a.timestamp; }); 
+          var latest = msgs[0];
+          threads.push({
+            uid: k,
+            latest: latest,
+            name: latest.authorName || 'Guest User',
+            photo: latest.authorPhoto || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill='%23e7e2dc' d='M0 0h128v128H0z'/%3E%3Cpath fill='%23788fa5' d='M88.41 84.67a32 32 0 1 0-48.82 0 66.13 66.13 0 0 1 48.82 0'/%3E%3Cpath fill='%239db3c8' d='M88.41 84.67a32 32 0 0 1-48.82 0A66.79 66.79 0 0 0 0 128h128a66.79 66.79 0 0 0-39.59-43.33'/%3E%3Cpath fill='%2356687a' d='M64 96a31.93 31.93 0 0 0 24.41-11.33 66.13 66.13 0 0 0-48.82 0A31.93 31.93 0 0 0 64 96'/%3E%3C/svg%3E"
+          });
+        }
+        
+        threads.sort(function(a, b) { return b.latest.timestamp - a.latest.timestamp; });
+        renderAdminInbox(threads);
+      });
+    }
+  }
+
+  function renderAdminInbox(threads) {
+    const dInbox = document.getElementById('chat-inbox');
+    const mInbox = document.getElementById('mobile-chat-inbox');
+    
+    let html = '';
+    if (threads.length === 0) {
+      html = '<div style="padding: 20px; text-align: center; color: var(--color-text-secondary); font-size: 14px;">No messages yet.</div>';
+    } else {
+      threads.forEach(function(t) {
+        var isUnread = t.latest.type === 'user'; // Admin didn't reply last
+        var timeStr = t.latest.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        html += '<div class="chat-inbox-item ' + (isUnread ? 'unread' : '') + '" onclick="openAdminThread(\'' + t.uid + '\', \'' + (t.name.replace(/'/g, "\\'")) + '\')">' +
+                  '<img src="' + t.photo + '" class="chat-inbox-item__avatar" referrerpolicy="no-referrer">' +
+                  '<div class="chat-inbox-item__content">' +
+                    '<div class="chat-inbox-item__header">' +
+                      '<span class="chat-inbox-item__name">' + t.name + '</span>' +
+                      '<span class="chat-inbox-item__time">' + timeStr + '</span>' +
+                    '</div>' +
+                    '<div class="chat-inbox-item__preview">' + (t.latest.type==='admin'?'You: ':'') + t.latest.text + '</div>' +
+                  '</div>' +
+                '</div>';
+      });
+    }
+
+    if (dInbox) dInbox.innerHTML = html;
+    if (mInbox) mInbox.innerHTML = html;
+  }
+
+  window.openAdminThread = function(uid, name) {
+    window.activeAdminThreadUid = uid;
+    
+    // UI Transitions
+    const dInbox = document.getElementById('chat-inbox');
+    const dMsgs = document.getElementById('chat-body');
+    const dBack = document.getElementById('chat-admin-back');
+    if (dInbox) dInbox.style.display = 'none';
+    if (dMsgs) dMsgs.style.display = 'flex';
+    if (dBack) dBack.style.display = 'block';
+
+    const mInbox = document.getElementById('mobile-chat-inbox');
+    const mMsgs = document.getElementById('mobile-chat-messages');
+    const mFooter = document.getElementById('mobile-chat-footer');
+    const mBack = document.getElementById('mobile-chat-back-btn');
+    if (mInbox) mInbox.style.display = 'none';
+    if (mMsgs) mMsgs.style.display = 'flex';
+    if (mFooter) mFooter.style.display = 'flex';
+    if (mBack) mBack.onclick = window.closeAdminThread;
+
+    document.querySelectorAll('.chat-widget__title').forEach(el => el.textContent = name);
+
+    // Boot listener for this user
+    if (PortfolioDB.stopListeningChat) PortfolioDB.stopListeningChat();
+    chatListenerActive = true;
+    PortfolioDB.listenToChat(uid, function(messages) {
+      renderChatMessages(messages);
+      // Admin scroll read sync
+      messages.forEach(function(m) {
+        var ts = m.timestamp ? (m.timestamp instanceof Date ? m.timestamp.getTime() : new Date(m.timestamp).getTime()) : Date.now();
+        if (ts > latestMsgTime) latestMsgTime = ts;
+      });
+      if (PortfolioDB.markChatRead) PortfolioDB.markChatRead(latestMsgTime);
+    });
+  };
+
+  window.closeAdminThread = function() {
+    window.activeAdminThreadUid = null;
+    if (PortfolioDB.stopListeningChat) PortfolioDB.stopListeningChat();
+    chatListenerActive = false;
+    
+    // Reset Title
+    var user = PortfolioDB.getCurrentUser();
+    document.querySelectorAll('.chat-widget__title').forEach(el => el.textContent = 'Inbox');
+
+    initAdminInbox();
+  };
+
+  window.handleMobileChatBack = function() {
+    if (window.activeAdminThreadUid) {
+      closeAdminThread();
+    } else {
+      closeMobileChat();
+    }
+  };
 
   function renderChatMessages(messages) {
     const container = document.getElementById('chat-messages');
@@ -1189,7 +1343,7 @@
     const input = document.getElementById('chat-msg-input');
     const text = input?.value.trim();
     if (!text) return;
-    PortfolioDB.sendChatMessage(text);
+    PortfolioDB.sendChatMessage(text, window.activeAdminThreadUid);
     input.value = '';
   };
 
@@ -1398,7 +1552,7 @@
     const input = document.getElementById('mobile-chat-msg-input');
     const text = input?.value.trim();
     if (!text) return;
-    PortfolioDB.sendChatMessage(text);
+    PortfolioDB.sendChatMessage(text, window.activeAdminThreadUid);
     input.value = '';
     // Keep keyboard open by refocusing immediately
     if (input) {
