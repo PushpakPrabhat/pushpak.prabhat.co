@@ -16,6 +16,8 @@
         class="profile-full__avatar"
       >
     </div>
+    <h1 class="profile-full__name">{{ $profile.name }}</h1>
+    <p class="profile-full__headline">{{ $profile.headline }}</p>
     
     {{ $currentJob := false }}
     {{ range $idx, $exp := $profile.experience }}
@@ -26,21 +28,22 @@
     {{ if $currentJob }}
     <div class="profile-full__company">
       {{ if $currentJob.logo }}
-      <img src="{{ $currentJob.logo }}" class="profile-full__company-logo" style="width:24px;height:24px;object-fit:contain;margin-right:8px;border-radius:4px;" alt="">
+      <img src="{{ $currentJob.logo }}" class="profile-full__company-logo" style="width:24px;height:24px;object-fit:contain;border-radius:4px;" alt="">
       {{ else }}
       <span class="profile-full__company-logo">🏢</span>
       {{ end }}
-      <span>{{ $currentJob.company }}</span>
+      {{ if $currentJob.companyUrl }}
+      <a href="{{ $currentJob.companyUrl }}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none; font-weight: 600;">{{ $currentJob.company }}</a>
+      {{ else }}
+      <span style="font-weight: 600;">{{ $currentJob.company }}</span>
+      {{ end }}
     </div>
     {{ else }}
     <div class="profile-full__company">
       <span class="profile-full__company-logo">💰</span>
-      <span>{{ .Site.Params.company }}</span>
+      <span style="font-weight: 600;">{{ .Site.Params.company }}</span>
     </div>
     {{ end }}
-    
-    <h1 class="profile-full__name">{{ $profile.name }}</h1>
-    <p class="profile-full__headline">{{ $profile.headline }}</p>
     <p class="profile-full__location">{{ $profile.location }} · <a class="profile-full__contact" href="#">{{ $profile.contactInfo }}</a></p>
     <p class="profile-full__connections"><span>{{ $profile.followers }} followers</span> · <span>{{ $profile.connections }} connections</span></p>
     
