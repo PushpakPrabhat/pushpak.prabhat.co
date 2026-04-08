@@ -1,407 +1,416 @@
 /* ============================================
-   LinkedIn-Inspired Portfolio — Responsive
+   Instagram-Inspired Portfolio — Responsive
    ============================================ */
 
-/* Large Desktop */
+/* ===== Large Desktop (>1200px) ===== */
 @media (min-width: 1200px) {
-  .layout {
-    display: flex;
-  }
-  
-  .layout__sidebar-left,
-  .layout__sidebar-right {
+  .ig-layout__aside {
     display: block;
   }
 }
 
-/* Tablet / Small Desktop */
+/* ===== Desktop (936px - 1199px) ===== */
 @media (max-width: 1199px) {
-  :root {
-    --sidebar-width: 200px;
-    --aside-width: 260px;
-  }
-  
-  .layout__sidebar-right {
+  .ig-layout__aside {
     display: none;
   }
   
-  .layout__main {
-    max-width: 100%;
-  }
-  
-  .nav__search {
-    flex: 0 1 220px;
-  }
-}
-
-/* Tablet Portrait */
-@media (max-width: 991px) {
-  .layout__sidebar-left {
-    display: none;
-  }
-  
-  .layout {
-    padding: 0 var(--space-md);
+  .ig-layout {
     justify-content: center;
   }
   
-  .layout__main {
+  .ig-layout__content {
     max-width: 600px;
-    width: 100%;
-  }
-  
-  .nav__item-label {
-    display: none;
-  }
-  
-  .nav__item {
-    min-width: 48px;
-    padding: var(--space-xs) var(--space-sm);
-  }
-  
-  .nav__search {
-    flex: 0 1 180px;
-  }
-  
-  /* Show mobile profile card at top of feed */
-  .mobile-profile-card {
-    display: block;
-  }
-  
-  .profile-full__banner {
-    height: 150px;
-  }
-  
-  .profile-full__avatar {
-    width: 100px;
-    height: 100px;
-  }
-
-  .profile-full__avatar-wrapper {
-    margin-top: -50px;
-  }
-  
-  .profile-full__name {
-    font-size: var(--font-size-lg);
   }
 }
 
-/* Mobile */
+/* ===== Narrow Desktop - Collapse sidebar text (768 - 1264) ===== */
+@media (max-width: 1264px) {
+  .ig-sidebar {
+    width: var(--nav-width-collapsed);
+  }
+  
+  .ig-sidebar__logo-text {
+    display: none;
+  }
+  
+  .ig-sidebar__logo-icon {
+    display: flex !important;
+    padding: var(--space-sm);
+  }
+  
+  .ig-sidebar__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .ig-sidebar__item-label {
+    display: none;
+  }
+  
+  .ig-sidebar__item {
+    justify-content: center;
+    padding: var(--space-md);
+  }
+  
+  .ig-layout {
+    margin-left: var(--nav-width-collapsed);
+  }
+  
+  .ig-search-panel {
+    left: var(--nav-width-collapsed);
+  }
+  
+  .ig-more-menu {
+    left: var(--space-md);
+    width: 200px;
+  }
+}
+
+/* ===== Tablet / No sidebar (768 - 935px) ===== */
+@media (max-width: 935px) and (min-width: 768px) {
+  .ig-layout__content {
+    max-width: 600px;
+  }
+  
+  .ig-profile__header {
+    gap: var(--space-2xl);
+  }
+  
+  .ig-profile__avatar-ring {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* ===== Mobile (<768px) ===== */
 @media (max-width: 767px) {
-  :root {
-    --nav-height: 48px;
+  /* Hide sidebar, show mobile elements */
+  .ig-sidebar {
+    display: none !important;
   }
   
+  .ig-mobile-header {
+    display: flex;
+  }
+  
+  .ig-bottom-nav {
+    display: block;
+  }
+  
+  .ig-layout {
+    margin-left: 0;
+    padding-top: 44px; /* mobile header height */
+    padding-bottom: var(--mobile-nav-height);
+  }
+  
+  .ig-layout__content {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .ig-layout__aside {
+    display: none !important;
+  }
+  
+  /* Feed styling */
+  .ig-post {
+    border-radius: 0;
+  }
+  
+  .ig-post__header {
+    padding: var(--space-md) var(--space-lg);
+  }
+  
+  .ig-post__media {
+    border-radius: 0;
+  }
+  
+  .ig-interactions {
+    padding: 0 var(--space-lg);
+  }
+  
+  .ig-post__caption {
+    padding: 0 var(--space-lg);
+  }
+  
+  .ig-post__time {
+    padding: var(--space-xs) var(--space-lg);
+  }
+  
+  .ig-post__pin-badge {
+    padding-left: var(--space-lg);
+  }
+  
+  .ig-comments {
+    padding: 0 var(--space-lg);
+  }
+  
+  .ig-stories {
+    padding: var(--space-sm) var(--space-lg);
+  }
+  
+  .ig-feed-tabs {
+    padding: 0 var(--space-sm);
+  }
+  
+  .ig-category-filter {
+    padding: var(--space-sm) var(--space-lg);
+  }
+  
+  /* Profile mobile */
+  .ig-profile {
+    padding: 0;
+  }
+  
+  .ig-profile__header {
+    flex-direction: row;
+    gap: var(--space-xl);
+    padding: var(--space-lg);
+  }
+  
+  .ig-profile__avatar-ring {
+    width: 86px;
+    height: 86px;
+  }
+  
+  .ig-profile__bio {
+    display: none;
+  }
+  
+  .ig-profile__bio-mobile {
+    display: block;
+    padding: 0 var(--space-lg) var(--space-lg);
+  }
+  
+  .ig-profile__action-btns {
+    display: none;
+  }
+  
+  .ig-profile__action-btns-mobile {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+  
+  .ig-profile__stats {
+    gap: var(--space-xl);
+    margin-bottom: 0;
+  }
+  
+  .ig-profile__stat {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  
+  .ig-profile__stat-num {
+    font-size: var(--font-size-md);
+  }
+  
+  .ig-profile__stat-label {
+    font-size: var(--font-size-xs);
+  }
+  
+  .ig-profile__top-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .ig-profile__username {
+    font-size: var(--font-size-lg);
+  }
+  
+  .ig-profile__highlights {
+    padding: var(--space-md) var(--space-lg);
+  }
+  
+  .ig-profile__grid, .ig-profile__reels-grid, .ig-explore__grid {
+    gap: 2px;
+  }
+  
+  .ig-profile__portfolio {
+    padding: 0 var(--space-lg);
+  }
+  
+  .ig-profile__tab {
+    padding: var(--space-md);
+    font-size: 0.625rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .ig-profile__tab span {
+    display: none;
+  }
+  
+  .ig-profile__tab svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  /* Search panel mobile */
+  .ig-search-panel {
+    left: 0;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  /* Chat */
+  .ig-chat {
+    display: none !important;
+  }
+  
+  .ig-chat-fab {
+    display: flex;
+  }
+  
+  /* Toast position */
+  .ig-toast {
+    bottom: 70px;
+  }
+  
+  /* Carousel buttons mobile */
+  .ig-carousel__btn {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Media viewer nav */
+  .ig-media-viewer__nav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ig-media-viewer__nav--prev { left: var(--space-sm); }
+  .ig-media-viewer__nav--next { right: var(--space-sm); }
+  
+  /* Story viewer mobile */
+  .ig-story-viewer__container {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+  
+  .ig-story-viewer__nav-btn { display: none; }
+  
+  /* Body scroll lock helpers */
+  body.noscroll {
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
+  }
+  
+  /* Reels mobile */
+  .ig-reels__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Disable selection on images */
   body {
-    padding-bottom: 56px; /* mobile nav height */
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
   }
   
-  /* Allow text selection in content areas */
-  .feed-item__text,
-  .feed-item__content,
-  .post-card__body,
-  .profile-section__text,
-  .comment__text {
+  /* Allow text selection */
+  .ig-post__caption-text,
+  .ig-comment__text,
+  .ig-portfolio-section__text,
+  .ig-exp-item__desc {
     -webkit-user-select: text;
     user-select: text;
   }
   
-  /* Hide desktop logo, show profile pic on LEFT */
-  .nav__logo {
-    display: none;
-  }
-  
-  .nav__menu {
-    display: none;
-  }
-  
-  .nav__divider {
-    display: none;
-  }
-  
-  .nav__profile-link-left {
-    display: flex;
-  }
-  
-  .nav__search {
-    flex: 1;
-    margin-left: 0;
-  }
-  
-  .nav__inner {
-    padding: 0 var(--space-md);
-  }
-  
-  .nav__mobile-msg {
-    display: flex;
-    margin-left: var(--space-sm);
-    color: var(--color-text-secondary);
-    font-size: 22px;
-  }
-  
-  /* Show mobile bottom nav */
-  .mobile-nav {
-    display: block;
-  }
-  
-  .layout {
-    padding: 0 0;
-    margin-top: var(--space-sm);
-  }
-  
-  .layout__main {
-    max-width: 100%;
-  }
-  
-  /* Cards — full width on mobile, no border-radius */
-  .feed-item,
-  .feed-tabs,
-  .category-filter,
-  .profile-full,
-  .profile-section {
-    border-radius: 0;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
-  }
-  
-  .feed-tabs {
-    padding: var(--space-sm) var(--space-md);
-    gap: var(--space-xs);
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  
-  .feed-tabs::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .feed-tabs__label {
-    display: none;
-  }
-  
-  .category-filter {
-    padding: var(--space-sm) var(--space-md);
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  
-  .category-filter::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .feed-item__header {
-    padding: var(--space-md);
-  }
-  
-  .feed-item__content {
-    padding: 0 var(--space-md);
-  }
-  
-  .interactions {
-    padding: var(--space-sm) var(--space-md);
-  }
-  
-  .comments-section {
-    padding: 0 var(--space-md) var(--space-md);
-  }
-  
-  /* Profile adjustments */
-  .profile-full__banner {
-    height: 120px;
-  }
-  
-  .profile-full__avatar {
-    width: 84px;
-    height: 84px;
-    border-width: 3px;
-  }
-
-  .profile-full__avatar-wrapper {
-    margin-top: -42px;
-  }
-  
-  .profile-full__header {
-    padding: 0 var(--space-md);
-  }
-  
-  .profile-full__name {
-    font-size: var(--font-size-md);
-  }
-  
-  .profile-full__headline {
-    font-size: var(--font-size-sm);
-  }
-  
-  .profile-full__actions {
-    flex-wrap: wrap;
-  }
-  
-  .profile-full__company {
-    position: relative;
-    right: auto;
-    top: auto;
-    margin-top: var(--space-sm);
-  }
-  
-  .profile-section {
-    padding: var(--space-lg);
-  }
-  
-  .profile-section__title {
-    font-size: var(--font-size-md);
-  }
-  
-  /* Interaction buttons — icons only on small mobile */
-  .interaction-btn span:not(.interaction-btn__icon) {
-    font-size: var(--font-size-xs);
-  }
-  
-  .experience-item__logo,
-  .education-item__logo {
-    width: 40px;
-    height: 40px;
-  }
-  
-  /* Toast above mobile nav */
-  .toast {
-    bottom: 70px;
-  }
-
-  /* Hide chat FAB and widget on mobile - use full page chat instead */
-  .chat-fab {
-    display: none !important;
-  }
-
-  .chat-widget {
-    display: none !important;
-  }
-
-  /* Reaction popup — proper mobile sizing */
-  .reaction-popup {
+  /* Create modal mobile */
+  .ig-create-modal__card {
+    width: 100%;
+    max-width: none;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     position: fixed;
-    bottom: 80px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    padding: 8px 16px;
-    border-radius: 32px;
-    z-index: 2100;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05);
+    bottom: 0;
   }
-
-  .reaction-popup__btn {
-    width: 52px;
-    height: 52px;
-    padding: 6px;
+  
+  /* Reactions modal mobile */
+  .ig-reactions-modal__content {
+    width: 100%;
+    max-width: none;
+    max-height: 60vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    position: fixed;
+    bottom: 0;
   }
-
-  .reaction-popup__btn img {
-    width: 44px !important;
-    height: 44px !important;
-  }
-
-  .reaction-popup__btn svg {
-    width: 44px !important;
-    height: 44px !important;
-  }
-
-  @keyframes reactionPopIn {
-    0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
-    100% { transform: translateX(-50%) scale(1); opacity: 1; }
-  }
-
-  .reaction-popup.show {
-    animation: reactionPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  }
-
-  /* Media viewer mobile */
-  .media-viewer__nav {
-    width: 36px;
-    height: 36px;
-  }
-  .media-viewer__nav--prev { left: var(--space-xs); }
-  .media-viewer__nav--next { right: var(--space-xs); }
 }
 
-/* Small Mobile */
+/* ===== Small Mobile (<480px) ===== */
 @media (max-width: 480px) {
-  .feed-tab {
+  .ig-story__ring {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .ig-story__name {
+    font-size: 0.5625rem;
+    max-width: 56px;
+  }
+  
+  .ig-profile__header {
+    gap: var(--space-lg);
+  }
+  
+  .ig-profile__avatar-ring {
+    width: 72px;
+    height: 72px;
+  }
+  
+  .ig-profile__stat-num {
+    font-size: var(--font-size-sm);
+  }
+  
+  .ig-btn {
     padding: var(--space-xs) var(--space-md);
     font-size: var(--font-size-xs);
   }
   
-  .category-chip {
-    font-size: 0.6875rem;
-  }
-  
-  .feed-item__avatar {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .profile-full__actions {
-    gap: var(--space-xs);
-  }
-  
-  .btn {
-    padding: var(--space-xs) var(--space-md);
-    font-size: var(--font-size-sm);
-  }
-  
-  .interactions__buttons {
-    justify-content: space-around;
-  }
-  
-  .interaction-btn {
-    flex: 1;
-    gap: 6px;
-    font-size: var(--font-size-sm);
+  .ig-feed-tab {
+    font-size: var(--font-size-xs);
+    padding: var(--space-sm) var(--space-md);
   }
 }
 
-/* Desktop — hide mobile-only elements */
+/* ===== Desktop only — hide mobile elements ===== */
 @media (min-width: 768px) {
-  .mobile-nav {
+  .ig-bottom-nav {
     display: none !important;
   }
   
-  .nav__profile-link {
-    display: none;
+  .ig-mobile-header {
+    display: none !important;
   }
   
-  .nav__profile-link-left {
-    display: none;
+  .ig-chat-fab {
+    display: none !important;
   }
   
-  .nav__mobile-msg {
-    display: none;
+  .ig-mobile-chat {
+    display: none !important;
   }
-
-  .chat-fab {
-    display: none;
+  
+  .ig-profile__bio-mobile {
+    display: none !important;
   }
-
-  .mobile-chat-page {
+  
+  .ig-profile__action-btns-mobile {
     display: none !important;
   }
 }
 
-@media (min-width: 992px) {
-  .mobile-profile-card {
-    display: none;
-  }
-}
-
-/* Print styles */
+/* ===== Print ===== */
 @media print {
-  .nav, .mobile-nav, .interactions, .comments-section, .load-more-wrapper,
-  .chat-widget, .chat-fab, .media-viewer, .video-viewer {
+  .ig-sidebar, .ig-bottom-nav, .ig-mobile-header, .ig-chat, .ig-chat-fab,
+  .ig-media-viewer, .ig-stories, .ig-feed-tabs, .ig-interactions,
+  .ig-comments, .ig-story-viewer, .ig-create-modal, .ig-auth-modal {
     display: none !important;
   }
   
@@ -411,13 +420,13 @@
     color: black;
   }
   
-  .layout {
+  .ig-layout {
+    margin-left: 0;
     display: block;
   }
   
-  .feed-item {
+  .ig-post {
     break-inside: avoid;
-    box-shadow: none;
     border: 1px solid #ccc;
     margin-bottom: 1rem;
   }

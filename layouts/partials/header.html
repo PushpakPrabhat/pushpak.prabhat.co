@@ -1,72 +1,160 @@
-<header class="nav" role="banner">
-  <div class="nav__inner">
-    <!-- Desktop Logo (hidden on mobile) -->
-    <a href="/" class="nav__logo" aria-label="Home">
-      {{ partial "icons.html" (dict "icon" "linkedin-logo" "size" "34") }}
+{{ $profile := .Site.Data.profile }}
+<!-- Instagram Left Sidebar Navigation (Desktop) -->
+<nav class="ig-sidebar" id="ig-sidebar" role="navigation" aria-label="Main navigation">
+  <div class="ig-sidebar__inner">
+    <!-- Logo / Brand -->
+    <a href="/" class="ig-sidebar__logo" id="sidebar-logo">
+      <span class="ig-sidebar__logo-text">pushpak</span>
+      <span class="ig-sidebar__logo-icon">{{ partial "icons.html" (dict "icon" "instagram-logo" "size" "24") }}</span>
     </a>
-    
-    <!-- Mobile: Profile pic on LEFT (default head icon, replaced by user's Google pic on sign-in) -->
-    <a href="#" class="nav__profile-link-left" id="mobile-profile-btn" onclick="toggleProfileMenu(event)">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill='%23e7e2dc' d='M0 0h128v128H0z'/%3E%3Cpath fill='%23788fa5' d='M88.41 84.67a32 32 0 1 0-48.82 0 66.13 66.13 0 0 1 48.82 0'/%3E%3Cpath fill='%239db3c8' d='M88.41 84.67a32 32 0 0 1-48.82 0A66.79 66.79 0 0 0 0 128h128a66.79 66.79 0 0 0-39.59-43.33'/%3E%3Cpath fill='%2356687a' d='M64 96a31.93 31.93 0 0 0 24.41-11.33 66.13 66.13 0 0 0-48.82 0A31.93 31.93 0 0 0 64 96'/%3E%3C/svg%3E" alt="Profile" class="nav__profile-pic" id="mobile-profile-pic">
-    </a>
-    
-    <!-- Search -->
-    <div class="nav__search">
-      <span class="nav__search-icon">{{ partial "icons.html" (dict "icon" "search" "size" "16") }}</span>
-      <input 
-        type="search" 
-        class="nav__search-input" 
-        placeholder="Search" 
-        id="nav-search"
-        aria-label="Search portfolio"
-      >
-    </div>
-    
-    <!-- Desktop Menu -->
-    <nav class="nav__menu" aria-label="Main navigation">
-      <a href="/" class="nav__item nav__item--active" id="nav-home">
-        <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "home" "size" "24") }}</span>
-        <span class="nav__item-label">Home</span>
+
+    <!-- Nav Items -->
+    <div class="ig-sidebar__nav">
+      <a href="/" class="ig-sidebar__item ig-sidebar__item--active" id="nav-home" data-page="home">
+        <span class="ig-sidebar__item-icon">{{ partial "icons.html" (dict "icon" "home" "size" "24") }}</span>
+        <span class="ig-sidebar__item-icon ig-sidebar__item-icon--filled" style="display:none;">{{ partial "icons.html" (dict "icon" "home-filled" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Home</span>
       </a>
-      <a href="/#profile" class="nav__item" id="nav-network">
-        <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "network" "size" "24") }}</span>
-        <span class="nav__item-label">My Network</span>
+      <a href="#" class="ig-sidebar__item" id="nav-search" data-page="search" onclick="toggleSearchPanel(event)">
+        <span class="ig-sidebar__item-icon">{{ partial "icons.html" (dict "icon" "search" "size" "24") }}</span>
+        <span class="ig-sidebar__item-icon ig-sidebar__item-icon--filled" style="display:none;">{{ partial "icons.html" (dict "icon" "search-filled" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Search</span>
       </a>
-      <a href="/#feed" class="nav__item" id="nav-jobs">
-        <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "briefcase" "size" "24") }}</span>
-        <span class="nav__item-label">Jobs</span>
+      <a href="#" class="ig-sidebar__item" id="nav-explore" data-page="explore" onclick="showExplorePage(event)">
+        <span class="ig-sidebar__item-icon">{{ partial "icons.html" (dict "icon" "explore" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Explore</span>
       </a>
-      <a href="#" class="nav__item" id="nav-messaging" onclick="openChat(event)">
-        <span class="nav__item-icon nav__item-icon--messaging">
-          {{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}
-          <span class="nav__unread-dot" id="desktop-unread-dot" style="display:none;"></span>
+      <a href="#" class="ig-sidebar__item" id="nav-reels" data-page="reels" onclick="showReelsPage(event)">
+        <span class="ig-sidebar__item-icon">{{ partial "icons.html" (dict "icon" "reels" "size" "24") }}</span>
+        <span class="ig-sidebar__item-icon ig-sidebar__item-icon--filled" style="display:none;">{{ partial "icons.html" (dict "icon" "reels-filled" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Reels</span>
+      </a>
+      <a href="#" class="ig-sidebar__item" id="nav-messages" data-page="messages" onclick="openChat(event)">
+        <span class="ig-sidebar__item-icon ig-sidebar__item-icon--msg">
+          {{ partial "icons.html" (dict "icon" "messenger" "size" "24") }}
+          <span class="ig-sidebar__unread" id="sidebar-unread-dot" style="display:none;"></span>
         </span>
-        <span class="nav__item-label">Messaging</span>
+        <span class="ig-sidebar__item-icon ig-sidebar__item-icon--filled" style="display:none;">{{ partial "icons.html" (dict "icon" "messenger-filled" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Messages</span>
       </a>
-      <a href="#" class="nav__item" id="nav-notifications">
-        <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "notifications" "size" "24") }}</span>
-        <span class="nav__item-label">Notifications</span>
+      <!-- Notifications - admin only, hidden by default -->
+      <a href="#" class="ig-sidebar__item admin-only-el" id="nav-notifications" data-page="notifications" style="display:none;">
+        <span class="ig-sidebar__item-icon">{{ partial "icons.html" (dict "icon" "heart" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Notifications</span>
       </a>
-      
-      <div class="nav__divider"></div>
-      
-      <!-- Desktop: Me button with user's pic / sign in option -->
-      <a href="#" class="nav__item" id="nav-me" onclick="toggleProfileMenu(event)">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill='%23e7e2dc' d='M0 0h128v128H0z'/%3E%3Cpath fill='%23788fa5' d='M88.41 84.67a32 32 0 1 0-48.82 0 66.13 66.13 0 0 1 48.82 0'/%3E%3Cpath fill='%239db3c8' d='M88.41 84.67a32 32 0 0 1-48.82 0A66.79 66.79 0 0 0 0 128h128a66.79 66.79 0 0 0-39.59-43.33'/%3E%3Cpath fill='%2356687a' d='M64 96a31.93 31.93 0 0 0 24.41-11.33 66.13 66.13 0 0 0-48.82 0A31.93 31.93 0 0 0 64 96'/%3E%3C/svg%3E" alt="Profile" class="nav__profile-pic" id="desktop-profile-pic">
-        <span class="nav__item-label" id="desktop-me-label">Me ▾</span>
+      <!-- Create - admin only -->
+      <a href="#" class="ig-sidebar__item admin-only-el" id="nav-create" onclick="openCreateModal(event)" style="display:none;">
+        <span class="ig-sidebar__item-icon">{{ partial "icons.html" (dict "icon" "create" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Create</span>
       </a>
-    </nav>
-    
-    <!-- Mobile: messaging icon on RIGHT with unread dot -->
-    <a href="#" class="nav__mobile-msg" aria-label="Messages" onclick="openChat(event)">
-      {{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}
-      <span class="nav__unread-dot" id="mobile-header-unread-dot" style="display:none;"></span>
+      <a href="#" class="ig-sidebar__item" id="nav-profile" data-page="profile" onclick="navigateToProfile(event)">
+        <span class="ig-sidebar__item-avatar">
+          <img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" id="sidebar-profile-pic">
+        </span>
+        <span class="ig-sidebar__item-label">Profile</span>
+      </a>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="ig-sidebar__bottom">
+      <button class="ig-sidebar__item" id="nav-theme-toggle" onclick="toggleTheme()">
+        <span class="ig-sidebar__item-icon theme-icon-dark">{{ partial "icons.html" (dict "icon" "sun" "size" "24") }}</span>
+        <span class="ig-sidebar__item-icon theme-icon-light" style="display:none;">{{ partial "icons.html" (dict "icon" "moon" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">Switch theme</span>
+      </button>
+      <button class="ig-sidebar__item" id="nav-more" onclick="toggleMoreMenu(event)">
+        <span class="ig-sidebar__item-icon">{{ partial "icons.html" (dict "icon" "menu" "size" "24") }}</span>
+        <span class="ig-sidebar__item-label">More</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Top Header -->
+<header class="ig-mobile-header" id="ig-mobile-header">
+  <a href="#" class="ig-mobile-header__logo" onclick="navigateToProfile(event)">pushpak</a>
+  <div class="ig-mobile-header__actions">
+    <a href="#" class="ig-mobile-header__btn" id="mobile-heart-btn" onclick="event.preventDefault();">
+      {{ partial "icons.html" (dict "icon" "heart" "size" "24") }}
+    </a>
+    <a href="#" class="ig-mobile-header__btn" onclick="openChat(event)">
+      {{ partial "icons.html" (dict "icon" "messenger" "size" "24") }}
+      <span class="ig-mobile-header__badge" id="mobile-unread-badge" style="display:none;">0</span>
     </a>
   </div>
 </header>
 
-<!-- Profile/Account Dropdown Menu (shared desktop + mobile) -->
-<div class="account-dropdown" id="account-dropdown" style="display:none;">
-  <div class="account-dropdown__content" id="account-dropdown-content">
+<!-- Search Panel (Instagram-style slide-in) -->
+<div class="ig-search-panel" id="ig-search-panel">
+  <div class="ig-search-panel__header">
+    <h2 class="ig-search-panel__title">Search</h2>
+    <div class="ig-search-panel__input-wrap">
+      <span class="ig-search-panel__input-icon">{{ partial "icons.html" (dict "icon" "search" "size" "16") }}</span>
+      <input type="search" class="ig-search-panel__input" placeholder="Search" id="ig-search-input" aria-label="Search portfolio">
+      <button class="ig-search-panel__clear" id="ig-search-clear" style="display:none;">✕</button>
+    </div>
   </div>
+  <div class="ig-search-panel__body" id="ig-search-body">
+    <div class="ig-search-panel__recent" id="ig-search-recent">
+      <div class="ig-search-panel__recent-header">
+        <span>Recent</span>
+        <button class="ig-search-panel__clear-all" id="ig-clear-recent">Clear all</button>
+      </div>
+      <div class="ig-search-panel__recent-list" id="ig-search-recent-list">
+        <p class="ig-search-panel__empty">No recent searches.</p>
+      </div>
+    </div>
+    <div class="ig-search-panel__results" id="ig-search-results" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- More Menu Dropdown -->
+<div class="ig-more-menu" id="ig-more-menu" style="display:none;">
+  <button class="ig-more-menu__item" onclick="toggleTheme(); toggleMoreMenu();">
+    <span>{{ partial "icons.html" (dict "icon" "sun" "size" "20") }}</span>
+    <span>Switch appearance</span>
+  </button>
+  <button class="ig-more-menu__item" onclick="window.open('/admin/', '_blank'); toggleMoreMenu();">
+    <span>{{ partial "icons.html" (dict "icon" "settings" "size" "20") }}</span>
+    <span>Settings</span>
+  </button>
+  <div class="ig-more-menu__divider"></div>
+  <button class="ig-more-menu__item ig-more-menu__item--logout" id="more-menu-logout" onclick="handleLogout()" style="display:none;">
+    <span>{{ partial "icons.html" (dict "icon" "logout" "size" "20") }}</span>
+    <span>Log out</span>
+  </button>
+</div>
+
+<!-- Google Sign-In Modal (Better UI) -->
+<div class="ig-auth-modal" id="ig-auth-modal" style="display:none;">
+  <div class="ig-auth-modal__overlay" onclick="closeAuthModal()"></div>
+  <div class="ig-auth-modal__card">
+    <button class="ig-auth-modal__close" onclick="closeAuthModal()">{{ partial "icons.html" (dict "icon" "close" "size" "20") }}</button>
+    <div class="ig-auth-modal__logo">
+      {{ partial "icons.html" (dict "icon" "instagram-logo" "size" "48") }}
+    </div>
+    <h2 class="ig-auth-modal__title">Sign in to continue</h2>
+    <p class="ig-auth-modal__subtitle">Like, comment, and chat with Pushpak</p>
+    <button class="ig-auth-modal__google-btn" id="google-signin-btn" onclick="handleGoogleSignIn()">
+      {{ partial "icons.html" (dict "icon" "google" "size" "20") }}
+      <span>Continue with Google</span>
+    </button>
+    <p class="ig-auth-modal__terms">By signing in, you agree to our Terms and Privacy Policy.</p>
+  </div>
+</div>
+
+<!-- User Menu Popup (after login) -->
+<div class="ig-user-menu" id="ig-user-menu" style="display:none;">
+  <div class="ig-user-menu__profile">
+    <img src="" alt="User" class="ig-user-menu__avatar" id="user-menu-avatar">
+    <div class="ig-user-menu__info">
+      <span class="ig-user-menu__name" id="user-menu-name">User</span>
+      <span class="ig-user-menu__email" id="user-menu-email">user@email.com</span>
+    </div>
+  </div>
+  <div class="ig-user-menu__divider"></div>
+  <button class="ig-user-menu__logout" onclick="handleLogout()">
+    {{ partial "icons.html" (dict "icon" "logout" "size" "18") }}
+    <span>Log out</span>
+  </button>
 </div>

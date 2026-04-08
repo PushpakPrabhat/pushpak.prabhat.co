@@ -2,41 +2,39 @@
 {{ $id := .File.ContentBaseName }}
 {{ $videoUrl := .Params.videoUrl }}
 {{ $videoType := .Params.videoType | default "file" }}
-<article class="feed-item feed-item--video" data-type="videos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-video-url="{{ $videoUrl }}" data-video-type="{{ $videoType }}" id="item-{{ $id }}">
+{{ $isReel := .Params.isReel | default false }}
+{{ $pinned := .Params.pinned | default false }}
+<article class="ig-post ig-post--video {{ if $isReel }}ig-post--reel{{ end }}" data-type="videos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-video-url="{{ $videoUrl }}" data-video-type="{{ $videoType }}" data-is-reel="{{ $isReel }}" data-pinned="{{ $pinned }}" id="item-{{ $id }}">
+  <!-- Pin badge -->
+  {{ if $pinned }}
+  <div class="ig-post__pin-badge">{{ partial "icons.html" (dict "icon" "pin" "size" "12") }} Pinned</div>
+  {{ end }}
+
   <!-- Header -->
-  <div class="feed-item__header">
-    <a href="/#profile">{{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}</a>
-    <div class="feed-item__meta">
-      <div class="feed-item__author">
-        <a href="/#profile" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
-        <span class="feed-item__author-badge">{{ partial "icons.html" (dict "icon" "verified" "size" "16") }}</span>
+  <div class="ig-post__header">
+    <a href="#" onclick="navigateToProfile(event)" class="ig-post__user">
+      {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="ig-post__avatar" loading="lazy">{{ end }}
+      <div class="ig-post__user-info">
+        <span class="ig-post__username">{{ $profile.name }}{{ partial "icons.html" (dict "icon" "verified" "size" "12") }}</span>
+        {{ if $isReel }}<span class="ig-post__reel-badge">Reel</span>{{ end }}
       </div>
-      <div class="feed-item__author-subtitle">{{ $profile.headline }}</div>
-      <div class="feed-item__time">
-        {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}
-      </div>
-    </div>
-    <div class="feed-item__menu-wrapper">
-      <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "dots" "size" "20") }}</button>
-      <div class="feed-menu" id="feed-menu-{{ $id }}">
-        <button class="feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
-        <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pdf" "size" "18") }} Save as PDF</button>
+    </a>
+    <div class="ig-post__menu-wrapper">
+      <button class="ig-post__more-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">
+        {{ partial "icons.html" (dict "icon" "more" "size" "20") }}
+      </button>
+      <div class="ig-feed-menu" id="feed-menu-{{ $id }}">
+        <button class="ig-feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link</button>
         {{ if or (eq $videoType "youtube") (eq $videoType "gdrive") }}
-        <button class="feed-menu__item" onclick="window.open('{{ $videoUrl }}', '_blank')">{{ partial "icons.html" (dict "icon" "external-link" "size" "18") }} Open original video</button>
+        <button class="ig-feed-menu__item" onclick="window.open('{{ $videoUrl }}', '_blank')">{{ partial "icons.html" (dict "icon" "external-link" "size" "18") }} Open original</button>
         {{ end }}
+        <button class="ig-feed-menu__item" onclick="togglePinPost('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pin" "size" "18") }} {{ if $pinned }}Unpin{{ else }}Pin to top{{ end }}</button>
       </div>
     </div>
   </div>
-  
-  <!-- Content -->
-  <div class="feed-item__content">
-    <div class="feed-item__text js-see-more">
-      {{ .Content | plainify }}
-    </div>
-  </div>
-  
+
   <!-- Video -->
-  <div class="feed-item__video-wrapper" onclick="openVideoViewer('videos', '{{ .Params.category }}', '{{ $id }}')">
+  <div class="ig-post__media ig-post__media--video" ondblclick="doubleTapLike('{{ $id }}')">
     {{ if eq $videoType "youtube" }}
       {{ $videoID := "" }}
       {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
@@ -51,7 +49,6 @@
         allowfullscreen
         loading="lazy"
       ></iframe>
-      <span class="video-type-badge video-type-badge--youtube">▶ YouTube</span>
     {{ else if eq $videoType "gdrive" }}
       <iframe 
         src="{{ $videoUrl }}" 
@@ -60,17 +57,23 @@
         allowfullscreen
         loading="lazy"
       ></iframe>
-      <span class="video-type-badge video-type-badge--gdrive">📁 Google Drive</span>
     {{ else }}
-      <video controls preload="metadata" poster="{{ .Params.thumbnail }}">
+      <video controls preload="metadata" poster="{{ .Params.thumbnail }}" muted playsinline>
         <source src="{{ $videoUrl }}" type="video/mp4">
-        Your browser does not support the video tag.
       </video>
     {{ end }}
-    <span class="feed-item__category-badge">{{ .Params.category | humanize }}</span>
+    <span class="ig-post__category-badge">{{ .Params.category | humanize }}</span>
   </div>
-  
-  <!-- Interactions -->
-  {{ partial "interactions.html" (dict "id" $id "type" "video" "showSave" true "videoUrl" $videoUrl "videoType" $videoType "context" $) }}
-</article>
 
+  <!-- Interactions -->
+  {{ partial "interactions.html" (dict "id" $id "type" "video" "videoUrl" $videoUrl "videoType" $videoType "context" $) }}
+
+  <!-- Caption -->
+  <div class="ig-post__caption">
+    <span class="ig-post__caption-user">{{ $profile.name }}</span>
+    <span class="ig-post__caption-text js-see-more">{{ .Content | plainify }}</span>
+  </div>
+
+  <!-- Time -->
+  <div class="ig-post__time">{{ .Date.Format "January 2, 2006" }}</div>
+</article>

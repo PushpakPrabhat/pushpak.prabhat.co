@@ -1,45 +1,70 @@
 {{ $profile := .Site.Data.profile }}
 {{ $id := .File.ContentBaseName }}
-<article class="feed-item feed-item--photo" data-type="photos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-image="{{ .Params.image }}" id="item-{{ $id }}">
+{{ $pinned := .Params.pinned | default false }}
+{{ $carouselImages := .Params.carouselImages }}
+<article class="ig-post" data-type="photos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-image="{{ .Params.image }}" data-pinned="{{ $pinned }}" id="item-{{ $id }}">
+  <!-- Pin badge -->
+  {{ if $pinned }}
+  <div class="ig-post__pin-badge">{{ partial "icons.html" (dict "icon" "pin" "size" "12") }} Pinned</div>
+  {{ end }}
+
   <!-- Header -->
-  <div class="feed-item__header">
-    <a href="/#profile">{{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}</a>
-    <div class="feed-item__meta">
-      <div class="feed-item__author">
-        <a href="/#profile" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
-        <span class="feed-item__author-badge">{{ partial "icons.html" (dict "icon" "verified" "size" "16") }}</span>
+  <div class="ig-post__header">
+    <a href="#" onclick="navigateToProfile(event)" class="ig-post__user">
+      {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="ig-post__avatar" loading="lazy">{{ end }}
+      <div class="ig-post__user-info">
+        <span class="ig-post__username">{{ $profile.name }}{{ partial "icons.html" (dict "icon" "verified" "size" "12") }}</span>
+        <span class="ig-post__location">{{ $profile.location }}</span>
       </div>
-      <div class="feed-item__author-subtitle">{{ $profile.headline }}</div>
-      <div class="feed-item__time">
-        {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}
-      </div>
-    </div>
-    <div class="feed-item__menu-wrapper">
-      <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "dots" "size" "20") }}</button>
-      <div class="feed-menu" id="feed-menu-{{ $id }}">
-        <button class="feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
-        <button class="feed-menu__item" onclick="downloadImage('{{ .Params.image }}', '{{ $id }}')">{{ partial "icons.html" (dict "icon" "download" "size" "18") }} Download image</button>
-        <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pdf" "size" "18") }} Save as PDF</button>
+    </a>
+    <div class="ig-post__menu-wrapper">
+      <button class="ig-post__more-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">
+        {{ partial "icons.html" (dict "icon" "more" "size" "20") }}
+      </button>
+      <div class="ig-feed-menu" id="feed-menu-{{ $id }}">
+        <button class="ig-feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link</button>
+        <button class="ig-feed-menu__item" onclick="downloadImage('{{ .Params.image }}', '{{ $id }}')">{{ partial "icons.html" (dict "icon" "download" "size" "18") }} Download</button>
+        <button class="ig-feed-menu__item" onclick="togglePinPost('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pin" "size" "18") }} {{ if $pinned }}Unpin{{ else }}Pin to top{{ end }}</button>
       </div>
     </div>
   </div>
-  
-  <!-- Content -->
-  <div class="feed-item__content">
-    <div class="feed-item__text js-see-more">
-      {{ .Content | plainify }}
+
+  <!-- Media -->
+  {{ if $carouselImages }}
+  <div class="ig-carousel" id="carousel-{{ $id }}" data-index="0">
+    <div class="ig-carousel__track">
+      {{ range $i, $img := $carouselImages }}
+      <div class="ig-carousel__slide {{ if eq $i 0 }}ig-carousel__slide--active{{ end }}">
+        <img src="{{ $img }}" alt="{{ $.Title }}" loading="lazy">
+      </div>
+      {{ end }}
+    </div>
+    <button class="ig-carousel__btn ig-carousel__btn--prev" onclick="carouselNav('{{ $id }}', -1)" style="display:none;">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "16") }}</button>
+    <button class="ig-carousel__btn ig-carousel__btn--next" onclick="carouselNav('{{ $id }}', 1)">{{ partial "icons.html" (dict "icon" "arrow-right" "size" "16") }}</button>
+    <div class="ig-carousel__dots">
+      {{ range $i, $img := $carouselImages }}
+      <span class="ig-carousel__dot {{ if eq $i 0 }}ig-carousel__dot--active{{ end }}"></span>
+      {{ end }}
     </div>
   </div>
-  
-  <!-- Image -->
+  {{ else }}
   {{ with .Params.image }}
-  <div class="feed-item__image-wrapper" onclick="openMediaViewer('photos', '{{ $.Params.category }}', '{{ $id }}')">
-    <img src="{{ . }}" alt="{{ $.Title }}" class="feed-item__image" loading="lazy">
-    <span class="feed-item__category-badge">{{ $.Params.category | humanize }}</span>
+  <div class="ig-post__media" ondblclick="doubleTapLike('{{ $id }}')" onclick="openMediaViewer('photos', '{{ $.Params.category }}', '{{ $id }}')">
+    <img src="{{ . }}" alt="{{ $.Title }}" class="ig-post__image" loading="lazy">
+    <span class="ig-post__category-badge">{{ $.Params.category | humanize }}</span>
   </div>
   {{ end }}
-  
-  <!-- Interactions -->
-  {{ partial "interactions.html" (dict "id" $id "type" "photo" "showSave" false "imageUrl" .Params.image "context" $) }}
-</article>
+  {{ end }}
 
+  <!-- Interactions -->
+  {{ partial "interactions.html" (dict "id" $id "type" "photo" "imageUrl" .Params.image "context" $) }}
+
+  <!-- Caption -->
+  <div class="ig-post__caption">
+    <span class="ig-post__caption-user">{{ $profile.name }}</span>
+    <span class="ig-post__caption-text js-see-more">{{ .Content | plainify }}</span>
+  </div>
+
+  <!-- Time -->
+  <div class="ig-post__time">{{ .Date.Format "January 2, 2006" }}</div>
+</article>

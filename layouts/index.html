@@ -1,12 +1,7 @@
 {{ define "main" }}
-<div class="layout" id="main-layout">
-  <!-- Left Sidebar (hidden when profile is open) -->
-  <div class="layout__sidebar-left" id="sidebar-left">
-    {{ partial "profile-card.html" . }}
-  </div>
-  
-  <!-- Main Feed -->
-  <div class="layout__main" id="feed">
+<div class="ig-layout" id="main-layout">
+  <!-- Main Content Area -->
+  <div class="ig-layout__content" id="feed">
     <!-- Profile Section (shown/hidden via JS) -->
     <div id="profile-section" style="display: none;">
       {{ partial "profile-full.html" . }}
@@ -14,6 +9,10 @@
     
     <!-- Feed Section -->
     <div id="feed-section">
+      <!-- Stories Tray -->
+      {{ partial "stories.html" . }}
+      
+      <!-- Feed Tabs -->
       {{ partial "feed-tabs.html" . }}
       
       <!-- Feed Items Container -->
@@ -39,16 +38,128 @@
       </div>
       
       <!-- Load More -->
-      <div class="load-more-wrapper" id="load-more-wrapper">
-        <button class="load-more-btn" id="load-more-btn" onclick="loadMore()">
-          Show more results
-          <span>↓</span>
+      <div class="ig-load-more" id="load-more-wrapper">
+        <button class="ig-load-more__btn" id="load-more-btn" onclick="loadMore()">
+          Load more
         </button>
       </div>
     </div>
+
+    <!-- Reels Section (shown/hidden via JS) -->
+    <div id="reels-section" style="display:none;">
+      <div class="ig-reels" id="ig-reels-container">
+        <h2 class="ig-reels__title">Reels</h2>
+        <div class="ig-reels__grid" id="reels-grid">
+          {{ range where .Site.RegularPages "Type" "videos" }}
+          {{ if or .Params.isReel (eq .Params.category "shorts-reels") }}
+          <div class="ig-reels__item" data-id="{{ .File.ContentBaseName }}" data-video-url="{{ .Params.videoUrl }}" data-video-type="{{ .Params.videoType | default "file" }}" onclick="openReelViewer('{{ .File.ContentBaseName }}')">
+            {{ if .Params.thumbnail }}
+            <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy">
+            {{ else }}
+              {{ $videoUrl := .Params.videoUrl }}
+              {{ $videoType := .Params.videoType | default "file" }}
+              {{ if eq $videoType "youtube" }}
+                {{ $videoID := "" }}
+                {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
+                  {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+                {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
+                  {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+                {{ end }}
+                {{ if $videoID }}
+                <img src="https://img.youtube.com/vi/{{ $videoID }}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/{{ $videoID }}/hqdefault.jpg'" alt="{{ .Title }}" loading="lazy">
+                {{ end }}
+              {{ end }}
+            {{ end }}
+            <div class="ig-reels__item-overlay">
+              <span class="ig-reels__item-title">{{ .Title }}</span>
+            </div>
+            <span class="ig-reels__item-icon">{{ partial "icons.html" (dict "icon" "reels" "size" "20") }}</span>
+          </div>
+          {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Explore Section (shown/hidden via JS) -->
+    <div id="explore-section" style="display:none;">
+      <div class="ig-explore">
+        <h2 class="ig-explore__title">Explore</h2>
+        <!-- Trending posts -->
+        <div class="ig-explore__trending" id="explore-trending">
+          <h3 class="ig-explore__subtitle">🔥 Trending</h3>
+          <div class="ig-explore__trending-list" id="trending-list"></div>
+        </div>
+        <div class="ig-explore__grid" id="explore-grid">
+          {{ range $allPhotos }}
+          <div class="ig-grid-item" data-id="{{ .File.ContentBaseName }}" onclick="scrollToPost('{{ .File.ContentBaseName }}')">
+            {{ with .Params.image }}
+            <img src="{{ . }}" alt="{{ $.Title }}" loading="lazy">
+            {{ end }}
+          </div>
+          {{ end }}
+          {{ range where .Site.RegularPages "Type" "videos" }}
+          <div class="ig-grid-item" data-id="{{ .File.ContentBaseName }}" onclick="scrollToPost('{{ .File.ContentBaseName }}')">
+            {{ $videoUrl := .Params.videoUrl }}
+            {{ $videoType := .Params.videoType | default "file" }}
+            {{ if eq $videoType "youtube" }}
+              {{ $videoID := "" }}
+              {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
+                {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+              {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
+                {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+              {{ end }}
+              {{ if $videoID }}
+              <img src="https://img.youtube.com/vi/{{ $videoID }}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/{{ $videoID }}/hqdefault.jpg'" alt="{{ .Title }}" loading="lazy">
+              {{ end }}
+            {{ else if .Params.thumbnail }}
+            <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy">
+            {{ else }}
+            <div class="ig-grid-item__placeholder">🎥</div>
+            {{ end }}
+            <span class="ig-grid-item__video-icon">{{ partial "icons.html" (dict "icon" "play" "size" "16") }}</span>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
   </div>
-  
-  <!-- Right Sidebar -->
-  {{ partial "sidebar-right.html" . }}
+
+  <!-- Right Sidebar — Suggestions (desktop only) -->
+  <aside class="ig-layout__aside" id="ig-aside">
+    <div class="ig-suggestions">
+      <div class="ig-suggestions__profile">
+        <a href="#" onclick="navigateToProfile(event)">
+          <img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Data.profile.name }}" class="ig-suggestions__avatar">
+        </a>
+        <div class="ig-suggestions__info">
+          <a href="#" onclick="navigateToProfile(event)" class="ig-suggestions__name">{{ .Site.Data.profile.name }}</a>
+          <span class="ig-suggestions__desc">{{ .Site.Data.profile.headline }}</span>
+        </div>
+        <!-- User login/avatar -->
+        <button class="ig-suggestions__switch" id="aside-login-btn" onclick="handleGoogleSignIn()">Sign in</button>
+      </div>
+      
+      <div class="ig-suggestions__header">
+        <span>Suggested for you</span>
+      </div>
+      
+      <div class="ig-suggestions__list">
+        {{ range .Site.Data.profile.quickLinks }}
+        <a href="{{ .url }}" target="_blank" rel="noopener" class="ig-suggestions__item">
+          <div class="ig-suggestions__item-avatar">🔗</div>
+          <div class="ig-suggestions__item-info">
+            <span class="ig-suggestions__item-name">{{ .title }}</span>
+            <span class="ig-suggestions__item-sub">Link</span>
+          </div>
+          <span class="ig-suggestions__item-action">Visit</span>
+        </a>
+        {{ end }}
+      </div>
+      
+      <!-- Footer -->
+      {{ partial "footer.html" . }}
+    </div>
+  </aside>
 </div>
 {{ end }}

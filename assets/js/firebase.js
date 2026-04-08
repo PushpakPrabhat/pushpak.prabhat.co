@@ -1,5 +1,5 @@
 /**
- * LinkedIn Portfolio — Firebase / Data Layer
+ * Instagram Portfolio — Firebase / Data Layer
  * 
  * Uses Firebase Firestore for data, Auth for Google Sign-In,
  * and Realtime Database for presence (online/offline/typing).
@@ -84,24 +84,70 @@
           // Sync page data
           syncPageData();
 
-          // Dispatch event so main.js can update UI
+          // Check if admin
+          const isAdmin = user.email === ADMIN_EMAIL;
+          if (typeof setAdminMode === 'function') setAdminMode(isAdmin);
+
+          // Update user UI
+          updateUserUI(currentUser, isAdmin);
+
+          // Dispatch event
           window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: currentUser } }));
         } else {
           currentUser = null;
           console.info('[PortfolioDB] Not signed in. Viewing as guest.');
+          if (typeof setAdminMode === 'function') setAdminMode(false);
 
           // Still sync page data for viewing (read-only)
           if (db) syncPageData();
+
+          // Update user UI
+          updateUserUI(null, false);
 
           window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: null } }));
         }
       });
 
-      // Handle redirect result (for when signInWithRedirect is used as fallback)
+      // Handle redirect result
       handleRedirectResult();
 
     } catch (e) {
       console.warn('[PortfolioDB] Firebase init error:', e.message);
+    }
+  }
+
+  // ============================
+  // User UI Updates (Instagram-style)
+  // ============================
+  function updateUserUI(user, isAdmin) {
+    // Update sidebar profile pic
+    const sidebarPic = document.getElementById('sidebar-profile-pic');
+    // Keep profile pic as site owner's pic always
+
+    // More menu logout
+    const logoutItem = document.getElementById('more-menu-logout');
+    if (logoutItem) logoutItem.style.display = user ? 'flex' : 'none';
+
+    // Aside login button
+    const asideBtn = document.getElementById('aside-login-btn');
+    if (asideBtn) {
+      if (user) {
+        asideBtn.textContent = user.name.split(' ')[0];
+        asideBtn.onclick = function() { toggleUserMenu(); };
+      } else {
+        asideBtn.textContent = 'Sign in';
+        asideBtn.onclick = function() { handleGoogleSignIn(); };
+      }
+    }
+
+    // User menu
+    if (user) {
+      const avatar = document.getElementById('user-menu-avatar');
+      const name = document.getElementById('user-menu-name');
+      const email = document.getElementById('user-menu-email');
+      if (avatar) avatar.src = user.photo;
+      if (name) name.textContent = user.name;
+      if (email) email.textContent = user.email;
     }
   }
 
@@ -129,13 +175,11 @@
     var connectedRef = rtdb.ref('.info/connected');
     connectedRef.on('value', function(snap) {
       if (snap.val() === true) {
-        // We are connected! Queue the disconnect payload first.
         presenceRef.onDisconnect().set({
           online: false,
           typing: false,
           lastSeen: firebase.database.ServerValue.TIMESTAMP
         }).then(function() {
-          // Once the disconnect hook is ready, commit the online status.
           presenceRef.set({
             online: true,
             typing: false,
@@ -144,11 +188,82 @@
         });
       }
     });
+
+    // Watch admin presence for chat UI
+    watchAdminPresence();
   }
 
   function setTyping(isTyping) {
     if (!presenceRef) return;
     presenceRef.update({ typing: isTyping });
+  }
+
+  // ============================
+  // Watch Admin Presence (for chat header)
+  // ============================
+  function watchAdminPresence() {
+    if (!rtdb) return;
+
+    // We need admin UID - we'll get it from Firestore users collection
+    if (db) {
+      db.collection('users').where('email', '==', ADMIN_EMAIL).limit(1).get().then(function(snap) {
+        if (!snap.empty) {
+          var adminUid = snap.docs[0].id;
+          var adminRef = rtdb.ref('presence/' + adminUid);
+          adminRef.on('value', function(presSnap) {
+            var pres = presSnap.val();
+            updateChatPresenceUI(pres);
+          });
+        }
+      }).catch(function() {});
+    }
+  }
+
+  function updateChatPresenceUI(presence) {
+    var isOnline = presence && presence.online;
+    var lastSeen = presence && presence.lastSeen;
+
+    // Desktop chat
+    var statusText = document.getElementById('chat-status-text');
+    var adminDot = document.getElementById('chat-admin-dot');
+    
+    if (statusText) {
+      if (isOnline) {
+        statusText.textContent = 'Active now';
+        statusText.style.color = 'var(--color-online)';
+      } else if (lastSeen) {
+        statusText.textContent = 'Last seen ' + formatLastSeen(lastSeen);
+        statusText.style.color = '';
+      } else {
+        statusText.textContent = 'Offline';
+        statusText.style.color = '';
+      }
+    }
+
+    if (adminDot) {
+      adminDot.style.background = isOnline ? 'var(--color-online)' : 'var(--color-text-tertiary)';
+    }
+
+    // Mobile chat
+    var mobileStatus = document.getElementById('mobile-chat-status');
+    var mobileDot = document.getElementById('mobile-chat-admin-dot');
+    
+    if (mobileStatus) {
+      mobileStatus.textContent = isOnline ? 'Active now' : (lastSeen ? 'Last seen ' + formatLastSeen(lastSeen) : 'Offline');
+    }
+    if (mobileDot) {
+      mobileDot.style.background = isOnline ? 'var(--color-online)' : 'var(--color-text-tertiary)';
+    }
+  }
+
+  function formatLastSeen(timestamp) {
+    var now = Date.now();
+    var diff = Math.floor((now - timestamp) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+    return new Date(timestamp).toLocaleDateString();
   }
 
   // ============================
@@ -159,45 +274,33 @@
 
     document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
-        // Tab hidden — disconnect to free up connection slot
-        if (rtdb) {
-          try { firebase.database().goOffline(); } catch(e) {}
-        }
+        if (rtdb) { try { firebase.database().goOffline(); } catch(e) {} }
       } else {
-        // Tab visible — reconnect
-        if (rtdb) {
-          try { firebase.database().goOnline(); } catch(e) {}
-        }
-        // Re-set presence
-        if (currentUser) {
-          setupPresence(currentUser.uid);
-        }
+        if (rtdb) { try { firebase.database().goOnline(); } catch(e) {} }
+        if (currentUser) { setupPresence(currentUser.uid); }
       }
     });
   }
 
   // ============================
-  // Google Sign-In (popup with redirect fallback)
+  // Google Sign-In
   // ============================
   function signInWithGoogle() {
     if (!auth) {
-      alert('Firebase not configured. Please try again later.');
+      showToast('Firebase not configured. Please try again later.');
       return Promise.reject(new Error('No auth'));
     }
     var provider = new firebase.auth.GoogleAuthProvider();
     return auth.signInWithPopup(provider).catch(function(err) {
-      // If popup was blocked or domain not authorized, try redirect
       if (err.code === 'auth/popup-blocked' || 
           err.code === 'auth/unauthorized-domain' ||
           err.code === 'auth/operation-not-supported-in-this-environment') {
-        console.info('[PortfolioDB] Popup failed, trying redirect...');
         return auth.signInWithRedirect(provider);
       }
       throw err;
     });
   }
 
-  // Handle redirect result on page load
   function handleRedirectResult() {
     if (!auth) return;
     auth.getRedirectResult().then(function(result) {
@@ -211,22 +314,17 @@
 
   function signOut() {
     if (!auth) return Promise.resolve();
-    // Clean up presence
     if (presenceRef) {
-      presenceRef.set({
-        online: false,
-        typing: false,
-        lastSeen: firebase.database.ServerValue.TIMESTAMP
-      });
+      presenceRef.set({ online: false, typing: false, lastSeen: firebase.database.ServerValue.TIMESTAMP });
     }
     return auth.signOut();
   }
 
   // ============================
-  // Sync page data from Firestore (read-only, no auth required)
+  // Sync Page Data from Firestore
   // ============================
   function syncPageData() {
-    document.querySelectorAll('.feed-item').forEach(function(item) {
+    document.querySelectorAll('.ig-post').forEach(function(item) {
       var id = item.dataset.id;
       if (!id) return;
 
@@ -236,73 +334,48 @@
           if (doc.exists) {
             var data = doc.data();
             var countEl = document.getElementById('like-count-' + id);
-            var iconsEl = document.getElementById('reaction-icons-' + id);
             var likeBtn = document.getElementById('like-btn-' + id);
             var totalLikes = data.count || 0;
 
             if (countEl) {
-              countEl.textContent = totalLikes === 0 ? '0 Reactions' : totalLikes;
+              countEl.textContent = totalLikes === 0 ? '0 likes' :
+                totalLikes === 1 ? '1 like' : totalLikes + ' likes';
             }
 
-            // Check if current user reacted
+            // Check if current user liked
             if (currentUser) {
               var userReaction = data.users && data.users[currentUser.uid];
               if (userReaction) {
-                lsSet('reaction_' + id, userReaction);
                 lsSet('liked_' + id, 'true');
+                lsSet('reaction_' + id, userReaction);
               } else {
-                lsRemove('reaction_' + id);
                 lsRemove('liked_' + id);
+                lsRemove('reaction_' + id);
               }
 
               if (userReaction && likeBtn) {
-                likeBtn.classList.add('interaction-btn--active');
-                if (userReaction !== 'like') {
-                  likeBtn.classList.add('has-custom');
-                }
-                var textEl = likeBtn.querySelector('.interaction-btn__text');
-                var customIconEl = likeBtn.querySelector('.like-icon-custom');
-                if (userReaction !== 'like' && customIconEl && textEl) {
-                  var imgUrl = window._reactionImages && window._reactionImages[userReaction];
-                  customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + userReaction + '" style="display:block;">';
-                  customIconEl.style.display = 'inline-block';
-                  textEl.textContent = userReaction.charAt(0).toUpperCase() + userReaction.slice(1);
-                  var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
-                  textEl.style.color = colors[userReaction] || '';
-                } else if (userReaction === 'like' && textEl) {
-                  textEl.textContent = 'Like';
-                  textEl.style.color = '';
-                  if (customIconEl) customIconEl.style.display = 'none';
-                }
+                likeBtn.classList.add('ig-action-btn--active');
+                var filled = likeBtn.querySelector('.ig-heart-filled');
+                var outline = likeBtn.querySelector('.ig-heart-outline');
+                if (filled) filled.style.display = 'block';
+                if (outline) outline.style.display = 'none';
               }
             }
 
-            // Show reaction icons
-            if (iconsEl && data.reactionTypes) {
-              var html = '';
-              var types = Object.keys(data.reactionTypes);
-              types.sort(function(a, b) {
-                return data.reactionTypes[b] - data.reactionTypes[a];
-              });
-              types.slice(0, 3).forEach(function(type) {
-                var imgUrl = window._reactionImages && window._reactionImages[type];
-                if (imgUrl) {
-                  html += '<img src="' + imgUrl + '" alt="' + type + '">';
-                }
-              });
-              if (html) iconsEl.innerHTML = html;
-            }
+            // Cache likes count
+            lsSet('likes_' + id, totalLikes.toString());
           }
         }).catch(function() {});
 
         // Sync comments
         db.collection('comments').doc(id).collection('items')
           .orderBy('timestamp', 'asc').get().then(function(snap) {
-            var countEl = document.getElementById('comment-count-' + id);
             var count = snap.size;
-            if (countEl) {
-              countEl.textContent = count + ' comment' + (count !== 1 ? 's' : '');
-            }
+            var countEl = document.getElementById('comment-count-' + id);
+            if (countEl) countEl.textContent = count;
+            
+            var viewBtn = document.getElementById('view-comments-btn-' + id);
+            if (viewBtn) viewBtn.style.display = count > 0 ? 'block' : 'none';
 
             var comments = [];
             snap.forEach(function(doc) {
@@ -314,10 +387,7 @@
 
             var rootComments = [];
             var commentMap = {};
-            comments.forEach(function(c) {
-              c.replies = [];
-              commentMap[c.id] = c;
-            });
+            comments.forEach(function(c) { c.replies = []; commentMap[c.id] = c; });
             comments.forEach(function(c) {
               if (c.parentId && commentMap[c.parentId]) {
                 commentMap[c.parentId].replies.push(c);
@@ -356,84 +426,57 @@
   // PortfolioDB — Public API
   // ============================
   window.PortfolioDB = {
-
-    // --- Auth ---
-
-    getCurrentUser: function() {
-      return currentUser;
-    },
-
-    isSignedIn: function() {
-      return !!currentUser;
-    },
-
+    getCurrentUser: function() { return currentUser; },
+    isSignedIn: function() { return !!currentUser; },
+    
     requireAuth: function() {
       if (currentUser) return Promise.resolve(currentUser);
-      return signInWithGoogle().then(function() {
-        return currentUser;
-      });
+      return signInWithGoogle().then(function() { return currentUser; });
     },
 
-    signOut: function() {
-      return signOut();
-    },
-
-    getAdminEmail: function() {
-      return ADMIN_EMAIL;
-    },
+    signOut: function() { return signOut(); },
+    getAdminEmail: function() { return ADMIN_EMAIL; },
 
     // --- Presence ---
-
     setTyping: function(isTyping) {
       if (typingTimeout) clearTimeout(typingTimeout);
       setTyping(isTyping);
       if (isTyping) {
-        typingTimeout = setTimeout(function() {
-          setTyping(false);
-        }, 2000);
+        typingTimeout = setTimeout(function() { setTyping(false); }, 2000);
       }
     },
 
     watchPresence: function(uid, callback) {
       if (!rtdb) return function() {};
       var ref = rtdb.ref('presence/' + uid);
-      ref.on('value', function(snap) {
-        callback(snap.val());
-      });
-      return function() { ref.off(); };
+      var listener = ref.on('value', function(snap) { callback(snap.val()); });
+      return function() { ref.off('value', listener); };
     },
 
-    // --- Likes / Reactions ---
-
+    // --- Likes ---
     getLikes: function(contentId) {
-      return parseInt(lsGet('likes_' + contentId, '0'), 10);
+      var stored = lsGet('likes_' + contentId, '0');
+      return { count: parseInt(stored, 10), users: [] };
     },
 
     hasLiked: function(contentId) {
       return lsGet('liked_' + contentId, null) === 'true';
     },
 
-    getReactionType: function(contentId) {
-      return lsGet('reaction_' + contentId, null);
-    },
-
-    toggleLike: function(contentId, reactionType) {
-      if (!currentUser) return { liked: false, count: this.getLikes(contentId) };
+    toggleLike: function(contentId) {
+      if (!currentUser) return { liked: false, count: 0 };
 
       var liked = this.hasLiked(contentId);
-      var count = this.getLikes(contentId);
-      var currentReaction = this.getReactionType(contentId) || 'like';
-      var newReaction = reactionType || 'like';
-      var isSwapping = liked && reactionType && (currentReaction !== newReaction);
+      var count = parseInt(lsGet('likes_' + contentId, '0'), 10);
 
-      if (liked && !isSwapping) {
+      if (liked) {
         count = Math.max(0, count - 1);
         lsRemove('liked_' + contentId);
         lsRemove('reaction_' + contentId);
       } else {
-        if (!liked) count += 1;
+        count += 1;
         lsSet('liked_' + contentId, 'true');
-        lsSet('reaction_' + contentId, newReaction);
+        lsSet('reaction_' + contentId, 'like');
       }
       lsSet('likes_' + contentId, count.toString());
 
@@ -443,43 +486,29 @@
         var ref = db.collection('reactions').doc(contentId);
         db.runTransaction(function(tx) {
           return tx.get(ref).then(function(doc) {
-            var data = doc.exists ? doc.data() : { count: 0, users: {}, reactionTypes: {}, userProfiles: {} };
+            var data = doc.exists ? doc.data() : { count: 0, users: {}, userProfiles: {} };
             if (!data.userProfiles) data.userProfiles = {};
-            var oldUserReaction = data.users[currentUser.uid];
 
-            if (liked && !isSwapping) {
+            if (liked) {
               data.count = Math.max(0, (data.count || 0) - 1);
               delete data.users[currentUser.uid];
               delete data.userProfiles[currentUser.uid];
-              if (oldUserReaction && data.reactionTypes[oldUserReaction]) {
-                data.reactionTypes[oldUserReaction] = Math.max(0, data.reactionTypes[oldUserReaction] - 1);
-                if (data.reactionTypes[oldUserReaction] === 0) delete data.reactionTypes[oldUserReaction];
-              }
             } else {
-              if (!liked || !oldUserReaction) {
-                data.count = (data.count || 0) + 1;
-              } else if (oldUserReaction && oldUserReaction !== newReaction) {
-                if (data.reactionTypes[oldUserReaction]) {
-                  data.reactionTypes[oldUserReaction] = Math.max(0, data.reactionTypes[oldUserReaction] - 1);
-                  if (data.reactionTypes[oldUserReaction] === 0) delete data.reactionTypes[oldUserReaction];
-                }
-              }
-              data.users[currentUser.uid] = newReaction;
+              data.count = (data.count || 0) + 1;
+              data.users[currentUser.uid] = 'like';
               data.userProfiles[currentUser.uid] = userProfile;
-              data.reactionTypes[newReaction] = (data.reactionTypes[newReaction] || 0) + 1;
             }
             tx.set(ref, data);
           });
         }).catch(function(err) {
-          console.warn('[PortfolioDB] Firestore reaction error:', err.message);
+          console.warn('[PortfolioDB] Reaction error:', err.message);
         });
       }
 
-      return { liked: liked && !isSwapping ? false : true, count: count };
+      return { liked: !liked, count: count };
     },
 
     // --- Comments ---
-
     getComments: function(contentId) {
       return lsGetJSON('comments_' + contentId, []);
     },
@@ -521,7 +550,6 @@
       lsSetJSON('comments_' + contentId, comments);
 
       if (firebaseReady && db) {
-        // Create/update parent doc so mods dashboard can find it
         db.collection('comments').doc(contentId).set({ updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
         db.collection('comments').doc(contentId).collection('items').doc(comment.id).set({
           text: comment.text,
@@ -533,7 +561,7 @@
           likedBy: [],
           parentId: comment.parentId
         }).catch(function(err) {
-          console.warn('[PortfolioDB] Firestore comment error:', err.message);
+          console.warn('[PortfolioDB] Comment error:', err.message);
         });
       }
 
@@ -577,11 +605,8 @@
             var data = doc.data();
             var likedBy = data.likedBy || [];
             var idx = likedBy.indexOf(userId);
-            if (idx >= 0) {
-              likedBy.splice(idx, 1);
-            } else {
-              likedBy.push(userId);
-            }
+            if (idx >= 0) likedBy.splice(idx, 1);
+            else likedBy.push(userId);
             ref.update({ likedBy: likedBy, likes: likedBy.length });
           }
         }).catch(function() {});
@@ -590,8 +615,7 @@
       return result;
     },
 
-    // --- Chat (Real-time with Firestore) ---
-
+    // --- Chat ---
     sendChatMessage: function(text) {
       if (!currentUser || !db) return;
 
@@ -610,33 +634,11 @@
       });
     },
 
-    getAdminEmail: function() {
-      return 'prabhat.pushpak@gmail.com';
-    },
-
-    watchPresence: function(uid, callback) {
-      if (!rtdb) return function() {};
-      var ref = rtdb.ref('presence/' + uid);
-      var listener = ref.on('value', function(snap) {
-        callback(snap.val());
-      });
-      return function() {
-        ref.off('value', listener);
-      };
-    },
-
     listenToChat: function(callback) {
-      if (!db || !currentUser) {
-        console.warn('[PortfolioDB] listenToChat: no db or user');
-        return function() {};
-      }
+      if (!db || !currentUser) return function() {};
 
-      // Unsubscribe from previous listener
-      if (chatUnsubscribe) {
-        chatUnsubscribe();
-      }
+      if (chatUnsubscribe) chatUnsubscribe();
 
-      // Use desc + limit to get latest msgs, then reverse for display order
       var query = db.collection('chat_messages')
         .where('conversationId', '==', currentUser.uid)
         .orderBy('timestamp', 'desc')
@@ -650,14 +652,11 @@
           d.timestamp = d.timestamp ? d.timestamp.toDate() : new Date();
           messages.push(d);
         });
-        // Reverse to show oldest first
         messages.reverse();
         callback(messages);
       }, function(err) {
         console.warn('[PortfolioDB] Chat listener error:', err.message);
-        // If index missing, try without ordering
         if (err.code === 'failed-precondition') {
-          console.info('[PortfolioDB] Falling back to unordered chat query');
           var fallback = db.collection('chat_messages')
             .where('conversationId', '==', currentUser.uid)
             .limit(CHAT_MSG_LIMIT);
@@ -678,27 +677,39 @@
       return chatUnsubscribe;
     },
 
-    // Mark chat as read (for unread tracking)
     markChatRead: function(latestMsgTime) {
       if (!db || !currentUser) return;
-      var newTime = latestMsgTime || Date.now();
-      localStorage.setItem('chat_read_' + currentUser.uid, newTime.toString());
+      localStorage.setItem('chat_read_' + currentUser.uid, (latestMsgTime || Date.now()).toString());
       db.collection('chat_read').doc(currentUser.uid).set({
         lastRead: firebase.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
     },
 
-
-    isSaved: function(contentId) {
-      return lsGet('saved_' + contentId, null) === 'true';
+    // --- Story Views ---
+    recordStoryView: function(storyId) {
+      if (!db || !currentUser) return;
+      db.collection('story_views').doc(storyId).set({
+        viewers: firebase.firestore.FieldValue.arrayUnion({
+          uid: currentUser.uid,
+          name: currentUser.name,
+          photo: currentUser.photo,
+          timestamp: Date.now()
+        })
+      }, { merge: true }).catch(function() {});
     },
 
-    toggleSave: function(contentId) {
-      var saved = this.isSaved(contentId);
-      if (saved) { lsRemove('saved_' + contentId); } else { lsSet('saved_' + contentId, 'true'); }
-      return !saved;
+    getStoryViews: function(storyId, callback) {
+      if (!db) { callback([]); return; }
+      db.collection('story_views').doc(storyId).get().then(function(doc) {
+        if (doc.exists) {
+          callback(doc.data().viewers || []);
+        } else {
+          callback([]);
+        }
+      }).catch(function() { callback([]); });
     },
 
+    // --- Shares ---
     getShares: function(contentId) {
       return parseInt(lsGet('shares_' + contentId, '0'), 10);
     },
@@ -711,52 +722,181 @@
   };
 
   // ============================
-  // Page load
+  // Global functions for HTML onclick handlers
+  // ============================
+  window.handleGoogleSignIn = function() {
+    if (!auth) {
+      // Use auth modal approach
+      var modal = document.getElementById('ig-auth-modal');
+      if (modal) modal.style.display = 'flex';
+      return;
+    }
+    
+    signInWithGoogle().catch(function(err) {
+      if (err.code !== 'auth/popup-closed-by-user') {
+        showToast('Sign-in failed');
+      }
+    });
+  };
+
+  window.handleLogout = function() {
+    signOut().then(function() {
+      showToast('Signed out');
+      location.reload();
+    });
+  };
+
+  window.startChat = function() {
+    window.handleGoogleSignIn();
+    // Auth state change will set up chat
+    window.addEventListener('authStateChanged', function handler(e) {
+      if (e.detail.user) {
+        initChatUI();
+        window.removeEventListener('authStateChanged', handler);
+      }
+    });
+  };
+
+  window.startMobileChat = function() {
+    window.handleGoogleSignIn();
+    window.addEventListener('authStateChanged', function handler(e) {
+      if (e.detail.user) {
+        initMobileChatUI();
+        window.removeEventListener('authStateChanged', handler);
+      }
+    });
+  };
+
+  window.sendChatMessage = function() {
+    var input = document.getElementById('chat-msg-input');
+    if (!input || !input.value.trim()) return;
+    PortfolioDB.sendChatMessage(input.value.trim());
+    input.value = '';
+  };
+
+  window.sendMobileChatMessage = function() {
+    var input = document.getElementById('mobile-chat-msg-input');
+    if (!input || !input.value.trim()) return;
+    PortfolioDB.sendChatMessage(input.value.trim());
+    input.value = '';
+  };
+
+  window.toggleUserMenu = function() {
+    var menu = document.getElementById('ig-user-menu');
+    if (menu) {
+      var isShowing = menu.style.display !== 'none';
+      menu.style.display = isShowing ? 'none' : 'block';
+      // Position it near the switch button
+      if (!isShowing) {
+        var btn = document.getElementById('aside-login-btn');
+        if (btn) {
+          var rect = btn.getBoundingClientRect();
+          menu.style.top = (rect.bottom + 8) + 'px';
+          menu.style.right = '20px';
+        }
+      }
+    }
+  };
+
+  window.recordStoryView = function(storyId) {
+    PortfolioDB.recordStoryView(storyId);
+  };
+
+  // ============================
+  // Chat UI Initialization
+  // ============================
+  function initChatUI() {
+    var onboarding = document.getElementById('chat-onboarding');
+    var body = document.getElementById('chat-body');
+    if (onboarding) onboarding.style.display = 'none';
+    if (body) body.style.display = 'flex';
+
+    PortfolioDB.listenToChat(function(messages) {
+      renderChatMessages('chat-messages', messages);
+    });
+  }
+
+  function initMobileChatUI() {
+    var onboarding = document.getElementById('mobile-chat-onboarding');
+    var messages = document.getElementById('mobile-chat-messages');
+    var footer = document.getElementById('mobile-chat-footer');
+    if (onboarding) onboarding.style.display = 'none';
+    if (messages) messages.style.display = 'flex';
+    if (footer) footer.style.display = 'flex';
+
+    PortfolioDB.listenToChat(function(msgs) {
+      renderChatMessages('mobile-chat-messages', msgs);
+    });
+  }
+
+  function renderChatMessages(containerId, messages) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = messages.map(function(msg) {
+      var isSent = msg.authorUid === (currentUser ? currentUser.uid : '');
+      var time = msg.timestamp instanceof Date 
+        ? msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        : '';
+      return '<div class="chat-bubble chat-bubble--' + (isSent ? 'sent' : 'received') + '">' +
+        msg.text +
+        '<span class="chat-bubble__time">' + time + '</span>' +
+      '</div>';
+    }).join('');
+
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // Auto-init chat if user is already signed in on load
+  window.addEventListener('authStateChanged', function(e) {
+    if (e.detail.user) {
+      // Desktop chat - if chat widget is open, init
+      var chat = document.getElementById('chat-widget');
+      if (chat && chat.classList.contains('open')) {
+        initChatUI();
+      }
+    }
+  });
+
+  // ============================
+  // Page Load
   // ============================
   document.addEventListener('DOMContentLoaded', function() {
     initFirebase();
     setupIdleDetection();
 
-    // Restore from localStorage immediately
-    document.querySelectorAll('.feed-item').forEach(function(item) {
+    // Restore likes from localStorage immediately
+    document.querySelectorAll('.ig-post').forEach(function(item) {
       var id = item.dataset.id;
       if (!id) return;
 
-      var likeCount = PortfolioDB.getLikes(id);
+      var likeCount = parseInt(lsGet('likes_' + id, '0'), 10);
       var likeCountEl = document.getElementById('like-count-' + id);
       if (likeCountEl) {
-        likeCountEl.textContent = likeCount > 0 ? likeCount : '0 Reactions';
+        likeCountEl.textContent = likeCount === 0 ? '0 likes' :
+          likeCount === 1 ? '1 like' : likeCount + ' likes';
       }
 
-      if (PortfolioDB.hasLiked(id)) {
+      if (lsGet('liked_' + id, null) === 'true') {
         var likeBtn = document.getElementById('like-btn-' + id);
-        var reaction = PortfolioDB.getReactionType(id) || 'like';
-
         if (likeBtn) {
-          likeBtn.classList.add('interaction-btn--active');
-          if (reaction !== 'like') {
-            likeBtn.classList.add('has-custom');
-            var textEl = likeBtn.querySelector('.interaction-btn__text');
-            var customIconEl = likeBtn.querySelector('.like-icon-custom');
-            if (customIconEl && textEl) {
-              var imgUrl = window._reactionImages && window._reactionImages[reaction];
-              customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + reaction + '" style="display:block;">';
-              customIconEl.style.display = 'inline-block';
-              textEl.textContent = reaction.charAt(0).toUpperCase() + reaction.slice(1);
-              var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
-              textEl.style.color = colors[reaction] || '';
-            }
-          }
+          likeBtn.classList.add('ig-action-btn--active');
+          var filled = likeBtn.querySelector('.ig-heart-filled');
+          var outline = likeBtn.querySelector('.ig-heart-outline');
+          if (filled) filled.style.display = 'block';
+          if (outline) outline.style.display = 'none';
         }
       }
 
-      var comments = PortfolioDB.getComments(id);
+      var comments = lsGetJSON('comments_' + id, []);
       var commentCountEl = document.getElementById('comment-count-' + id);
-      if (commentCountEl && comments.length > 0) {
+      var viewBtn = document.getElementById('view-comments-btn-' + id);
+      if (comments.length > 0) {
         var totalC = 0;
         function countR(arr) { arr.forEach(function(x) { totalC++; if(x.replies) countR(x.replies); }); }
         countR(comments);
-        commentCountEl.textContent = totalC + ' comment' + (totalC !== 1 ? 's' : '');
+        if (commentCountEl) commentCountEl.textContent = totalC;
+        if (viewBtn) viewBtn.style.display = 'block';
       }
     });
   });

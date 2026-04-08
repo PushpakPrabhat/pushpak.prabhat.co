@@ -1,0 +1,79 @@
+{{ $profile := .Site.Data.profile }}
+<!-- Instagram Stories Tray -->
+<div class="ig-stories" id="ig-stories-tray">
+  <div class="ig-stories__scroll">
+    <!-- Your Story (admin only - add story) -->
+    <div class="ig-story admin-only-el" id="add-story-btn" onclick="openCreateModal(event, 'story')" style="display:none;">
+      <div class="ig-story__ring ig-story__ring--add">
+        <img src="{{ .Site.Params.profileImage }}" alt="Your story" class="ig-story__avatar">
+        <span class="ig-story__add-icon">{{ partial "icons.html" (dict "icon" "plus" "size" "12") }}</span>
+      </div>
+      <span class="ig-story__name">Your story</span>
+    </div>
+
+    <!-- Story items loaded via JS from Firebase -->
+    <div id="stories-list"></div>
+  </div>
+</div>
+
+<!-- Story Viewer Overlay -->
+<div class="ig-story-viewer" id="ig-story-viewer" style="display:none;">
+  <div class="ig-story-viewer__overlay" onclick="closeStoryViewer()"></div>
+  <div class="ig-story-viewer__container">
+    <!-- Progress bars -->
+    <div class="ig-story-viewer__progress" id="story-progress-bar"></div>
+    
+    <!-- Header -->
+    <div class="ig-story-viewer__header">
+      <div class="ig-story-viewer__user">
+        <img src="" alt="" class="ig-story-viewer__user-avatar" id="story-viewer-avatar">
+        <span class="ig-story-viewer__user-name" id="story-viewer-name"></span>
+        <span class="ig-story-viewer__time" id="story-viewer-time"></span>
+      </div>
+      <div class="ig-story-viewer__actions">
+        <button class="ig-story-viewer__btn" id="story-pause-btn" onclick="toggleStoryPause()">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <button class="ig-story-viewer__btn" id="story-volume-btn" onclick="toggleStoryVolume()">
+          {{ partial "icons.html" (dict "icon" "volume-off" "size" "20") }}
+        </button>
+        <button class="ig-story-viewer__btn" onclick="closeStoryViewer()">
+          {{ partial "icons.html" (dict "icon" "close" "size" "20") }}
+        </button>
+      </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="ig-story-viewer__content" id="story-viewer-content">
+      <img id="story-viewer-img" src="" alt="" style="display:none;">
+      <video id="story-viewer-video" src="" muted playsinline style="display:none;"></video>
+    </div>
+    
+    <!-- Navigation areas -->
+    <div class="ig-story-viewer__nav-left" onclick="prevStorySlide()"></div>
+    <div class="ig-story-viewer__nav-right" onclick="nextStorySlide()"></div>
+    
+    <!-- Previous/Next story buttons -->
+    <button class="ig-story-viewer__nav-btn ig-story-viewer__nav-btn--prev" id="story-prev-btn" onclick="prevStory()">
+      {{ partial "icons.html" (dict "icon" "arrow-left" "size" "24") }}
+    </button>
+    <button class="ig-story-viewer__nav-btn ig-story-viewer__nav-btn--next" id="story-next-btn" onclick="nextStory()">
+      {{ partial "icons.html" (dict "icon" "arrow-right" "size" "24") }}
+    </button>
+    
+    <!-- Seen by (admin only) -->
+    <div class="ig-story-viewer__seen admin-only-el" id="story-seen-section" style="display:none;" onclick="toggleSeenBy()">
+      <span class="ig-story-viewer__seen-icon">{{ partial "icons.html" (dict "icon" "eye" "size" "18") }}</span>
+      <span class="ig-story-viewer__seen-count" id="story-seen-count">0</span>
+    </div>
+    
+    <!-- Seen by panel -->
+    <div class="ig-story-viewer__seen-panel" id="story-seen-panel" style="display:none;">
+      <div class="ig-story-viewer__seen-header">
+        <h3>Viewers</h3>
+        <button onclick="toggleSeenBy()">{{ partial "icons.html" (dict "icon" "close" "size" "18") }}</button>
+      </div>
+      <div class="ig-story-viewer__seen-list" id="story-seen-list"></div>
+    </div>
+  </div>
+</div>

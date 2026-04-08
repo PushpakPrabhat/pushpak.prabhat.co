@@ -1,21 +1,22 @@
 /**
- * LinkedIn Portfolio — Interactions
- * Handles: Like, Comment (with reactions & replies), Share
+ * Instagram Portfolio — Interactions
+ * Handles: Like (heart), Comment, Reply, Share
  * Auth-gated: requires Google Sign-In for Like, Comment, Reply
  */
 
 (function() {
   'use strict';
 
-  // LinkedIn default user avatar SVG (gray silhouette)
-  const DEFAULT_AVATAR_SVG = '<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="128" height="128" rx="64" fill="#e7e7e7"/><path d="M64 72c13.25 0 24-10.75 24-24S77.25 24 64 24 40 34.75 40 48s10.75 24 24 24zm0 8c-16 0-48 8-48 24v8h96v-8c0-16-32-24-48-24z" fill="#666"/></svg>';
-
-  const DEFAULT_AVATAR_DATA_URI = 'data:image/svg+xml,' + encodeURIComponent('<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><rect width="128" height="128" rx="64" fill="#e7e7e7"/><path d="M64 72c13.25 0 24-10.75 24-24S77.25 24 64 24 40 34.75 40 48s10.75 24 24 24zm0 8c-16 0-48 8-48 24v8h96v-8c0-16-32-24-48-24z" fill="#666"/></svg>');
+  const DEFAULT_AVATAR_DATA_URI = 'data:image/svg+xml,' + encodeURIComponent('<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><rect width="128" height="128" rx="64" fill="#333"/><path d="M64 72c13.25 0 24-10.75 24-24S77.25 24 64 24 40 34.75 40 48s10.75 24 24 24zm0 8c-16 0-48 8-48 24v8h96v-8c0-16-32-24-48-24z" fill="#666"/></svg>');
 
   // ============================
   // Auth Helper
   // ============================
   function requireAuthThen(callback) {
+    if (typeof PortfolioDB === 'undefined') {
+      openAuthModal();
+      return;
+    }
     if (PortfolioDB.isSignedIn()) {
       callback();
       return;
@@ -24,10 +25,8 @@
       callback();
     }).catch(function(err) {
       console.warn('[Interactions] Auth error:', err);
-      if (err && err.code === 'auth/unauthorized-domain') {
-        showToast('⚠️ Add this domain to Firebase authorized domains');
-      } else if (err && err.code === 'auth/popup-closed-by-user') {
-        // User cancelled sign-in, do nothing
+      if (err && err.code === 'auth/popup-closed-by-user') {
+        // User cancelled, do nothing
       } else {
         showToast('Sign in to interact');
       }
@@ -35,7 +34,7 @@
   }
 
   // ============================
-  // Like
+  // Like (Heart)
   // ============================
   window.toggleLike = function(contentId) {
     requireAuthThen(function() {
@@ -43,76 +42,44 @@
       
       const btn = document.getElementById('like-btn-' + contentId);
       const countEl = document.getElementById('like-count-' + contentId);
-      const iconsEl = document.getElementById('reaction-icons-' + contentId);
       
       if (btn) {
-        btn.classList.toggle('interaction-btn--active', result.liked);
-        
-        if (!result.liked) {
-          btn.classList.remove('has-custom');
-          const textEl = btn.querySelector('.interaction-btn__text');
-          if (textEl) {
-            textEl.textContent = 'Like';
-            textEl.style.color = '';
-          }
-          const customEl = btn.querySelector('.like-icon-custom');
-          if (customEl) { customEl.innerHTML = ''; customEl.style.display = 'none'; }
-        }
+        btn.classList.toggle('ig-action-btn--active', result.liked);
         
         // Animate
-        const icon = btn.querySelector('.interaction-btn__icon');
-        if (icon) {
-          icon.style.animation = 'none';
-          icon.offsetHeight;
-          icon.style.animation = 'likeHeart 0.35s ease';
+        if (result.liked) {
+          const filled = btn.querySelector('.ig-heart-filled');
+          if (filled) {
+            filled.style.display = 'block';
+            const svg = filled.querySelector('svg');
+            if (svg) {
+              svg.style.animation = 'none';
+              svg.offsetHeight;
+              svg.style.animation = 'likeHeart 0.35s ease';
+            }
+          }
+          const outline = btn.querySelector('.ig-heart-outline');
+          if (outline) outline.style.display = 'none';
+        } else {
+          const filled = btn.querySelector('.ig-heart-filled');
+          if (filled) filled.style.display = 'none';
+          const outline = btn.querySelector('.ig-heart-outline');
+          if (outline) outline.style.display = 'block';
         }
       }
       
       if (countEl) {
-        countEl.textContent = result.count === 0 ? '0 Reactions' : result.count;
+        const count = result.count || 0;
+        countEl.textContent = count === 0 ? '0 likes' :
+          count === 1 ? '1 like' : count + ' likes';
       }
-
-      if (!result.liked && iconsEl) {
-        if (result.count === 0) iconsEl.innerHTML = '';
-      } else if (result.liked && iconsEl && iconsEl.innerHTML.trim() === '') {
-        var likeImg = window._reactionImages && window._reactionImages['like'];
-        if (likeImg) {
-          iconsEl.innerHTML = '<img src="' + likeImg + '" alt="Like">';
-        }
-      }
-      
-      showToast(result.liked ? 'You liked this post 👍' : 'Reaction removed');
     });
   };
 
   // ============================
   // Comments
   // ============================
-  window.toggleComments = function(contentId) {
-    const section = document.getElementById('comments-' + contentId);
-    if (!section) return;
-    section.classList.toggle('open');
-    
-    // Load existing comments (anyone can VIEW without sign-in)
-    if (section.classList.contains('open')) {
-      const listEl = document.getElementById('comment-list-' + contentId);
-      if (listEl && listEl.children.length === 0) {
-        const comments = PortfolioDB.getComments(contentId);
-        comments.forEach(function(comment) {
-          if (!comment.parentId) {
-            var el = createCommentElement(comment, contentId);
-            listEl.appendChild(el);
-          }
-        });
-      }
-      // Focus input
-      var input = document.getElementById('comment-input-' + contentId);
-      if (input) setTimeout(function() { input.focus(); }, 100);
-    }
-  };
-
   window.addComment = function(contentId, parentId) {
-    // Gate behind auth
     requireAuthThen(function() {
       var inputId = parentId 
         ? 'reply-input-' + parentId 
@@ -146,12 +113,18 @@
       var allComments = PortfolioDB.getComments(contentId);
       var totalCount = countAllComments(allComments);
       var countEl = document.getElementById('comment-count-' + contentId);
-      if (countEl) {
-        countEl.textContent = totalCount + ' comment' + (totalCount !== 1 ? 's' : '');
-      }
+      if (countEl) countEl.textContent = totalCount;
+      
+      // Show "View all" button
+      var viewBtn = document.getElementById('view-comments-btn-' + contentId);
+      if (viewBtn && totalCount > 0) viewBtn.style.display = 'block';
+      
+      // Hide post button
+      var postBtn = document.getElementById('comment-post-btn-' + contentId);
+      if (postBtn) postBtn.style.display = 'none';
       
       input.value = '';
-      showToast('Comment posted! 💬');
+      showToast('Comment posted');
     });
   };
 
@@ -173,12 +146,12 @@
   function getUserName() {
     var user = PortfolioDB.getCurrentUser ? PortfolioDB.getCurrentUser() : null;
     if (user && user.name) return user.name;
-    return 'Guest User';
+    return 'Guest';
   }
 
   function createCommentElement(comment, contentId) {
     var div = document.createElement('div');
-    div.className = 'comment';
+    div.className = 'ig-comment';
     div.id = 'comment-' + comment.id;
     
     var timeAgo = getTimeAgo(new Date(comment.timestamp));
@@ -186,39 +159,30 @@
     var userId = PortfolioDB.getCurrentUser ? (PortfolioDB.getCurrentUser() || {}).uid : 'local_user';
     var isLiked = comment.likedBy && comment.likedBy.indexOf(userId) >= 0;
     
-    // Use the commenter's real profile picture if available
     var avatarUrl = comment.authorPhoto || DEFAULT_AVATAR_DATA_URI;
-    var authorName = comment.author || 'Guest User';
+    var authorName = comment.author || 'Guest';
     
     div.innerHTML = 
-      '<div class="comment__avatar-wrap">' +
-        '<img src="' + avatarUrl + '" alt="' + escapeHtml(authorName) + '" class="comment__avatar" referrerpolicy="no-referrer">' +
-      '</div>' +
-      '<div class="comment__content-wrapper">' +
-        '<div class="comment__body">' +
-          '<div class="comment__author">' +
-            escapeHtml(authorName) +
-            '<span class="comment__author-title"> · ' + timeAgo + '</span>' +
-          '</div>' +
-          '<div class="comment__text">' + escapeHtml(comment.text) + '</div>' +
+      '<img src="' + avatarUrl + '" alt="' + escapeHtml(authorName) + '" class="ig-comment__avatar" referrerpolicy="no-referrer">' +
+      '<div class="ig-comment__body">' +
+        '<div>' +
+          '<span class="ig-comment__author">' + escapeHtml(authorName) + '</span>' +
+          '<span class="ig-comment__text">' + escapeHtml(comment.text) + '</span>' +
         '</div>' +
-        '<div class="comment__actions">' +
-          '<button class="comment__action comment__action--like' + (isLiked ? ' comment__action--liked' : '') + '" onclick="toggleCommentLikeUI(\'' + comment.id + '\', \'' + contentId + '\', this)">' +
-            'Like' + (likeCount > 0 ? ' · ' + likeCount : '') +
+        '<div class="ig-comment__meta">' +
+          '<span>' + timeAgo + '</span>' +
+          '<button class="ig-comment__like-btn' + (isLiked ? ' ig-comment__like-btn--liked' : '') + '" onclick="toggleCommentLikeUI(\'' + comment.id + '\', \'' + contentId + '\', this)">' +
+            (likeCount > 0 ? likeCount + ' like' + (likeCount > 1 ? 's' : '') : 'Like') +
           '</button>' +
-          '<span class="comment__action-divider">|</span>' +
-          '<button class="comment__action" onclick="showReplyInput(\'' + comment.id + '\', \'' + contentId + '\')">' +
-            'Reply' +
-          '</button>' +
+          '<button class="ig-comment__like-btn" onclick="showReplyInput(\'' + comment.id + '\', \'' + contentId + '\')">Reply</button>' +
         '</div>' +
-        '<div class="comment__reply-wrapper" id="reply-wrapper-' + comment.id + '" style="display:none;">' +
-          '<div class="comment__reply-input-row">' +
-            '<img src="' + getUserAvatar() + '" alt="You" class="comment__reply-avatar" referrerpolicy="no-referrer">' +
-            '<input type="text" class="comment__reply-input" id="reply-input-' + comment.id + '" placeholder="Reply..." onkeypress="if(event.key===\'Enter\') addComment(\'' + contentId + '\', \'' + comment.id + '\')">' +
-            '<button class="comment__reply-btn" onclick="addComment(\'' + contentId + '\', \'' + comment.id + '\')">Post</button>' +
+        '<div class="ig-comment__reply-wrapper" id="reply-wrapper-' + comment.id + '" style="display:none;">' +
+          '<div class="ig-comments__add">' +
+            '<input type="text" class="ig-comments__input" id="reply-input-' + comment.id + '" placeholder="Reply..." onkeypress="if(event.key===\'Enter\') addComment(\'' + contentId + '\', \'' + comment.id + '\')">' +
+            '<button class="ig-comments__post-btn" style="display:block;" onclick="addComment(\'' + contentId + '\', \'' + comment.id + '\')">Post</button>' +
           '</div>' +
         '</div>' +
-        '<div class="comment__replies" id="replies-' + comment.id + '"></div>' +
+        '<div class="ig-comment__replies" id="replies-' + comment.id + '"></div>' +
       '</div>';
 
     // Render existing replies
@@ -237,8 +201,8 @@
     requireAuthThen(function() {
       var result = PortfolioDB.toggleCommentLike(commentId, contentId);
       if (btnEl) {
-        btnEl.classList.toggle('comment__action--liked', result.liked);
-        btnEl.textContent = 'Like' + (result.likes > 0 ? ' · ' + result.likes : '');
+        btnEl.classList.toggle('ig-comment__like-btn--liked', result.liked);
+        btnEl.textContent = result.likes > 0 ? result.likes + ' like' + (result.likes > 1 ? 's' : '') : 'Like';
       }
     });
   };
@@ -247,7 +211,7 @@
     var wrapper = document.getElementById('reply-wrapper-' + commentId);
     if (wrapper) {
       var isVisible = wrapper.style.display !== 'none';
-      wrapper.style.display = isVisible ? 'none' : 'flex';
+      wrapper.style.display = isVisible ? 'none' : 'block';
       if (!isVisible) {
         var input = document.getElementById('reply-input-' + commentId);
         if (input) setTimeout(function() { input.focus(); }, 50);
@@ -256,59 +220,69 @@
   };
 
   // ============================
-  // Share
+  // Like Display on Load
   // ============================
-  window.shareContent = function(url) {
-    if (url && url.startsWith('/')) {
-      url = window.location.origin + url;
-    }
-    
-    // Attempt tracking
-    var contentId = url.split('/').filter(Boolean).pop();
-    if (navigator.share) {
-      navigator.share({
-        title: document.title,
-        url: url
-      }).then(function() {
-        showToast('Shared! 🔗');
-      }).catch(function() {});
-    } else {
-      var el = document.createElement('textarea');
-      el.value = url;
-      el.setAttribute('readonly', '');
-      el.style.position = 'absolute';
-      el.style.left = '-9999px';
-      document.body.appendChild(el);
+  window.addEventListener('DOMContentLoaded', function() {
+    // Load like/comment counts for all posts
+    document.querySelectorAll('.ig-post').forEach(function(post) {
+      var contentId = post.dataset.id;
+      if (!contentId) return;
       
-      var selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
-      el.select();
-      
-      var success = false;
-      try {
-        success = document.execCommand('copy');
-      } catch (err) {}
-      
-      document.body.removeChild(el);
-      if (selected) {
-        document.getSelection().removeAllRanges();
-        document.getSelection().addRange(selected);
+      // Load likes
+      if (typeof PortfolioDB !== 'undefined') {
+        var likes = PortfolioDB.getLikes(contentId);
+        var countEl = document.getElementById('like-count-' + contentId);
+        if (countEl && likes) {
+          var count = likes.count || 0;
+          countEl.textContent = count === 0 ? '0 likes' :
+            count === 1 ? '1 like' : count + ' likes';
+        }
+        
+        // Check if current user liked
+        var userId = PortfolioDB.getCurrentUser ? (PortfolioDB.getCurrentUser() || {}).uid : null;
+        if (userId && likes && likes.users && likes.users.indexOf(userId) >= 0) {
+          var btn = document.getElementById('like-btn-' + contentId);
+          if (btn) {
+            btn.classList.add('ig-action-btn--active');
+            var filled = btn.querySelector('.ig-heart-filled');
+            if (filled) filled.style.display = 'block';
+            var outline = btn.querySelector('.ig-heart-outline');
+            if (outline) outline.style.display = 'none';
+          }
+        }
+        
+        // Load comments
+        var comments = PortfolioDB.getComments(contentId);
+        var totalCount = countAllComments(comments);
+        var commentCount = document.getElementById('comment-count-' + contentId);
+        if (commentCount) commentCount.textContent = totalCount;
+        var viewBtn = document.getElementById('view-comments-btn-' + contentId);
+        if (viewBtn) viewBtn.style.display = totalCount > 0 ? 'block' : 'none';
+        
+        // Pre-load comment list
+        if (comments.length > 0) {
+          var listEl = document.getElementById('comment-list-' + contentId);
+          if (listEl) {
+            listEl.style.display = 'none'; // Hidden initially, shown on "View all"
+            comments.forEach(function(comment) {
+              if (!comment.parentId) {
+                var el = createCommentElement(comment, contentId);
+                listEl.appendChild(el);
+              }
+            });
+          }
+        }
       }
-      
-      if (success) {
-        showToast('Link copied! 🔗');
-      } else if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(url).then(function() {
-          showToast('Link copied! 🔗');
-        }).catch(function() {
-          showToast('Could not copy link');
-        });
-      } else {
-        showToast('Could not copy link');
-      }
-    }
+    });
     
-    PortfolioDB.incrementShare(contentId);
-  };
+    // Setup like button click handlers
+    document.querySelectorAll('[id^="like-btn-"]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var contentId = this.dataset.contentId;
+        if (contentId) window.toggleLike(contentId);
+      });
+    });
+  });
 
   // ============================
   // Helpers

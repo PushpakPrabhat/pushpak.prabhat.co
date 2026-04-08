@@ -9,191 +9,206 @@
   <main id="main-content">
     {{ block "main" . }}{{ end }}
   </main>
-  
+
   <!-- ===== MEDIA VIEWER (Images) ===== -->
-  <div class="media-viewer" id="media-viewer" role="dialog" aria-modal="true" aria-label="Image viewer">
-    <div class="media-viewer__overlay"></div>
-    <div class="media-viewer__topbar">
-      <span class="media-viewer__counter" id="mv-counter">1 / 1</span>
-      <div class="media-viewer__actions">
-        <button class="media-viewer__btn" id="mv-zoom-in" title="Zoom in">{{ partial "icons.html" (dict "icon" "zoom-in" "size" "22") }}</button>
-        <button class="media-viewer__btn" id="mv-zoom-out" title="Zoom out">{{ partial "icons.html" (dict "icon" "zoom-out" "size" "22") }}</button>
-        <button class="media-viewer__btn" id="mv-download" title="Download">{{ partial "icons.html" (dict "icon" "download" "size" "22") }}</button>
-        <button class="media-viewer__btn" id="mv-fullscreen" title="Fullscreen">{{ partial "icons.html" (dict "icon" "fullscreen" "size" "22") }}</button>
-        <button class="media-viewer__btn" id="mv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
+  <div class="ig-media-viewer" id="media-viewer" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="ig-media-viewer__overlay"></div>
+    <div class="ig-media-viewer__topbar">
+      <span class="ig-media-viewer__counter" id="mv-counter">1 / 1</span>
+      <div class="ig-media-viewer__actions">
+        <button class="ig-media-viewer__btn" id="mv-zoom-in" title="Zoom in">{{ partial "icons.html" (dict "icon" "zoom-in" "size" "22") }}</button>
+        <button class="ig-media-viewer__btn" id="mv-zoom-out" title="Zoom out">{{ partial "icons.html" (dict "icon" "zoom-out" "size" "22") }}</button>
+        <button class="ig-media-viewer__btn" id="mv-download" title="Download">{{ partial "icons.html" (dict "icon" "download" "size" "22") }}</button>
+        <button class="ig-media-viewer__btn" id="mv-fullscreen" title="Fullscreen">{{ partial "icons.html" (dict "icon" "fullscreen" "size" "22") }}</button>
+        <button class="ig-media-viewer__btn" id="mv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
       </div>
     </div>
-    <button class="media-viewer__nav media-viewer__nav--prev" id="mv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "36") }}</button>
-    <button class="media-viewer__nav media-viewer__nav--next" id="mv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "arrow-right" "size" "36") }}</button>
-    <div class="media-viewer__content" id="mv-content">
+    <button class="ig-media-viewer__nav ig-media-viewer__nav--prev" id="mv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "20") }}</button>
+    <button class="ig-media-viewer__nav ig-media-viewer__nav--next" id="mv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "arrow-right" "size" "20") }}</button>
+    <div class="ig-media-viewer__content" id="mv-content">
       <img id="mv-img" src="" alt="" draggable="false">
     </div>
   </div>
 
   <!-- ===== VIDEO VIEWER ===== -->
-  <div class="video-viewer" id="video-viewer" role="dialog" aria-modal="true" aria-label="Video viewer">
-    <div class="media-viewer__overlay"></div>
-    <div class="media-viewer__topbar">
-      <span class="media-viewer__counter" id="vv-counter">1 / 1</span>
-      <div class="media-viewer__actions">
-        <button class="media-viewer__btn" id="vv-fullscreen" title="Fullscreen">{{ partial "icons.html" (dict "icon" "fullscreen" "size" "22") }}</button>
-        <button class="media-viewer__btn" id="vv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
+  <div class="ig-media-viewer ig-video-viewer" id="video-viewer" role="dialog" aria-modal="true" aria-label="Video viewer">
+    <div class="ig-media-viewer__overlay"></div>
+    <div class="ig-media-viewer__topbar">
+      <span class="ig-media-viewer__counter" id="vv-counter">1 / 1</span>
+      <div class="ig-media-viewer__actions">
+        <button class="ig-media-viewer__btn" id="vv-fullscreen" title="Fullscreen">{{ partial "icons.html" (dict "icon" "fullscreen" "size" "22") }}</button>
+        <button class="ig-media-viewer__btn" id="vv-close" title="Close">{{ partial "icons.html" (dict "icon" "close" "size" "22") }}</button>
       </div>
     </div>
-    <button class="media-viewer__nav media-viewer__nav--prev" id="vv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "36") }}</button>
-    <button class="media-viewer__nav media-viewer__nav--next" id="vv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "arrow-right" "size" "36") }}</button>
-    <div class="media-viewer__content" id="vv-content">
+    <button class="ig-media-viewer__nav ig-media-viewer__nav--prev" id="vv-prev" aria-label="Previous">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "20") }}</button>
+    <button class="ig-media-viewer__nav ig-media-viewer__nav--next" id="vv-next" aria-label="Next">{{ partial "icons.html" (dict "icon" "arrow-right" "size" "20") }}</button>
+    <div class="ig-media-viewer__content" id="vv-content">
       <div id="vv-embed"></div>
     </div>
   </div>
 
-  <!-- ===== CHAT WIDGET (LinkedIn Messaging style) ===== -->
-  <div class="chat-widget" id="chat-widget">
-    <!-- Header bar (always visible when open) -->
-    <div class="chat-widget__header" onclick="toggleChatMinimize()">
-      <div class="chat-widget__header-left">
-        <div class="chat-widget__avatar-wrapper">
-          {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="chat-widget__avatar">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "chat-widget__avatar" "size" "48") }}{{ end }}
-          <span class="chat-widget__online-dot" id="chat-admin-dot"></span>
+  <!-- ===== INSTAGRAM DM CHAT ===== -->
+  <div class="ig-chat" id="chat-widget">
+    <div class="ig-chat__header" onclick="toggleChatMinimize()">
+      <div class="ig-chat__header-left">
+        <div class="ig-chat__avatar-wrap">
+          {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="ig-chat__avatar">{{ end }}
+          <span class="ig-chat__online-dot" id="chat-admin-dot"></span>
         </div>
-        <span class="chat-widget__title">{{ .Site.Params.author }}</span>
+        <div class="ig-chat__header-info">
+          <span class="ig-chat__title">{{ .Site.Params.author }}</span>
+          <span class="ig-chat__status" id="chat-status-text">Offline</span>
+        </div>
       </div>
-      <div class="chat-widget__header-actions">
-        <button class="chat-widget__header-btn" onclick="event.stopPropagation();" title="New message">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17 2H7a1 1 0 00-1 1v2H4a1 1 0 00-1 1v14a1 1 0 001 1h10a1 1 0 001-1v-2h2a1 1 0 001-1V3a1 1 0 00-1-1zM13 19H5V7h8v12zm3-3h-2V6a1 1 0 00-1-1H8V4h8v12z"/><line x1="7" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="13" x2="11" y2="13" stroke="currentColor" stroke-width="1.5"/></svg>
-        </button>
-        <button class="chat-widget__header-btn chat-widget__chevron" id="chat-chevron" onclick="event.stopPropagation(); toggleChatMinimize()">
+      <div class="ig-chat__header-actions">
+        <button class="ig-chat__header-btn ig-chat__chevron" id="chat-chevron" onclick="event.stopPropagation(); toggleChatMinimize()">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
         </button>
       </div>
     </div>
-    <!-- Onboarding (Google Sign-In) -->
-    <div class="chat-widget__onboarding" id="chat-onboarding">
-      <div class="chat-widget__search-bar">
-        <span class="chat-widget__search-icon">{{ partial "icons.html" (dict "icon" "search" "size" "14") }}</span>
-        <input type="text" class="chat-widget__search-input" placeholder="Search messages" disabled>
-      </div>
-      <div class="chat-widget__promo-list">
-        <p class="chat-widget__onboarding-text">Sign in with Google to start a live chat conversation.</p>
-        <button class="chat-widget__start-btn" onclick="startChat()">Sign in with Google to Chat</button>
+    <!-- Onboarding -->
+    <div class="ig-chat__onboarding" id="chat-onboarding">
+      <div class="ig-chat__promo">
+        <p class="ig-chat__onboarding-text">Sign in to start chatting</p>
+        <button class="ig-chat__start-btn" onclick="startChat()">
+          {{ partial "icons.html" (dict "icon" "google" "size" "18") }}
+          Sign in with Google
+        </button>
       </div>
     </div>
-    <!-- Chat Body (shown after sign-in) -->
-    <div class="chat-widget__body" id="chat-body" style="display:none;">
-      <div class="chat-widget__messages" id="chat-messages"></div>
-      <div class="chat-typing-indicator" id="chat-typing-indicator" style="display:none;">
+    <!-- Chat Body -->
+    <div class="ig-chat__body" id="chat-body" style="display:none;">
+      <div class="ig-chat__messages" id="chat-messages"></div>
+      <div class="ig-chat__typing" id="chat-typing-indicator" style="display:none;">
         <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
       </div>
-      <div class="chat-widget__footer">
-        <input type="text" class="chat-widget__msg-input" id="chat-msg-input" placeholder="Write a message..." maxlength="500" onkeypress="if(event.key==='Enter') sendChatMessage()">
-        <button class="chat-widget__send-btn" onclick="sendChatMessage()">{{ partial "icons.html" (dict "icon" "send" "size" "18") }}</button>
+      <div class="ig-chat__footer">
+        <input type="text" class="ig-chat__input" id="chat-msg-input" placeholder="Message..." maxlength="500" onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <button class="ig-chat__send-btn" onclick="sendChatMessage()">{{ partial "icons.html" (dict "icon" "send" "size" "18") }}</button>
       </div>
     </div>
   </div>
-  <!-- Chat FAB (mobile/collapsed) -->
-  <button class="chat-fab" id="chat-fab" onclick="openChat(event)" aria-label="Open chat">
-    {{ partial "icons.html" (dict "icon" "messaging" "size" "24") }}
-    <span class="chat-fab__badge" id="chat-fab-badge" style="display:none;">0</span>
+
+  <!-- Chat FAB (mobile) -->
+  <button class="ig-chat-fab" id="chat-fab" onclick="openChat(event)" aria-label="Open chat">
+    {{ partial "icons.html" (dict "icon" "messenger" "size" "24") }}
+    <span class="ig-chat-fab__badge" id="chat-fab-badge" style="display:none;">0</span>
   </button>
 
   <!-- Profile Preview Modal -->
-  <div class="profile-preview-modal" id="profile-preview-modal">
-    <div class="profile-preview-modal__overlay" onclick="closeProfilePreview()"></div>
-    <div class="profile-preview-modal__content">
-      <button class="profile-preview-modal__close" onclick="closeProfilePreview()">✕</button>
+  <div class="ig-preview-modal" id="profile-preview-modal">
+    <div class="ig-preview-modal__overlay" onclick="closeProfilePreview()"></div>
+    <div class="ig-preview-modal__content">
+      <button class="ig-preview-modal__close" onclick="closeProfilePreview()">{{ partial "icons.html" (dict "icon" "close" "size" "24") }}</button>
       <img id="profile-preview-img" src="" alt="Preview">
     </div>
   </div>
 
-  <!-- Mobile Chat Page (full screen, replaces widget on mobile) -->
-  <div class="mobile-chat-page" id="mobile-chat-page">
-    <div class="mobile-chat-page__header">
-      <button class="mobile-chat-page__back" onclick="closeMobileChat()">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "24") }}</button>
-      <div class="mobile-chat-page__header-info">
-        <div class="mobile-chat-page__avatar-wrapper">
-          {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="mobile-chat-page__avatar">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "mobile-chat-page__avatar" "size" "48") }}{{ end }}
-          <span class="chat-widget__online-dot" id="mobile-chat-admin-dot"></span>
+  <!-- Mobile Full Chat Page -->
+  <div class="ig-mobile-chat" id="mobile-chat-page">
+    <div class="ig-mobile-chat__header">
+      <button class="ig-mobile-chat__back" onclick="closeMobileChat()">{{ partial "icons.html" (dict "icon" "arrow-left" "size" "24") }}</button>
+      <div class="ig-mobile-chat__user">
+        <div class="ig-mobile-chat__avatar-wrap">
+          {{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ .Site.Params.author }}" class="ig-mobile-chat__avatar">{{ end }}
+          <span class="ig-chat__online-dot" id="mobile-chat-admin-dot"></span>
         </div>
-        <div class="mobile-chat-page__header-text">
-          <span class="mobile-chat-page__title">{{ .Site.Params.author }}</span>
-          <span class="mobile-chat-page__status" id="mobile-chat-status">Offline</span>
+        <div class="ig-mobile-chat__user-info">
+          <span class="ig-mobile-chat__name">{{ .Site.Params.author }}</span>
+          <span class="ig-mobile-chat__status" id="mobile-chat-status">Offline</span>
         </div>
       </div>
     </div>
-    <div class="mobile-chat-page__body">
-      <!-- Onboarding -->
-      <div class="mobile-chat-page__onboarding" id="mobile-chat-onboarding">
-        <p class="mobile-chat-page__onboarding-text">Sign in with Google to start a live chat conversation.</p>
-        <button class="chat-widget__start-btn" onclick="startMobileChat()">Sign in with Google to Chat</button>
+    <div class="ig-mobile-chat__body">
+      <div class="ig-mobile-chat__onboarding" id="mobile-chat-onboarding">
+        <p>Sign in to start chatting</p>
+        <button class="ig-chat__start-btn" onclick="startMobileChat()">
+          {{ partial "icons.html" (dict "icon" "google" "size" "18") }}
+          Sign in with Google
+        </button>
       </div>
-      <!-- Messages -->
-      <div class="mobile-chat-page__messages" id="mobile-chat-messages" style="display:none;"></div>
-      <div class="chat-typing-indicator" id="mobile-chat-typing-indicator" style="display:none;">
+      <div class="ig-mobile-chat__messages" id="mobile-chat-messages" style="display:none;"></div>
+      <div class="ig-chat__typing" id="mobile-chat-typing-indicator" style="display:none;">
         <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
       </div>
     </div>
-    <div class="mobile-chat-page__footer" id="mobile-chat-footer" style="display:none;">
-      <input type="text" class="chat-widget__msg-input" id="mobile-chat-msg-input" placeholder="Write a message..." maxlength="500" onkeypress="if(event.key==='Enter') sendMobileChatMessage()">
-      <button class="chat-widget__send-btn" onclick="sendMobileChatMessage()">{{ partial "icons.html" (dict "icon" "send" "size" "18") }}</button>
+    <div class="ig-mobile-chat__footer" id="mobile-chat-footer" style="display:none;">
+      <input type="text" class="ig-chat__input" id="mobile-chat-msg-input" placeholder="Message..." maxlength="500" onkeypress="if(event.key==='Enter') sendMobileChatMessage()">
+      <button class="ig-chat__send-btn" onclick="sendMobileChatMessage()">{{ partial "icons.html" (dict "icon" "send" "size" "18") }}</button>
     </div>
   </div>
-  
+
   <!-- Reactions Modal -->
-  <div class="reactions-modal" id="reactions-modal">
-    <div class="reactions-modal__overlay" onclick="closeReactionsModal()"></div>
-    <div class="reactions-modal__content">
-      <div class="reactions-modal__header">
-        <h3 class="reactions-modal__title">Reactions</h3>
-        <button class="reactions-modal__close" onclick="closeReactionsModal()">✕</button>
+  <div class="ig-reactions-modal" id="reactions-modal">
+    <div class="ig-reactions-modal__overlay" onclick="closeReactionsModal()"></div>
+    <div class="ig-reactions-modal__content">
+      <div class="ig-reactions-modal__header">
+        <h3>Likes</h3>
+        <button onclick="closeReactionsModal()">{{ partial "icons.html" (dict "icon" "close" "size" "20") }}</button>
       </div>
-      <div class="reactions-modal__tabs" id="reactions-modal-tabs">
-        <!-- Tabs appended here via JS -->
-      </div>
-      <div class="reactions-modal__body" id="reactions-modal-body">
-        <!-- List of users appended here via JS -->
+      <div class="ig-reactions-modal__body" id="reactions-modal-body">
         <div style="padding: 24px; text-align: center; color: var(--color-text-secondary);">Loading...</div>
       </div>
     </div>
   </div>
 
   <!-- Toast -->
-  <div class="toast" id="toast"></div>
+  <div class="ig-toast" id="toast"></div>
   
-  <!-- Mobile Bottom Nav (matching LinkedIn UI from screenshot) -->
-  <nav class="mobile-nav" aria-label="Mobile navigation">
-    <div class="mobile-nav__items">
-      <a href="/" class="mobile-nav__item mobile-nav__item--active" id="mob-nav-home">
-        <span class="mobile-nav__item-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M23 9v2h-2v7a3 3 0 01-3 3h-4v-6h-4v6H6a3 3 0 01-3-3v-7H1V9l11-7 5 3.18V2h3v5.09z"/></svg>
-        </span>
-        <span>Home</span>
+  <!-- Mobile Bottom Nav (Instagram-style) -->
+  <nav class="ig-bottom-nav" aria-label="Mobile navigation">
+    <div class="ig-bottom-nav__items">
+      <a href="/" class="ig-bottom-nav__item ig-bottom-nav__item--active" id="mob-nav-home">
+        <span class="ig-bottom-nav__icon">{{ partial "icons.html" (dict "icon" "home" "size" "24") }}</span>
+        <span class="ig-bottom-nav__icon ig-bottom-nav__icon--filled" style="display:none;">{{ partial "icons.html" (dict "icon" "home-filled" "size" "24") }}</span>
       </a>
-      <a href="/#network" class="mobile-nav__item" id="mob-nav-network">
-        <span class="mobile-nav__item-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 16v6H3v-6a3 3 0 013-3h3a3 3 0 013 3zm5.5-3A3.5 3.5 0 1014 9.5a3.5 3.5 0 003.5 3.5zm1 2h-2a2.5 2.5 0 00-2.5 2.5V22h7v-4.5a2.5 2.5 0 00-2.5-2.5zM7.5 2A4.5 4.5 0 1012 6.5 4.49 4.49 0 007.5 2z"/></svg>
-        </span>
-        <span>My Network</span>
+      <a href="#" class="ig-bottom-nav__item" id="mob-nav-search" onclick="showExplorePage(event)">
+        <span class="ig-bottom-nav__icon">{{ partial "icons.html" (dict "icon" "search" "size" "24") }}</span>
       </a>
-      <a href="#" class="mobile-nav__item" id="mob-nav-post">
-        <span class="mobile-nav__item-icon mobile-nav__post-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-3 10h-3v3a1 1 0 01-2 0v-3H8a1 1 0 010-2h3V8a1 1 0 012 0v3h3a1 1 0 010 2z"/></svg>
-        </span>
-        <span>Post</span>
+      <a href="#" class="ig-bottom-nav__item admin-only-el" id="mob-nav-create" onclick="openCreateModal(event)" style="display:none;">
+        <span class="ig-bottom-nav__icon">{{ partial "icons.html" (dict "icon" "create" "size" "24") }}</span>
       </a>
-      <a href="#" class="mobile-nav__item" id="mob-nav-notifications">
-        <span class="mobile-nav__item-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M22 19h-8.28a2 2 0 11-3.44 0H2v-1a4.52 4.52 0 011.17-2.83l1-1.17h15.7l1 1.17A4.42 4.42 0 0122 18zM18.21 7.44A6.27 6.27 0 0012 2a6.27 6.27 0 00-6.21 5.44L5 13h14z"/></svg>
-        </span>
-        <span class="mobile-nav__notif-wrapper">Notifications</span>
+      <a href="#" class="ig-bottom-nav__item" id="mob-nav-reels" onclick="showReelsPage(event)">
+        <span class="ig-bottom-nav__icon">{{ partial "icons.html" (dict "icon" "reels" "size" "24") }}</span>
       </a>
-      <a href="#" class="mobile-nav__item" id="mob-nav-jobs">
-        <span class="mobile-nav__item-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17 6V5a3 3 0 00-3-3h-4a3 3 0 00-3 3v1H2v4a3 3 0 003 3h14a3 3 0 003-3V6zM9 5a1 1 0 011-1h4a1 1 0 011 1v1H9zm13 9v5a3 3 0 01-3 3H5a3 3 0 01-3-3v-5h8v1a1 1 0 002 0v-1z"/></svg>
+      <a href="#" class="ig-bottom-nav__item" id="mob-nav-profile" onclick="navigateToProfile(event)">
+        <span class="ig-bottom-nav__profile-pic">
+          <img src="{{ .Site.Params.profileImage }}" alt="Profile" id="mob-nav-profile-pic">
         </span>
-        <span>Jobs</span>
       </a>
     </div>
   </nav>
+
+  <!-- Create Post Modal (admin only) -->
+  <div class="ig-create-modal" id="ig-create-modal" style="display:none;">
+    <div class="ig-create-modal__overlay" onclick="closeCreateModal()"></div>
+    <div class="ig-create-modal__card">
+      <div class="ig-create-modal__header">
+        <button onclick="closeCreateModal()">{{ partial "icons.html" (dict "icon" "close" "size" "24") }}</button>
+        <h3>Create new post</h3>
+        <button class="ig-create-modal__share-btn" id="create-share-btn">Share</button>
+      </div>
+      <div class="ig-create-modal__body">
+        <div class="ig-create-modal__type-select">
+          <button class="ig-create-modal__type ig-create-modal__type--active" data-type="post" onclick="selectCreateType('post')">
+            {{ partial "icons.html" (dict "icon" "camera" "size" "20") }} Post
+          </button>
+          <button class="ig-create-modal__type" data-type="reel" onclick="selectCreateType('reel')">
+            {{ partial "icons.html" (dict "icon" "reels" "size" "20") }} Reel
+          </button>
+          <button class="ig-create-modal__type" data-type="story" onclick="selectCreateType('story')">
+            {{ partial "icons.html" (dict "icon" "story-plus" "size" "20") }} Story
+          </button>
+          <button class="ig-create-modal__type" data-type="highlight" onclick="selectCreateType('highlight')">
+            {{ partial "icons.html" (dict "icon" "plus" "size" "20") }} Highlight
+          </button>
+        </div>
+        <div class="ig-create-modal__content">
+          <p class="ig-create-modal__placeholder">Use the admin panel at <a href="/admin/" target="_blank">/admin/</a> to create and manage content.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   {{ $firebaseJS := resources.Get "js/firebase.js" | minify | fingerprint }}
   <script src="{{ $firebaseJS.RelPermalink }}"></script>
@@ -216,4 +231,3 @@
 </script>
 </body>
 </html>
-

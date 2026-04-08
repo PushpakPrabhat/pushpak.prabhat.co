@@ -1,10 +1,12 @@
-<!-- Footer is minimal for LinkedIn-style sites -->
-<footer class="sidebar-footer" role="contentinfo">
-  <p>
-    <a href="/#">About</a> · 
-    <a href="/#">Privacy</a> · 
-    <a href="/#">Terms</a> ·
+<!-- Instagram-style minimal footer -->
+<footer class="ig-footer" role="contentinfo">
+  <div class="ig-footer__links">
+    <a href="#">About</a> · 
+    <a href="#">Help</a> · 
+    <a href="#">Press</a> · 
+    <a href="#">Privacy</a> · 
+    <a href="#">Terms</a> ·
     <a href="/admin/" target="_blank">Admin</a>
-  </p>
-  <p style="margin-top: 8px;">{{ .Site.Params.author }} © {{ now.Year }}</p>
+  </div>
+  <p class="ig-footer__copy">© {{ now.Year }} {{ .Site.Params.author }}</p>
 </footer>

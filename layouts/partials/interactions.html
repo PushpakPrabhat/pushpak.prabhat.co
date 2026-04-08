@@ -1,93 +1,61 @@
 {{ $id := .id }}
 {{ $type := .type }}
-{{ $showSave := .showSave }}
 {{ $imageUrl := .imageUrl | default "" }}
 {{ $videoUrl := .videoUrl | default "" }}
 {{ $videoType := .videoType | default "" }}
 
-<div class="interactions" id="interactions-{{ $id }}">
-  <!-- Stats -->
-  <div class="interactions__stats">
-    <div class="interactions__reactions" style="cursor: pointer;" onclick="showReactionsModal('{{ $id }}')" title="View reactions">
-      <span class="interactions__reaction-icons" id="reaction-icons-{{ $id }}">
-        <!-- Only the chosen reaction icon will appear here via JS -->
-      </span>
-      <span class="interactions__count" id="like-count-{{ $id }}">0 Reactions</span>
-    </div>
-    <div class="interactions__comment-count" onclick="toggleComments('{{ $id }}')" style="cursor: pointer;" title="View comments">
-      <span id="comment-count-{{ $id }}">0 comments</span>
-    </div>
-  </div>
-  
-  <div class="interactions__divider"></div>
-  
-  <!-- Buttons -->
-  <div class="interactions__buttons">
-    <!-- Like button with reaction popup -->
-    <div class="like-btn-wrapper" id="like-wrapper-{{ $id }}">
-      <button class="interaction-btn" id="like-btn-{{ $id }}" data-content-id="{{ $id }}" aria-label="Like">
-        <span class="interaction-btn__icon">
-          <span class="like-icon-default">{{ partial "icons.html" (dict "icon" "like" "size" "20") }}</span>
-          <span class="like-icon-active">{{ partial "icons.html" (dict "icon" "like-filled" "size" "20") }}</span>
-          <span class="like-icon-custom" style="display: none;"></span>
-        </span>
-        <span class="interaction-btn__text">Like</span>
+<div class="ig-interactions" id="interactions-{{ $id }}">
+  <!-- Action Buttons -->
+  <div class="ig-interactions__buttons">
+    <div class="ig-interactions__left">
+      <!-- Like / Heart -->
+      <div class="ig-like-wrapper" id="like-wrapper-{{ $id }}">
+        <button class="ig-action-btn" id="like-btn-{{ $id }}" data-content-id="{{ $id }}" aria-label="Like" title="Like">
+          <span class="ig-heart-outline">{{ partial "icons.html" (dict "icon" "heart" "size" "24") }}</span>
+          <span class="ig-heart-filled" style="display:none;">{{ partial "icons.html" (dict "icon" "heart-filled" "size" "24") }}</span>
+        </button>
+      </div>
+      <!-- Comment -->
+      <button class="ig-action-btn" id="comment-btn-{{ $id }}" onclick="toggleComments('{{ $id }}')" aria-label="Comment" title="Comment">
+        {{ partial "icons.html" (dict "icon" "comment" "size" "24") }}
       </button>
-      <!-- Reaction popup with LinkedIn-style emoji icons -->
-      <div class="reaction-popup" id="reaction-popup-{{ $id }}">
-        <button class="reaction-popup__btn" data-reaction="like" data-id="{{ $id }}" title="Like">
-          <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%230a66c2%22%2F%3E%3Cg%20transform%3D%22translate%288%2C%208%29%20scale%281%29%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M19.46%2011l-3.91-3.91a7%207%200%2001-1.69-2.74l-.49-1.47A2.76%202.76%200%200010.76%201%202.75%202.75%200%20008%203.74v1.12a9.19%209.19%200%2000.46%202.85L8.89%209H4.12A2.12%202.12%200%20002%2011.12a2.16%202.16%200%2000.92%201.76A2.11%202.11%200%20002%2014.62a2.14%202.14%200%20001.28%202%202%202%200%2000-.28%201%202.12%202.12%200%20002%202.12v.14A2.12%202.12%200%20007.12%2022h7.49a8.08%208.08%200%20003.58-.84l.31-.16H21V11z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Like" width="40" height="40">
-        </button>
-        <button class="reaction-popup__btn" data-reaction="celebrate" data-id="{{ $id }}" title="Celebrate">
-          <img src="https://static.licdn.com/aero-v1/sc/h/b1dl5jk88euc7e9ri50xy5qo8" alt="Celebrate" width="40" height="40">
-        </button>
-        <button class="reaction-popup__btn" data-reaction="support" data-id="{{ $id }}" title="Support">
-          <img src="https://static.licdn.com/aero-v1/sc/h/3wqhxqtk2l554o70ur3kessf1" alt="Support" width="40" height="40">
-        </button>
-        <button class="reaction-popup__btn" data-reaction="love" data-id="{{ $id }}" title="Love">
-          <img src="https://static.licdn.com/aero-v1/sc/h/f58e354mjsjpdd67eq51cuh49" alt="Love" width="40" height="40">
-        </button>
-        <button class="reaction-popup__btn" data-reaction="insightful" data-id="{{ $id }}" title="Insightful">
-          <img src="https://static.licdn.com/aero-v1/sc/h/39axkb4qe8q95ieljrhqhkxvl" alt="Insightful" width="40" height="40">
-        </button>
-        <button class="reaction-popup__btn" data-reaction="funny" data-id="{{ $id }}" title="Funny">
-          <img src="https://static.licdn.com/aero-v1/sc/h/ktcgulanbxpl0foz1uckibdl" alt="Funny" width="40" height="40">
-        </button>
-      </div>
+      <!-- Share -->
+      <button class="ig-action-btn" id="share-btn-{{ $id }}" onclick="shareContent('{{ .context.Permalink }}'); event.stopPropagation();" aria-label="Share" title="Share">
+        {{ partial "icons.html" (dict "icon" "share" "size" "24") }}
+      </button>
     </div>
-    
-    <button class="interaction-btn" id="comment-btn-{{ $id }}" onclick="toggleComments('{{ $id }}')" aria-label="Comment">
-      <span class="interaction-btn__icon">{{ partial "icons.html" (dict "icon" "comment" "size" "20") }}</span>
-      <span>Comment</span>
-    </button>
-    
-    <button class="interaction-btn" id="share-btn-{{ $id }}" onclick="shareContent('{{ .context.Permalink }}'); event.stopPropagation();" aria-label="Share" style="position: relative;">
-      <span class="interaction-btn__icon">{{ partial "icons.html" (dict "icon" "send" "size" "20") }}</span>
-      <span>Share</span>
-      <div class="share-tooltip" id="share-tooltip-{{ $id }}">
-        Link copied!
-        <div class="share-tooltip__arrow"></div>
-      </div>
-    </button>
-    
   </div>
-  
-  <div class="interactions__divider"></div>
-  
+
+  <!-- Like Count -->
+  <div class="ig-interactions__likes" id="like-section-{{ $id }}">
+    <span class="ig-interactions__like-count" id="like-count-{{ $id }}" onclick="showReactionsModal('{{ $id }}')" style="cursor:pointer;">0 likes</span>
+  </div>
+
   <!-- Comments Section -->
-  <div class="comments-section" id="comments-{{ $id }}">
-    <div class="comment-input-wrapper">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill='%23e7e2dc' d='M0 0h128v128H0z'/%3E%3Cpath fill='%23788fa5' d='M88.41 84.67a32 32 0 1 0-48.82 0 66.13 66.13 0 0 1 48.82 0'/%3E%3Cpath fill='%239db3c8' d='M88.41 84.67a32 32 0 0 1-48.82 0A66.79 66.79 0 0 0 0 128h128a66.79 66.79 0 0 0-39.59-43.33'/%3E%3Cpath fill='%2356687a' d='M64 96a31.93 31.93 0 0 0 24.41-11.33 66.13 66.13 0 0 0-48.82 0A31.93 31.93 0 0 0 64 96'/%3E%3C/svg%3E" alt="You" class="comment-avatar" loading="lazy">
+  <div class="ig-comments" id="comments-{{ $id }}">
+    <button class="ig-comments__view-all" id="view-comments-btn-{{ $id }}" onclick="toggleComments('{{ $id }}')" style="display:none;">
+      View all <span id="comment-count-{{ $id }}">0</span> comments
+    </button>
+    <div class="ig-comments__list" id="comment-list-{{ $id }}"></div>
+    <div class="ig-comments__add">
       <input 
         type="text" 
-        class="comment-input" 
+        class="ig-comments__input" 
         placeholder="Add a comment..." 
         id="comment-input-{{ $id }}"
         onkeypress="if(event.key==='Enter') addComment('{{ $id }}')"
       >
-      <button class="comment-submit-btn" onclick="addComment('{{ $id }}')">Post</button>
+      <button class="ig-comments__post-btn" onclick="addComment('{{ $id }}')" style="display:none;" id="comment-post-btn-{{ $id }}">Post</button>
     </div>
-    <div class="comment-list" id="comment-list-{{ $id }}">
-    </div>
+  </div>
+
+  <!-- Share Tooltip -->
+  <div class="ig-share-tooltip" id="share-tooltip-{{ $id }}">
+    Link copied!
+  </div>
+
+  <!-- Double-tap heart animation overlay -->
+  <div class="ig-double-tap-heart" id="double-tap-heart-{{ $id }}" style="display:none;">
+    {{ partial "icons.html" (dict "icon" "heart-filled" "size" "80") }}
   </div>
 </div>

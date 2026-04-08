@@ -1,204 +1,317 @@
 {{ $profile := .Site.Data.profile }}
-<section class="profile-full" id="profile">
-  <!-- Banner -->
-  <div class="profile-full__banner" onclick="openProfilePreview('{{ .Site.Params.bannerImage }}')">
-    {{ with .Site.Params.bannerImage }}
-    <img src="{{ . }}" alt="Cover photo">
-    {{ end }}
-  </div>
-  
-  <!-- Header -->
-  <div class="profile-full__header">
-    <div class="profile-full__avatar-wrapper" onclick="openProfilePreview('{{ .Site.Params.profileImage }}')">
-      <img 
-        src="{{ .Site.Params.profileImage }}" 
-        alt="{{ $profile.name }}" 
-        class="profile-full__avatar"
-      >
-    </div>
-    <h1 class="profile-full__name">{{ $profile.name }}</h1>
-    <p class="profile-full__headline">{{ $profile.headline }}</p>
-    
-    {{ $currentJob := false }}
-    {{ range $idx, $exp := $profile.experience }}
-      {{ if .current }}
-        {{ $currentJob = $exp }}
-      {{ end }}
-    {{ end }}
-    {{ if $currentJob }}
-    <div class="profile-full__company">
-      {{ if $currentJob.logo }}
-      <img src="{{ $currentJob.logo }}" class="profile-full__company-logo" style="width:24px;height:24px;object-fit:contain;border-radius:4px;" alt="">
-      {{ else }}
-      <span class="profile-full__company-logo">🏢</span>
-      {{ end }}
-      {{ if $currentJob.companyUrl }}
-      <a href="{{ $currentJob.companyUrl }}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none; font-weight: 600;">{{ $currentJob.company }}</a>
-      {{ else }}
-      <span style="font-weight: 600;">{{ $currentJob.company }}</span>
-      {{ end }}
-    </div>
-    {{ else }}
-    <div class="profile-full__company">
-      <span class="profile-full__company-logo">💰</span>
-      <span style="font-weight: 600;">{{ .Site.Params.company }}</span>
-    </div>
-    {{ end }}
-    <p class="profile-full__location">{{ $profile.location }} · <a class="profile-full__contact" href="#">{{ $profile.contactInfo }}</a></p>
-    <p class="profile-full__connections"><span>{{ $profile.followers }} followers</span> · <span>{{ $profile.connections }} connections</span></p>
-    
-    <div class="profile-full__actions">
-      <a href="{{ .Site.Params.social.linkedin }}" target="_blank" rel="noopener" class="btn btn--primary" id="btn-follow">
-        {{ partial "icons.html" (dict "icon" "add-small" "size" "16") }} Follow
-      </a>
-      <button class="btn btn--outline" id="btn-message" onclick="openChat(event)">
-        {{ partial "icons.html" (dict "icon" "messaging" "size" "18") }} Message
-      </button>
-      <button class="btn btn--ghost" id="btn-more">More</button>
-    </div>
-  </div>
-</section>
-
-<!-- About -->
-<section class="profile-section" id="about-section">
-  <h2 class="profile-section__title">About</h2>
-  <p class="profile-section__text">{{ $profile.about }}</p>
-</section>
-
-<!-- Featured -->
-<section class="featured-section" id="featured-section">
-  <h2 class="featured-section__title">Featured</h2>
-  {{ $allPhotos := where .Site.RegularPages "Type" "photos" }}
-  {{ $allVideos := where .Site.RegularPages "Type" "videos" }}
-  {{ $allPosts := where .Site.RegularPages "Type" "posts" }}
-  {{ $all := $allPhotos | append $allVideos | append $allPosts }}
-  {{ $sorted := sort $all "Date" "desc" }}
-  {{ $featured := first 1 $sorted }}
-  {{ range $featured }}
-  <div class="featured-card" onclick="window.location.href='{{ .Permalink }}'">
-    {{ if .Params.image }}
-    <img src="{{ .Params.image }}" alt="{{ .Title }}" class="featured-card__image">
-    {{ else if .Params.featured_image }}
-    <img src="{{ .Params.featured_image }}" alt="{{ .Title }}" class="featured-card__image">
-    {{ else if .Params.thumbnail }}
-    <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" class="featured-card__image">
-    {{ else if .Params.videoUrl }}
-      {{ $videoUrl := .Params.videoUrl }}
-      {{ if eq .Params.videoType "youtube" }}
-        {{ $videoID := "" }}
-        {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
-          {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
-        {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
-          {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
-        {{ end }}
-        {{ if $videoID }}
-        <img src="https://img.youtube.com/vi/{{ $videoID }}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/{{ $videoID }}/hqdefault.jpg'" alt="{{ .Title }}" class="featured-card__image">
-        {{ else }}
-        <div class="featured-card__image" style="background: linear-gradient(135deg, #0a66c2, #283e4a); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🎥</div>
-        {{ end }}
-      {{ else if eq .Params.videoType "file" }}
-        <video class="featured-card__image" src="{{ $videoUrl }}" preload="metadata" style="object-fit:cover;" muted playsinline></video>
-      {{ else }}
-        <div class="featured-card__image" style="background: linear-gradient(135deg, #0a66c2, #283e4a); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🎥</div>
-      {{ end }}
-    {{ else }}
-    <div class="featured-card__image" style="background: linear-gradient(135deg, #0a66c2, #283e4a); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">📄</div>
-    {{ end }}
-    <div class="featured-card__info">
-      <div class="featured-card__title">{{ .Title }}</div>
-      <div class="featured-card__type">{{ .Type | humanize }} · {{ .Date.Format "Jan 2006" }}</div>
-      {{ if .Params.description }}
-      <div class="featured-card__desc" style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ .Params.description }}</div>
-      {{ else if .Summary }}
-      <div class="featured-card__desc" style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ plainify .Summary }}</div>
-      {{ end }}
-    </div>
-  </div>
-  {{ end }}
-  <button class="featured-section__see-all" onclick="showAllFeatured()">Show all featured →</button>
-</section>
-
-<!-- Experience -->
-<section class="profile-section" id="experience-section">
-  <h2 class="profile-section__title">Experience</h2>
-  {{ range $profile.experience }}
-  <div class="experience-item">
-    {{ if .logo }}
-    <img src="{{ .logo }}" alt="{{ .company }}" class="experience-item__logo-img" style="width:48px;height:48px;object-fit:contain;">
-    {{ else }}
-    <div class="experience-item__logo">🏢</div>
-    {{ end }}
-    <div class="experience-item__info">
-      <div class="experience-item__title">{{ .title }}</div>
-      {{ with .designation }}
-      <div class="experience-item__designation">{{ . }}</div>
-      {{ end }}
-      <div class="experience-item__company">
-        {{ if .companyUrl }}
-        <a href="{{ .companyUrl }}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none; font-weight: 600;">{{ .company }}</a>
-        {{ else }}
-        <span style="font-weight: 600;">{{ .company }}</span>
-        {{ end }}
-        · {{ .type }}
+<section class="ig-profile" id="profile">
+  <!-- Profile Header -->
+  <div class="ig-profile__header">
+    <!-- Avatar -->
+    <div class="ig-profile__avatar-wrapper" onclick="openProfilePreview('{{ .Site.Params.profileImage }}')">
+      <div class="ig-profile__avatar-ring">
+        <img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="ig-profile__avatar">
       </div>
-      <div class="experience-item__duration">{{ .startDate }} - {{ .endDate }}<span class="js-calc-duration" data-start="{{ .startDate }}" data-end="{{ .endDate }}">{{ if .duration }} · {{ .duration }}{{ end }}</span></div>
-      <div class="experience-item__location">{{ .location }}</div>
-      {{ with .description }}
-      <div class="experience-item__description js-see-more">{{ . }}</div>
-      {{ end }}
-      {{ with .skills }}
-      <div class="experience-item__skills">♦ {{ . }}</div>
-      {{ end }}
-      {{ with .roles }}
-      <div class="experience-item__roles">
-        {{ range . }}
-        <div class="experience-item__role">
-          <div class="experience-item__role-title">{{ .title }}</div>
-          <div class="experience-item__role-date">{{ .startDate }} - {{ .endDate }}<span class="js-calc-duration" data-start="{{ .startDate }}" data-end="{{ .endDate }}"></span></div>
-          {{ with .description }}
-          <div class="experience-item__description js-see-more">{{ . }}</div>
+    </div>
+    
+    <!-- Stats & Actions -->
+    <div class="ig-profile__info">
+      <div class="ig-profile__top-row">
+        <h1 class="ig-profile__username">{{ $profile.name }}{{ partial "icons.html" (dict "icon" "verified" "size" "16") }}</h1>
+        <div class="ig-profile__action-btns">
+          <a href="{{ .Site.Params.social.linkedin }}" target="_blank" rel="noopener" class="ig-btn ig-btn--primary" id="btn-follow">Follow</a>
+          <button class="ig-btn ig-btn--secondary" id="btn-message" onclick="openChat(event)">Message</button>
+          <button class="ig-btn ig-btn--icon" id="btn-more-profile">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="1.5"/><circle cx="6" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Stats -->
+      <div class="ig-profile__stats">
+        {{ $allPhotos := where .Site.RegularPages "Type" "photos" }}
+        {{ $allVideos := where .Site.RegularPages "Type" "videos" }}
+        {{ $allPosts := where .Site.RegularPages "Type" "posts" }}
+        {{ $totalPosts := add (len $allPhotos) (add (len $allVideos) (len $allPosts)) }}
+        <div class="ig-profile__stat">
+          <span class="ig-profile__stat-num">{{ $totalPosts }}</span>
+          <span class="ig-profile__stat-label">posts</span>
+        </div>
+        <div class="ig-profile__stat">
+          <span class="ig-profile__stat-num">{{ $profile.followers }}</span>
+          <span class="ig-profile__stat-label">followers</span>
+        </div>
+        <div class="ig-profile__stat">
+          <span class="ig-profile__stat-num">{{ $profile.connections }}</span>
+          <span class="ig-profile__stat-label">following</span>
+        </div>
+      </div>
+      
+      <!-- Bio -->
+      <div class="ig-profile__bio">
+        <div class="ig-profile__name-display">{{ $profile.name }}</div>
+        <div class="ig-profile__headline">{{ $profile.headline }}</div>
+        <div class="ig-profile__bio-location">📍 {{ $profile.location }}</div>
+        {{ $currentJob := false }}
+        {{ range $idx, $exp := $profile.experience }}
+          {{ if .current }}
+            {{ $currentJob = $exp }}
           {{ end }}
+        {{ end }}
+        {{ if $currentJob }}
+        <div class="ig-profile__bio-company">
+          💼 {{ $currentJob.title }} at 
+          {{ if $currentJob.companyUrl }}<a href="{{ $currentJob.companyUrl }}" target="_blank" rel="noopener">{{ $currentJob.company }}</a>{{ else }}{{ $currentJob.company }}{{ end }}
+        </div>
+        {{ end }}
+        <div class="ig-profile__bio-about js-see-more">{{ $profile.about }}</div>
+        {{ with .Site.Params.social.linkedin }}
+        <a href="{{ . }}" target="_blank" rel="noopener" class="ig-profile__bio-link">{{ . }}</a>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Bio (only visible on mobile, duplicate below avatar) -->
+  <div class="ig-profile__bio-mobile">
+    <div class="ig-profile__name-display">{{ $profile.name }}</div>
+    <div class="ig-profile__headline">{{ $profile.headline }}</div>
+    <div class="ig-profile__bio-location">📍 {{ $profile.location }}</div>
+    {{ if $currentJob }}
+    <div class="ig-profile__bio-company">
+      💼 {{ $currentJob.title }} at {{ $currentJob.company }}
+    </div>
+    {{ end }}
+    <div class="ig-profile__bio-about js-see-more">{{ $profile.about }}</div>
+    <div class="ig-profile__action-btns-mobile">
+      <a href="{{ .Site.Params.social.linkedin }}" target="_blank" rel="noopener" class="ig-btn ig-btn--primary ig-btn--full">Follow</a>
+      <button class="ig-btn ig-btn--secondary ig-btn--full" onclick="openChat(event)">Message</button>
+    </div>
+  </div>
+
+  <!-- Story Highlights (auto-generated from categories) -->
+  <div class="ig-profile__highlights">
+    <div class="ig-profile__highlights-scroll">
+      {{ range first 6 $profile.interests }}
+      <div class="ig-highlight">
+        <div class="ig-highlight__ring">
+          <div class="ig-highlight__icon">{{ .icon }}</div>
+        </div>
+        <span class="ig-highlight__label">{{ .name }}</span>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+
+  <!-- Content Tabs -->
+  <div class="ig-profile__tabs" id="profile-tabs">
+    <button class="ig-profile__tab ig-profile__tab--active" data-profile-tab="grid" onclick="switchProfileTab('grid')">
+      {{ partial "icons.html" (dict "icon" "grid" "size" "12") }}
+      <span>POSTS</span>
+    </button>
+    <button class="ig-profile__tab" data-profile-tab="reels" onclick="switchProfileTab('reels')">
+      {{ partial "icons.html" (dict "icon" "reels" "size" "12") }}
+      <span>REELS</span>
+    </button>
+    <button class="ig-profile__tab" data-profile-tab="portfolio" onclick="switchProfileTab('portfolio')">
+      {{ partial "icons.html" (dict "icon" "portfolio" "size" "12") }}
+      <span>PORTFOLIO</span>
+    </button>
+  </div>
+
+  <!-- Grid View -->
+  <div class="ig-profile__grid" id="profile-grid">
+    {{ $allItems := where .Site.RegularPages "Type" "photos" }}
+    {{ $allVids := where .Site.RegularPages "Type" "videos" }}
+    {{ $allBlogs := where .Site.RegularPages "Type" "posts" }}
+    {{ $all := $allItems | append $allVids | append $allBlogs }}
+    {{ $sorted := sort $all "Date" "desc" }}
+    {{ range $sorted }}
+    <div class="ig-grid-item" data-id="{{ .File.ContentBaseName }}" data-type="{{ .Type }}" onclick="scrollToPost('{{ .File.ContentBaseName }}')">
+      {{ if eq .Type "photos" }}
+        {{ with .Params.image }}
+        <img src="{{ . }}" alt="{{ $.Title }}" loading="lazy">
+        {{ end }}
+        {{ if .Params.carouselImages }}
+        <span class="ig-grid-item__carousel-icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M 22 3 L 22 18 a 1 1 0 0 1 -1 1 L 8 19 L 8 20 a 1 1 0 0 0 1 1 L 21 21 a 3 3 0 0 0 3 -3 L 24 4 a 1 1 0 0 0 -1 -1 Z"/><rect x="1" y="1" width="18" height="16" rx="2" fill="none" stroke="white" stroke-width="2"/></svg>
+        </span>
+        {{ end }}
+      {{ else if eq .Type "videos" }}
+        {{ if .Params.thumbnail }}
+        <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy">
+        {{ else }}
+          {{ $videoUrl := .Params.videoUrl }}
+          {{ $videoType := .Params.videoType | default "file" }}
+          {{ if eq $videoType "youtube" }}
+            {{ $videoID := "" }}
+            {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
+              {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+            {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
+              {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+            {{ end }}
+            {{ if $videoID }}
+            <img src="https://img.youtube.com/vi/{{ $videoID }}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/{{ $videoID }}/hqdefault.jpg'" alt="{{ .Title }}" loading="lazy">
+            {{ else }}
+            <div class="ig-grid-item__placeholder">🎥</div>
+            {{ end }}
+          {{ else }}
+          <div class="ig-grid-item__placeholder">🎥</div>
+          {{ end }}
+        {{ end }}
+        {{ if .Params.isReel }}
+        <span class="ig-grid-item__reel-icon">{{ partial "icons.html" (dict "icon" "reels" "size" "16") }}</span>
+        {{ else }}
+        <span class="ig-grid-item__video-icon">{{ partial "icons.html" (dict "icon" "play" "size" "16") }}</span>
+        {{ end }}
+      {{ else if eq .Type "posts" }}
+        {{ with .Params.featured_image }}
+        <img src="{{ . }}" alt="{{ $.Title }}" loading="lazy">
+        {{ else }}
+        <div class="ig-grid-item__placeholder ig-grid-item__placeholder--text">
+          <span>{{ $.Title | truncate 60 }}</span>
+        </div>
+        {{ end }}
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+
+  <!-- Reels Grid -->
+  <div class="ig-profile__reels-grid" id="profile-reels" style="display:none;">
+    {{ range $allVids }}
+    {{ if or .Params.isReel (eq .Params.category "shorts-reels") }}
+    <div class="ig-grid-item ig-grid-item--reel" data-id="{{ .File.ContentBaseName }}" onclick="scrollToPost('{{ .File.ContentBaseName }}')">
+      {{ if .Params.thumbnail }}
+      <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy">
+      {{ else }}
+        {{ $videoUrl := .Params.videoUrl }}
+        {{ $videoType := .Params.videoType | default "file" }}
+        {{ if eq $videoType "youtube" }}
+          {{ $videoID := "" }}
+          {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
+            {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+          {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
+            {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
+          {{ end }}
+          {{ if $videoID }}
+          <img src="https://img.youtube.com/vi/{{ $videoID }}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/{{ $videoID }}/hqdefault.jpg'" alt="{{ .Title }}" loading="lazy">
+          {{ else }}
+          <div class="ig-grid-item__placeholder">🎬</div>
+          {{ end }}
+        {{ else }}
+        <div class="ig-grid-item__placeholder">🎬</div>
+        {{ end }}
+      {{ end }}
+      <span class="ig-grid-item__reel-icon">{{ partial "icons.html" (dict "icon" "reels" "size" "16") }}</span>
+    </div>
+    {{ end }}
+    {{ end }}
+    <div class="ig-profile__no-reels" id="no-reels-msg">
+      <p>No reels yet</p>
+    </div>
+  </div>
+
+  <!-- Portfolio Tab (Experience, Education, Skills) -->
+  <div class="ig-profile__portfolio" id="profile-portfolio" style="display:none;">
+    
+    <!-- About -->
+    <div class="ig-portfolio-section">
+      <h3 class="ig-portfolio-section__title">About</h3>
+      <p class="ig-portfolio-section__text">{{ $profile.about }}</p>
+    </div>
+
+    <!-- Experience -->
+    <div class="ig-portfolio-section">
+      <h3 class="ig-portfolio-section__title">Experience</h3>
+      {{ range $profile.experience }}
+      <div class="ig-exp-item">
+        <div class="ig-exp-item__logo">
+          {{ if .logo }}
+          <img src="{{ .logo }}" alt="{{ .company }}">
+          {{ else }}
+          <span>🏢</span>
+          {{ end }}
+        </div>
+        <div class="ig-exp-item__info">
+          <div class="ig-exp-item__title">{{ .title }}</div>
+          <div class="ig-exp-item__company">
+            {{ if .companyUrl }}<a href="{{ .companyUrl }}" target="_blank" rel="noopener">{{ .company }}</a>{{ else }}{{ .company }}{{ end }}
+            · {{ .type }}
+          </div>
+          <div class="ig-exp-item__duration">{{ .startDate }} - {{ .endDate }}{{ with .duration }} · {{ . }}{{ end }}</div>
+          <div class="ig-exp-item__location">{{ .location }}</div>
+          {{ with .description }}
+          <div class="ig-exp-item__desc js-see-more">{{ . }}</div>
+          {{ end }}
+          {{ with .roles }}
+          <div class="ig-exp-item__roles">
+            {{ range . }}
+            <div class="ig-exp-item__role">
+              <div class="ig-exp-item__role-title">{{ .title }}</div>
+              <div class="ig-exp-item__role-date">{{ .startDate }} - {{ .endDate }}</div>
+              {{ with .description }}
+              <div class="ig-exp-item__desc js-see-more">{{ . }}</div>
+              {{ end }}
+            </div>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+    </div>
+
+    <!-- Education -->
+    <div class="ig-portfolio-section">
+      <h3 class="ig-portfolio-section__title">Education</h3>
+      {{ range $profile.education }}
+      <div class="ig-edu-item">
+        <div class="ig-edu-item__logo">
+          {{ if .logo }}
+          <img src="{{ .logo }}" alt="{{ .school }}">
+          {{ else }}
+          <span>🎓</span>
+          {{ end }}
+        </div>
+        <div class="ig-edu-item__info">
+          <div class="ig-edu-item__school">{{ .school }}</div>
+          <div class="ig-edu-item__degree">{{ .degree }}</div>
+          <div class="ig-edu-item__year">{{ .year }}</div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+
+    <!-- Skills -->
+    <div class="ig-portfolio-section">
+      <h3 class="ig-portfolio-section__title">Skills</h3>
+      <div class="ig-skills-grid">
+        {{ range $profile.skills }}
+        <div class="ig-skill-tag">
+          <span class="ig-skill-tag__name">{{ .name }}</span>
+          {{ with .endorsements }}<span class="ig-skill-tag__count">{{ . }}</span>{{ end }}
         </div>
         {{ end }}
       </div>
-      {{ end }}
     </div>
-  </div>
-  {{ end }}
-</section>
 
-<!-- Education -->
-<section class="profile-section" id="education-section">
-  <h2 class="profile-section__title">Education</h2>
-  {{ range $profile.education }}
-  <div class="education-item">
-    {{ if .logo }}
-    <img src="{{ .logo }}" alt="{{ .school }}" class="education-item__logo-img" style="width:48px;height:48px;object-fit:contain;margin-right:16px;">
-    {{ else }}
-    <div class="education-item__logo" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#f3f2ef;margin-right:16px;font-size:24px;">🎓</div>
-    {{ end }}
-    <div class="education-item__info">
-      <div class="education-item__school">{{ .school }}</div>
-      <div class="education-item__degree">{{ .degree }}</div>
-      <div class="education-item__year">{{ .year }}</div>
+    <!-- Interests -->
+    <div class="ig-portfolio-section">
+      <h3 class="ig-portfolio-section__title">Interests</h3>
+      <div class="ig-interests-grid">
+        {{ range $profile.interests }}
+        <span class="ig-interest-tag">{{ .icon }} {{ .name }}</span>
+        {{ end }}
+      </div>
     </div>
-  </div>
-  {{ end }}
-</section>
 
-<!-- Interests -->
-<section class="profile-section" id="interests-section">
-  <h2 class="profile-section__title">Interests</h2>
-  <div class="interests-grid">
-    {{ range $profile.interests }}
-    <span class="interest-tag">
-      {{ if .icon }}
-      <span class="interest-tag__icon"><img src="{{ .icon }}" alt="{{ .name }}" style="width:16px;height:16px;object-fit:contain;"></span>
-      {{ else }}
-      <span class="interest-tag__icon">📌</span>
-      {{ end }}
-      {{ .name }}
-    </span>
-    {{ end }}
+    <!-- Quick Links -->
+    <div class="ig-portfolio-section">
+      <h3 class="ig-portfolio-section__title">Links</h3>
+      <div class="ig-links-list">
+        {{ range $profile.quickLinks }}
+        <a href="{{ .url }}" target="_blank" rel="noopener" class="ig-link-item">
+          {{ partial "icons.html" (dict "icon" "external-link" "size" "16") }}
+          <span>{{ .title }}</span>
+        </a>
+        {{ end }}
+      </div>
+    </div>
   </div>
 </section>
