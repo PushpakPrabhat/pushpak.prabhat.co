@@ -27,8 +27,8 @@ experience:
       content that drives user engagement.
     company: ET Money
     roles: []
-  - endDate: Present
-    logo: 🎬
+  - endDate: Jan 2026
+    logo: /images/uploads/adda_logo.png
     startDate: Jun 2025
     duration: 11 mos
     location: Gurugram, Haryana, India · On-site
@@ -38,7 +38,7 @@ experience:
     description: Leading a team of designers to create educational content
       animations, promotional videos, and interactive visual experiences for
       PrepInsta's platform.
-    company: PrepInsta
+    company: Adda247
     roles:
       - title: Lead Motion Designer
         startDate: Jun 2025
@@ -72,7 +72,7 @@ experience:
     company: Freelance
   - skills: Motion Graphics, Animation and +2 skills
     endDate: Jun 2025
-    logo: 🎓
+    logo: /images/uploads/unacademy_logo.jpg
     startDate: Jul 2022
     duration: 3 yrs
     location: Chandigarh, India · On-site
@@ -88,20 +88,20 @@ experience:
         endDate: Jun 2025
         description: Led animation projects for key educational verticals. Mentored
           junior animators and established animation guidelines for the team.
-      - title: Motion Graphics Designer
+      - title: Animator
         startDate: Jul 2022
         endDate: Dec 2023
         description: Created motion graphics content for marketing campaigns and
           educational content. Produced 200+ animated assets.
 education:
   - school: Chandigarh University
-    degree: Bachelor of Computer Applications (BCA)
-    year: 2019 - 2022
-    logo: 🏫
-  - school: KV Dharmshala
+    degree: Bachelor of Computer Applications (Dropout)
+    year: 2018 - 2021
+    logo: /images/uploads/cu_logo.jpeg
+  - school: JAC
     degree: Higher Secondary (12th)
     year: 2017 - 2019
-    logo: 📚
+    logo: /images/uploads/jac_logo.webp
 interests:
   - name: Motion Design
     icon: 🎬
