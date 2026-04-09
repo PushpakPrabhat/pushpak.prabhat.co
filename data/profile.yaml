@@ -46,7 +46,7 @@ experience:
         description: Managing end-to-end motion design pipeline. Created over 100+
           educational animation assets for the platform.
   - endDate: Present
-    logo: https://pushpunk.com/Kitty.svg
+    logo: /images/uploads/1758915309027.jpeg
     startDate: Jun 2025
     companyUrl: https://pushpunk.com/
     duration: 11 mos
@@ -58,18 +58,6 @@ experience:
       and interactive web experiences. Working with clients across
       entertainment, education, and tech industries.
     company: pushpunk.com
-  - skills: JavaScript, HTML5 and +2 skills
-    endDate: Present
-    logo: /images/uploads/freelancer_logo.png
-    startDate: Feb 2019
-    duration: 7 yrs 3 mos
-    location: Remote
-    title: Frontend Web Developer
-    type: Freelance
-    description: Building responsive websites, interactive web applications, and
-      creative coding projects. Specializing in portfolio sites, landing pages,
-      and interactive experiences using modern web technologies.
-    company: Freelance
   - skills: Motion Graphics, Animation and +2 skills
     endDate: Jun 2025
     logo: /images/uploads/unacademy_logo.jpg
@@ -93,6 +81,18 @@ experience:
         endDate: Dec 2023
         description: Created motion graphics content for marketing campaigns and
           educational content. Produced 200+ animated assets.
+  - skills: JavaScript, HTML5 and +2 skills
+    endDate: Present
+    logo: /images/uploads/freelancer_logo.png
+    startDate: Feb 2019
+    duration: 7 yrs 3 mos
+    location: Remote
+    title: Frontend Web Developer
+    type: Freelance
+    description: Building responsive websites, interactive web applications, and
+      creative coding projects. Specializing in portfolio sites, landing pages,
+      and interactive experiences using modern web technologies.
+    company: Freelance
 education:
   - school: Chandigarh University
     degree: Bachelor of Computer Applications (Dropout)
