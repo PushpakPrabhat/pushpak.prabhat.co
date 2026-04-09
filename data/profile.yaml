@@ -60,7 +60,7 @@ experience:
     company: pushpunk.com
   - skills: JavaScript, HTML5 and +2 skills
     endDate: Present
-    logo: 💻
+    logo: /images/uploads/freelancer_logo.png
     startDate: Feb 2019
     duration: 7 yrs 3 mos
     location: Remote
@@ -97,7 +97,7 @@ education:
   - school: Chandigarh University
     degree: Bachelor of Computer Applications (Dropout)
     year: 2018 - 2021
-    logo: /images/uploads/cu_logo.jpeg
+    logo: /images/uploads/cu_logo.png
   - school: JAC
     degree: Higher Secondary (12th)
     year: 2017 - 2019
