@@ -2,18 +2,17 @@
 <aside class="profile-card" id="sidebar-profile-card">
   <div class="profile-card__banner"></div>
   <div class="profile-card__avatar-wrapper">
-    <a href="/#profile">
-      <img 
-        src="{{ .Site.Params.profileImage }}" 
-        alt="{{ $profile.name }}" 
-        class="profile-card__avatar"
-        loading="lazy"
-      >
+    <a href="/profile/">
+      {{ if .Site.Params.profileImage }}
+      <img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="profile-card__avatar" loading="lazy">
+      {{ else }}
+      {{ partial "icons.html" (dict "icon" "default-user" "class" "profile-card__avatar" "size" "64") }}
+      {{ end }}
     </a>
   </div>
   <div class="profile-card__info">
     <h2 class="profile-card__name">
-      <a href="/#profile">{{ $profile.name }}</a>
+      <a href="/profile/">{{ $profile.name }}</a>
     </h2>
     <p class="profile-card__headline">{{ $profile.headline }}</p>
   </div>

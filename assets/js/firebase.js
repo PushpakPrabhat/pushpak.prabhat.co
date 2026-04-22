@@ -1,5 +1,5 @@
 /**
- * LinkedIn Portfolio — Firebase / Data Layer
+ * Apple HIG Portfolio — Firebase / Data Layer
  * 
  * Uses Firebase Firestore for data, Auth for Google Sign-In,
  * and Realtime Database for presence (online/offline/typing).
@@ -10,8 +10,10 @@
   'use strict';
 
   const STORAGE_PREFIX = 'pp_portfolio_';
-  const ADMIN_EMAIL = 'prabhat.pushpak@gmail.com';
+  const ADMIN_EMAILS = ['prabhat.pushpak@gmail.com', 'prabhatpushpak@gmail.com'];
   const CHAT_MSG_LIMIT = 25;
+  let adminInboxUnsub = null;
+  let adminConvUnsub = null;
 
   let db = null;
   let rtdb = null;
@@ -266,8 +268,8 @@
                   var imgUrl = window._reactionImages && window._reactionImages[userReaction];
                   customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + userReaction + '" style="display:block;">';
                   customIconEl.style.display = 'inline-block';
-                  textEl.textContent = userReaction.charAt(0).toUpperCase() + userReaction.slice(1);
-                  var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
+                  textEl.textContent = ({celebrate:'Clap',support:'Fire',love:'Wow',insightful:'Laugh',funny:'Sad'})[userReaction] || userReaction.charAt(0).toUpperCase() + userReaction.slice(1);
+                  var colors = { celebrate: '#FF9500', support: '#FF3B30', love: '#5856D6', insightful: '#34C759', funny: '#007AFF' };
                   textEl.style.color = colors[userReaction] || '';
                 } else if (userReaction === 'like' && textEl) {
                   textEl.textContent = 'Like';
@@ -379,7 +381,7 @@
     },
 
     getAdminEmail: function() {
-      return ADMIN_EMAIL;
+      return ADMIN_EMAILS[0];
     },
 
     // --- Presence ---
@@ -611,7 +613,15 @@
     },
 
     getAdminEmail: function() {
-      return 'prabhat.pushpak@gmail.com';
+      return ADMIN_EMAILS[0];
+    },
+
+    getAdminEmails: function() {
+      return ADMIN_EMAILS;
+    },
+
+    isAdmin: function() {
+      return currentUser && ADMIN_EMAILS.indexOf(currentUser.email) >= 0;
     },
 
     watchPresence: function(uid, callback) {
@@ -707,6 +717,135 @@
       var count = this.getShares(contentId) + 1;
       lsSet('shares_' + contentId, count.toString());
       return count;
+    },
+
+    // --- Admin Inbox ---
+
+    listenToAllConversations: function(callback) {
+      if (!db || !this.isAdmin()) return function() {};
+      if (adminInboxUnsub) adminInboxUnsub();
+
+      // Get recent messages across all conversations to build conversation list
+      var query = db.collection('chat_messages')
+        .orderBy('timestamp', 'desc')
+        .limit(200);
+
+      adminInboxUnsub = query.onSnapshot(function(snap) {
+        var conversationsMap = {};
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          d.id = doc.id;
+          d.timestamp = d.timestamp ? d.timestamp.toDate() : new Date();
+          var convId = d.conversationId;
+          if (!convId) return;
+          if (!conversationsMap[convId]) {
+            conversationsMap[convId] = {
+              conversationId: convId,
+              userName: d.authorName || 'User',
+              userPhoto: d.authorPhoto || '',
+              userUid: d.authorUid || convId,
+              lastMessage: d.text,
+              lastMessageType: d.type,
+              lastTimestamp: d.timestamp,
+              messages: [],
+              unreadCount: 0
+            };
+          }
+          conversationsMap[convId].messages.push(d);
+          // Track the user info from user messages (not admin ones)
+          if (d.type === 'user') {
+            conversationsMap[convId].userName = d.authorName || 'User';
+            conversationsMap[convId].userPhoto = d.authorPhoto || '';
+            conversationsMap[convId].userUid = d.authorUid || convId;
+          }
+        });
+
+        // Calculate unread (user messages admin hasn't read)
+        var conversations = Object.values(conversationsMap);
+        conversations.forEach(function(conv) {
+          var adminLastRead = parseInt(localStorage.getItem('admin_read_' + conv.conversationId) || '0', 10);
+          conv.unreadCount = 0;
+          conv.messages.forEach(function(m) {
+            if (m.type === 'user' && m.timestamp.getTime() > adminLastRead) {
+              conv.unreadCount++;
+            }
+          });
+        });
+
+        // Sort by most recent message
+        conversations.sort(function(a, b) { return b.lastTimestamp - a.lastTimestamp; });
+        callback(conversations);
+      }, function(err) {
+        console.warn('[PortfolioDB] Admin inbox listener error:', err.message);
+      });
+
+      return adminInboxUnsub;
+    },
+
+    listenToConversation: function(conversationId, callback) {
+      if (!db || !this.isAdmin()) return function() {};
+      if (adminConvUnsub) adminConvUnsub();
+
+      var query = db.collection('chat_messages')
+        .where('conversationId', '==', conversationId)
+        .orderBy('timestamp', 'desc')
+        .limit(50);
+
+      adminConvUnsub = query.onSnapshot(function(snap) {
+        var messages = [];
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          d.id = doc.id;
+          d.timestamp = d.timestamp ? d.timestamp.toDate() : new Date();
+          messages.push(d);
+        });
+        messages.reverse();
+        callback(messages);
+      }, function(err) {
+        console.warn('[PortfolioDB] Conversation listener error:', err.message);
+        if (err.code === 'failed-precondition') {
+          var fallback = db.collection('chat_messages')
+            .where('conversationId', '==', conversationId)
+            .limit(50);
+          adminConvUnsub = fallback.onSnapshot(function(snap) {
+            var messages = [];
+            snap.forEach(function(doc) {
+              var d = doc.data();
+              d.id = doc.id;
+              d.timestamp = d.timestamp ? d.timestamp.toDate() : new Date();
+              messages.push(d);
+            });
+            messages.sort(function(a, b) { return a.timestamp - b.timestamp; });
+            callback(messages);
+          });
+        }
+      });
+
+      return adminConvUnsub;
+    },
+
+    stopConversationListener: function() {
+      if (adminConvUnsub) { adminConvUnsub(); adminConvUnsub = null; }
+    },
+
+    sendAdminReply: function(conversationId, text) {
+      if (!db || !currentUser || !this.isAdmin()) return;
+      var msg = {
+        text: text,
+        type: 'admin',
+        authorName: currentUser.name,
+        authorPhoto: currentUser.photo,
+        authorUid: currentUser.uid,
+        conversationId: conversationId,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      db.collection('chat_messages').add(msg).catch(function(err) {
+        console.warn('[PortfolioDB] Admin reply error:', err.message);
+      });
+    },
+
+    markAdminConversationRead: function(conversationId) {
+      localStorage.setItem('admin_read_' + conversationId, Date.now().toString());
     }
   };
 
@@ -742,8 +881,8 @@
               var imgUrl = window._reactionImages && window._reactionImages[reaction];
               customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + reaction + '" style="display:block;">';
               customIconEl.style.display = 'inline-block';
-              textEl.textContent = reaction.charAt(0).toUpperCase() + reaction.slice(1);
-              var colors = { celebrate: '#057642', support: '#666666', love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' };
+              textEl.textContent = ({celebrate:'Clap',support:'Fire',love:'Wow',insightful:'Laugh',funny:'Sad'})[reaction] || reaction.charAt(0).toUpperCase() + reaction.slice(1);
+              var colors = { celebrate: '#FF9500', support: '#FF3B30', love: '#5856D6', insightful: '#34C759', funny: '#007AFF' };
               textEl.style.color = colors[reaction] || '';
             }
           }

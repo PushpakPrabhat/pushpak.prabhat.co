@@ -5,10 +5,10 @@
 <article class="feed-item feed-item--video" data-type="videos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-video-url="{{ $videoUrl }}" data-video-type="{{ $videoType }}" id="item-{{ $id }}">
   <!-- Header -->
   <div class="feed-item__header">
-    <a href="/#profile">{{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}</a>
+    <a href="/profile/">{{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}</a>
     <div class="feed-item__meta">
       <div class="feed-item__author">
-        <a href="/#profile" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
+        <a href="/profile/" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
         <span class="feed-item__author-badge">{{ partial "icons.html" (dict "icon" "verified" "size" "16") }}</span>
       </div>
       <div class="feed-item__author-subtitle">{{ $profile.headline }}</div>
@@ -17,10 +17,10 @@
       </div>
     </div>
     <div class="feed-item__menu-wrapper">
-      <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "dots" "size" "20") }}</button>
+      <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "ellipsis" "size" "20") }}</button>
       <div class="feed-menu" id="feed-menu-{{ $id }}">
         <button class="feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
-        <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pdf" "size" "18") }} Save as PDF</button>
+        <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "doc" "size" "18") }} Save as PDF</button>
         {{ if or (eq $videoType "youtube") (eq $videoType "gdrive") }}
         <button class="feed-menu__item" onclick="window.open('{{ $videoUrl }}', '_blank')">{{ partial "icons.html" (dict "icon" "external-link" "size" "18") }} Open original video</button>
         {{ end }}
@@ -31,11 +31,11 @@
   <!-- Content -->
   <div class="feed-item__content">
     <div class="feed-item__text js-see-more">
-      {{ .Content | plainify }}
+      <a href="{{ .Permalink }}" class="feed-item__text-link">{{ .Content | plainify }}</a>
     </div>
   </div>
   
-  <!-- Video -->
+  <!-- Video with Apple-style play overlay -->
   <div class="feed-item__video-wrapper" onclick="openVideoViewer('videos', '{{ .Params.category }}', '{{ $id }}')">
     {{ if eq $videoType "youtube" }}
       {{ $videoID := "" }}
@@ -51,7 +51,6 @@
         allowfullscreen
         loading="lazy"
       ></iframe>
-      <span class="video-type-badge video-type-badge--youtube">▶ YouTube</span>
     {{ else if eq $videoType "gdrive" }}
       <iframe 
         src="{{ $videoUrl }}" 
@@ -60,17 +59,19 @@
         allowfullscreen
         loading="lazy"
       ></iframe>
-      <span class="video-type-badge video-type-badge--gdrive">📁 Google Drive</span>
     {{ else }}
       <video controls preload="metadata" poster="{{ .Params.thumbnail }}">
         <source src="{{ $videoUrl }}" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     {{ end }}
+    <!-- Apple-style play overlay (custom, no YouTube/GDrive branding) -->
+    <div class="feed-item__play-overlay">
+      <div class="feed-item__play-btn">{{ partial "icons.html" (dict "icon" "play" "size" "24") }}</div>
+    </div>
     <span class="feed-item__category-badge">{{ .Params.category | humanize }}</span>
   </div>
   
   <!-- Interactions -->
   {{ partial "interactions.html" (dict "id" $id "type" "video" "showSave" true "videoUrl" $videoUrl "videoType" $videoType "context" $) }}
 </article>
-

@@ -1,7 +1,7 @@
 /**
- * LinkedIn Portfolio — Main JavaScript (Enhanced)
+ * Apple HIG Portfolio — Main JavaScript (Enhanced)
  * Handles: Tabs, Filtering, Pagination, Media Viewer, Video Viewer,
- *          Reactions, Feed Menus, Profile Toggle, Chat, Search
+ *          Reactions, Feed Menus, Profile Toggle, Chat, Search, Dark Mode
  */
 
 (function() {
@@ -486,14 +486,14 @@
     applyReaction(contentId, 'like');
   }
 
-  // Reaction image URLs (LinkedIn CDN and custom SVGs)
+  // Reaction image URLs (Apple-style emoji SVGs)
   const reactionImages = {
-    'like': 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%230a66c2%22%2F%3E%3Cg%20transform%3D%22translate%288%2C%208%29%20scale%281%29%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M19.46%2011l-3.91-3.91a7%207%200%2001-1.69-2.74l-.49-1.47A2.76%202.76%200%200010.76%201%202.75%202.75%200%20008%203.74v1.12a9.19%209.19%200%2000.46%202.85L8.89%209H4.12A2.12%202.12%200%20002%2011.12a2.16%202.16%200%2000.92%201.76A2.11%202.11%200%20002%2014.62a2.14%202.14%200%20001.28%202%202%202%200%2000-.28%201%202.12%202.12%200%20002%202.12v.14A2.12%202.12%200%20007.12%2022h7.49a8.08%208.08%200%20003.58-.84l.31-.16H21V11z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E',
-    'celebrate': 'https://static.licdn.com/aero-v1/sc/h/b1dl5jk88euc7e9ri50xy5qo8',
-    'support': 'https://static.licdn.com/aero-v1/sc/h/3wqhxqtk2l554o70ur3kessf1',
-    'love': 'https://static.licdn.com/aero-v1/sc/h/f58e354mjsjpdd67eq51cuh49',
-    'insightful': 'https://static.licdn.com/aero-v1/sc/h/39axkb4qe8q95ieljrhqhkxvl',
-    'funny': 'https://static.licdn.com/aero-v1/sc/h/ktcgulanbxpl0foz1uckibdl'
+    'like': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23FF2D55%22%2F%3E%3Cpath%20d%3D%22M20%2029s-7-4.5-7-9.5c0-2.5%202-4.5%203.5-4.5%201.2%200%202.2.8%203.5%202%201.3-1.2%202.3-2%203.5-2%201.5%200%203.5%202%203.5%204.5%200%205-7%209.5-7%209.5z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E',
+    'celebrate': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23FF9500%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%91%8F%3C%2Ftext%3E%3C%2Fsvg%3E',
+    'support': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23FF3B30%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%94%A5%3C%2Ftext%3E%3C%2Fsvg%3E',
+    'love': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%235856D6%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%98%AE%3C%2Ftext%3E%3C%2Fsvg%3E',
+    'insightful': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%2334C759%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%98%82%3C%2Ftext%3E%3C%2Fsvg%3E',
+    'funny': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23007AFF%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%98%A2%3C%2Ftext%3E%3C%2Fsvg%3E'
   };
   // Expose globally for firebase.js sync
   window._reactionImages = reactionImages;
@@ -530,10 +530,14 @@
             customIconEl.innerHTML = `<img src="${imgUrl}" width="20" height="20" alt="${reaction}" style="display:block;">`;
           }
           if (textEl) {
-            textEl.textContent = reaction.charAt(0).toUpperCase() + reaction.slice(1);
+            const displayNames = { 
+              celebrate: 'Clap', support: 'Fire', 
+              love: 'Wow', insightful: 'Laugh', funny: 'Sad' 
+            };
+            textEl.textContent = displayNames[reaction] || reaction.charAt(0).toUpperCase() + reaction.slice(1);
             const colors = { 
-              celebrate: '#057642', support: '#666666', 
-              love: '#df704d', insightful: '#0a66c2', funny: '#0a66c2' 
+              celebrate: '#FF9500', support: '#FF3B30', 
+              love: '#5856D6', insightful: '#34C759', funny: '#007AFF' 
             };
             textEl.style.color = colors[reaction] || '';
           }
@@ -545,7 +549,8 @@
           icon.offsetHeight;
           icon.style.animation = 'likeHeart 0.35s ease';
         }
-        showToast(`You reacted with ${reaction}!`);
+        const _dn = {celebrate:'Clap',support:'Fire',love:'Wow',insightful:'Laugh',funny:'Sad',like:'Like'};
+        showToast(`You reacted with ${_dn[reaction] || reaction}!`);
       } else {
         btn.classList.remove('interaction-btn--active');
         btn.classList.remove('has-custom');
@@ -604,7 +609,7 @@
         function renderUsers(filterType) {
            let usersHtml = '';
            const profiles = data.userProfiles || {};
-           const defaultPic = 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20128%20128%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2264%22%20fill%3D%22%23e7e7e7%22%2F%3E%3Cpath%20d%3D%22M64%2072c13.25%200%2024-10.75%2024-24S77.25%2024%2064%2024%2040%2034.75%2040%2048s10.75%2024%2024%2024zm0%208c-16%200-48%208-48%2024v8h96v-8c0-16-32-24-48-24z%22%20fill%3D%22%23666%22%2F%3E%3C%2Fsvg%3E';
+           const defaultPic = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='60' y1='0' x2='60' y2='120' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23C8C8CC'/%3E%3Cstop offset='1' stop-color='%238E8E93'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='60' cy='60' r='60' fill='url(%23g)'/%3E%3Ccircle cx='60' cy='46' r='18' fill='white'/%3E%3Cpath d='M24 102c0-16.57 16.12-30 36-30s36 13.43 36 30' fill='white'/%3E%3C/svg%3E";
            Object.keys(data.users || {}).forEach(uid => {
              const r = data.users[uid];
              if (filterType !== 'all' && r !== filterType) return;
@@ -612,7 +617,7 @@
              const rImg = window._reactionImages && window._reactionImages[r];
              const profile = profiles[uid] || {};
              const pImg = profile.photo || defaultPic;
-             const pName = profile.name || 'LinkedIn Member';
+             const pName = profile.name || 'Member';
              
              usersHtml += `
                <div class="reactions-modal__user">
@@ -622,7 +627,7 @@
                  </div>
                  <div>
                    <div class="reactions-modal__user-name">${pName}</div>
-                   <div class="reactions-modal__user-desc">Reacted with ${r.charAt(0).toUpperCase() + r.slice(1)} on this post</div>
+                   <div class="reactions-modal__user-desc">Reacted with ${({celebrate:'Clap',support:'Fire',love:'Wow',insightful:'Laugh',funny:'Sad',like:'Like'}[r]) || r} on this post</div>
                  </div>
                </div>
              `;
@@ -775,6 +780,13 @@
     document.addEventListener('click', function(e) {
       const link = e.target.closest('a[href*="profile"], a[href="/#profile"], a[href="#profile"], [data-profile-link]');
       if (link && (link.getAttribute('href') || '').includes('profile') && !link.getAttribute('target')) {
+        const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '';
+        if (!isHome) {
+          if (!link.getAttribute('href') || link.getAttribute('href') === '#profile') {
+            e.preventDefault(); window.location.href = '/#profile';
+          }
+          return;
+        }
         e.preventDefault();
         toggleProfile(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -787,6 +799,8 @@
 
     document.querySelectorAll('#nav-home, #mob-nav-home').forEach(link => {
       link.addEventListener('click', function(e) {
+        const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '';
+        if (!isHome) return;
         e.preventDefault();
         toggleProfile(false);
         switchTab('all');
@@ -798,127 +812,7 @@
         if (mobH) mobH.classList.add('mobile-nav__item--active');
       });
     });
-
-    const searchInput = document.getElementById('nav-search');
-    if (searchInput) {
-      // Create search dropdown
-      let dropdown = document.getElementById('search-dropdown');
-      if (!dropdown) {
-        dropdown = document.createElement('div');
-        dropdown.id = 'search-dropdown';
-        dropdown.className = 'search-dropdown';
-        searchInput.parentElement.appendChild(dropdown);
-      }
-
-      searchInput.addEventListener('input', function() {
-        const q = this.value.toLowerCase().trim();
-        if (!q) {
-          dropdown.classList.remove('open');
-          filterAndPaginate();
-          // Show feed
-          toggleProfile(false);
-          return;
-        }
-
-        // Search feed items
-        const results = [];
-        document.querySelectorAll('.feed-item').forEach(item => {
-          const text = item.textContent.toLowerCase();
-          const type = item.dataset.type || 'posts';
-          const title = item.querySelector('.feed-item__author-subtitle, .post-card__title, .feed-item__text');
-          const titleText = title ? title.textContent.trim().substring(0, 60) : 'Untitled';
-          if (text.includes(q)) {
-            const icons = { photos: '📷', videos: '🎬', posts: '📝' };
-            results.push({
-              type: type,
-              icon: icons[type] || '📄',
-              label: type.charAt(0).toUpperCase() + type.slice(1, -1),
-              title: titleText,
-              element: item
-            });
-          }
-        });
-
-        // Search experience companies
-        const expItems = document.querySelectorAll('.experience-item');
-        expItems.forEach(exp => {
-          const text = exp.textContent.toLowerCase();
-          if (text.includes(q)) {
-            const company = exp.querySelector('.experience-item__company');
-            const title = exp.querySelector('.experience-item__title');
-            results.push({
-              type: 'experience',
-              icon: '🏢',
-              label: 'Company',
-              title: (title ? title.textContent : '') + (company ? ' · ' + company.textContent : ''),
-              element: null,
-              action: 'profile'
-            });
-          }
-        });
-
-        // Build dropdown
-        if (results.length === 0) {
-          dropdown.innerHTML = '<div class="search-no-results"><div class="search-no-results__icon">🔍</div><div class="search-no-results__text">No results found</div><div class="search-no-results__hint">Try searching for something else</div></div>';
-        } else {
-          let html = '';
-          results.slice(0, 8).forEach((r, i) => {
-            html += '<button class="search-result-item" data-index="' + i + '">' +
-              '<span class="search-result-item__icon">' + r.icon + '</span>' +
-              '<span class="search-result-item__text">' + r.title.substring(0, 50) + '</span>' +
-              '<span class="search-result-item__badge">' + r.label + '</span>' +
-              '</button>';
-          });
-          dropdown.innerHTML = html;
-
-          // Click handlers
-          dropdown.querySelectorAll('.search-result-item').forEach((btn, i) => {
-            btn.addEventListener('click', function() {
-              const r = results[i];
-              dropdown.classList.remove('open');
-              searchInput.value = '';
-              if (r.action === 'profile') {
-                toggleProfile(true);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              } else if (r.element) {
-                toggleProfile(false);
-                filterAndPaginate();
-                // Show all items, scroll to match
-                document.querySelectorAll('.feed-item').forEach(it => it.style.display = 'block');
-                r.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                r.element.style.boxShadow = '0 0 0 3px var(--color-primary)';
-                setTimeout(() => { r.element.style.boxShadow = ''; }, 2000);
-              }
-            });
-          });
-        }
-
-        dropdown.classList.add('open');
-
-        // Also filter feed items
-        document.querySelectorAll('.feed-item').forEach(item => {
-          item.style.display = item.textContent.toLowerCase().includes(q) ? 'block' : 'none';
-        });
-      });
-
-      // Close dropdown on outside click
-      document.addEventListener('click', function(e) {
-        if (!e.target.closest('.nav__search')) {
-          dropdown.classList.remove('open');
-        }
-      });
-
-      // Close on Escape
-      searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          dropdown.classList.remove('open');
-          this.value = '';
-          filterAndPaginate();
-        }
-      });
-    }
   }
-
   // ======================== Animations ========================
   function initAnimations() {
     document.querySelectorAll('.feed-item').forEach((item, i) => {
@@ -979,18 +873,23 @@
     }
   }
 
+  // Shared read-tracking logic for both mobile and desktop
+  function markChatAsRead() {
+    localStorage.setItem('pp_chat_last_read', Date.now().toString());
+    hideUnreadDots();
+    chatOpen = true;
+    if (PortfolioDB.markChatRead) PortfolioDB.markChatRead(latestMsgTime);
+  }
+
   window.openChat = function(e) {
     if (e) e.preventDefault();
     askNotificationPerm();
+    markChatAsRead();
     const widget = document.getElementById('chat-widget');
     if (widget) {
       widget.classList.add('open');
-      chatOpen = true;
       const fab = document.getElementById('chat-fab');
       if (fab) fab.style.display = 'none';
-      // Clear unread dots and mark as read
-      hideUnreadDots();
-      if (PortfolioDB.markChatRead) PortfolioDB.markChatRead(latestMsgTime);
     }
   };
 
@@ -1054,7 +953,7 @@
         var lsKey = 'chat_read_' + user.uid;
         var lr = parseInt(localStorage.getItem(lsKey) || '0', 10);
         
-        var hasUnread = false;
+        var unreadMsgCount = 0;
         messages.forEach(function(m) {
           var ts = m.timestamp ? (m.timestamp instanceof Date ? m.timestamp.getTime() : new Date(m.timestamp).getTime()) : Date.now();
           if (ts > latestMsgTime) {
@@ -1063,16 +962,16 @@
             }
             latestMsgTime = ts;
           }
-          if (m.type === 'admin' && ts > lr) hasUnread = true;
+          if (m.type === 'admin' && ts > lr) unreadMsgCount++;
         });
 
         chatInitialLoad = false;
 
-        if (hasUnread && !chatOpen) {
-          showUnreadDots();
-        } else if (chatOpen || !hasUnread) {
+        if (unreadMsgCount > 0 && !chatOpen) {
+          showUnreadDots(unreadMsgCount);
+        } else if (chatOpen || unreadMsgCount === 0) {
           hideUnreadDots();
-          if (hasUnread && chatOpen && PortfolioDB.markChatRead) {
+          if (unreadMsgCount > 0 && chatOpen && PortfolioDB.markChatRead) {
             PortfolioDB.markChatRead(latestMsgTime);
           }
         }
@@ -1086,21 +985,114 @@
     const container = document.getElementById('chat-messages');
     const mContainer = document.getElementById('mobile-chat-messages');
 
-    if (container) {
-      container.innerHTML = '';
-      messages.forEach(function(msg) {
-        const type = msg.type === 'admin' ? 'received' : 'sent';
-        addChatBubble(msg.text, type, msg.timestamp, container);
-      });
+    // Get last read timestamp from localStorage
+    var lastReadTime = parseInt(localStorage.getItem('pp_chat_last_read') || '0');
+
+    // If chat is currently open, update the read timestamp so separator hides on next render
+    if (chatOpen) {
+      var now = Date.now();
+      localStorage.setItem('pp_chat_last_read', now.toString());
+      lastReadTime = now;
     }
 
-    if (mContainer) {
-      mContainer.innerHTML = '';
+    [container, mContainer].forEach(function(c) {
+      if (!c) return;
+
+      var isNearBottom = (c.scrollHeight - c.scrollTop - c.clientHeight) < 50;
+      var currentScrollTop = c.scrollTop;
+
+      c.innerHTML = '';
+      var lastDateStr = '';
+      var unreadSeparatorAdded = false;
+      var unreadCount = 0;
+
+      // Count unread messages first (only when chat is NOT open)
+      if (!chatOpen) {
+        messages.forEach(function(msg) {
+          if (msg.type === 'admin') {
+            var msgTime = msg.timestamp instanceof Date ? msg.timestamp.getTime() : 0;
+            if (msgTime > lastReadTime) unreadCount++;
+          }
+        });
+      }
+
       messages.forEach(function(msg) {
-        const type = msg.type === 'admin' ? 'received' : 'sent';
-        addChatBubble(msg.text, type, msg.timestamp, mContainer);
+        var type = msg.type === 'admin' ? 'received' : 'sent';
+        var d = msg.timestamp instanceof Date ? msg.timestamp : new Date();
+        var dateStr = getDateLabel(d);
+        
+        // Date separator
+        if (dateStr !== lastDateStr) {
+          var sep = document.createElement('div');
+          sep.className = 'chat-date-separator';
+          sep.innerHTML = '<span class="chat-date-separator__text">' + dateStr + '</span>';
+          c.appendChild(sep);
+          lastDateStr = dateStr;
+        }
+
+        // Unread separator (before first unread admin message, only when chat is NOT open)
+        if (!chatOpen && !unreadSeparatorAdded && msg.type === 'admin' && unreadCount > 0) {
+          var msgTime = msg.timestamp instanceof Date ? msg.timestamp.getTime() : 0;
+          if (msgTime > lastReadTime) {
+            var unreadSep = document.createElement('div');
+            unreadSep.className = 'chat-unread-separator';
+            unreadSep.innerHTML = '<span class="chat-unread-separator__text">' + unreadCount + ' unread message' + (unreadCount > 1 ? 's' : '') + '</span>';
+            c.appendChild(unreadSep);
+            unreadSeparatorAdded = true;
+          }
+        }
+
+        addChatBubble(msg.text, type, msg.timestamp, c);
       });
-    }
+
+      // Maintain scroll position
+      if (isNearBottom || messages.length === 0) {
+        c.scrollTop = c.scrollHeight;
+      } else {
+        c.scrollTop = currentScrollTop;
+      }
+
+      // Configure scroll-to-bottom button
+      var scrollBtn = document.getElementById(c.id === 'chat-messages' ? 'chat-scroll-bottom' : 'mobile-chat-scroll-bottom');
+      if (scrollBtn && !c.dataset.scrollListenerAdded) {
+        c.dataset.scrollListenerAdded = 'true';
+        scrollBtn.style.display = 'none';
+        c.addEventListener('scroll', function() {
+          var nearBottom = (c.scrollHeight - c.scrollTop - c.clientHeight) < 50;
+          scrollBtn.style.display = nearBottom ? 'none' : 'flex';
+        });
+      }
+    });
+  }
+
+  function getDateLabel(date) {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (date.toDateString() === today.toDateString()) return 'Today';
+    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function linkifyText(text) {
+    var urlRegex = /(https?:\/\/[^\s<]+)/g;
+    return text.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  }
+
+  function addChatBubble(text, type, timestamp, container) {
+    if (!container) return;
+    var bubble = document.createElement('div');
+    bubble.className = 'chat-bubble chat-bubble--' + type;
+    // Auto-link URLs
+    var textEl = document.createElement('span');
+    textEl.innerHTML = linkifyText(text);
+    bubble.appendChild(textEl);
+    var time = document.createElement('span');
+    time.className = 'chat-bubble__time';
+    var d = timestamp instanceof Date ? timestamp : new Date();
+    time.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    bubble.appendChild(time);
+    container.appendChild(bubble);
   }
 
   function watchAdminPresence() {
@@ -1129,22 +1121,15 @@
   }
 
   function updateAdminStatus(presence) {
-    // Desktop chat dot
     var chatDot = document.getElementById('chat-admin-dot');
-    // Mobile chat dots
     var mobileDot = document.getElementById('mobile-chat-admin-dot');
     var statusText = document.getElementById('mobile-chat-status');
-
-    // Typing indicators
     var typingEl = document.getElementById('chat-typing-indicator');
     var mTypingEl = document.getElementById('mobile-chat-typing-indicator');
-
     var isOnline = presence && presence.online;
 
     [chatDot, mobileDot].forEach(function(dot) {
-      if (dot) {
-        dot.classList.toggle('online', isOnline);
-      }
+      if (dot) dot.classList.toggle('online', isOnline);
     });
 
     if (statusText) {
@@ -1161,15 +1146,16 @@
     }
   }
 
-  // Unread dots
-  function showUnreadDots() {
+  // Unread dots — now with count inside
+  function showUnreadDots(count) {
+    count = count || 1;
+    var badgeText = count > 9 ? '9+' : String(count);
     ['desktop-unread-dot', 'mobile-header-unread-dot', 'mobile-nav-unread-dot'].forEach(function(id) {
       var el = document.getElementById(id);
-      if (el) el.style.display = 'block';
+      if (el) { el.style.display = 'flex'; el.textContent = badgeText; }
     });
-    // Also show on FAB badge
     var fab = document.getElementById('chat-fab-badge');
-    if (fab) { fab.style.display = 'flex'; fab.textContent = '!'; }
+    if (fab) { fab.style.display = 'flex'; fab.textContent = badgeText; }
   }
 
   function hideUnreadDots() {
@@ -1216,19 +1202,7 @@
     }
   });
 
-  function addChatBubble(text, type, timestamp, container) {
-    if (!container) return;
-    var bubble = document.createElement('div');
-    bubble.className = 'chat-bubble chat-bubble--' + type;
-    bubble.textContent = text;
-    var time = document.createElement('span');
-    time.className = 'chat-bubble__time';
-    var d = timestamp instanceof Date ? timestamp : new Date();
-    time.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    bubble.appendChild(time);
-    container.appendChild(bubble);
-    container.scrollTop = container.scrollHeight;
-  }
+  // (addChatBubble is defined earlier at ~line 1127 with linkify support)
 
   // ======================== Profile / Account Menu ========================
   window.toggleProfileMenu = function(e) {
@@ -1239,22 +1213,27 @@
     if (dropdown.style.display === 'none' || !dropdown.style.display) {
       var content = document.getElementById('account-dropdown-content');
       var user = PortfolioDB.getCurrentUser ? PortfolioDB.getCurrentUser() : null;
+      var isMobile = window.innerWidth < 769;
+      
+      var moonIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;display:inline-block;vertical-align:middle;flex-shrink:0;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+      var themeItem = isMobile ? '<button class="account-dropdown__item" onclick="toggleTheme(); toggleProfileMenu();" style="display:flex;align-items:center;">' + moonIcon + ' Toggle Dark Mode</button><div class="account-dropdown__divider"></div>' : '';
+
+      var signOutIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;display:inline-block;vertical-align:middle;flex-shrink:0;color:var(--color-error);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>';
+      var signInIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;display:inline-block;vertical-align:middle;flex-shrink:0;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>';
 
       if (user) {
         content.innerHTML = 
           '<div class="account-dropdown__item" style="cursor:default;">' +
-            '<img src="' + (user.photo || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill='%23e7e2dc' d='M0 0h128v128H0z'/%3E%3Cpath fill='%23788fa5' d='M88.41 84.67a32 32 0 1 0-48.82 0 66.13 66.13 0 0 1 48.82 0'/%3E%3Cpath fill='%239db3c8' d='M88.41 84.67a32 32 0 0 1-48.82 0A66.79 66.79 0 0 0 0 128h128a66.79 66.79 0 0 0-39.59-43.33'/%3E%3Cpath fill='%2356687a' d='M64 96a31.93 31.93 0 0 0 24.41-11.33 66.13 66.13 0 0 0-48.82 0A31.93 31.93 0 0 0 64 96'/%3E%3C/svg%3E") + '" class="account-dropdown__avatar" referrerpolicy="no-referrer">' +
+            '<img src="' + (user.photo || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='60' y1='0' x2='60' y2='120' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23C8C8CC'/%3E%3Cstop offset='1' stop-color='%238E8E93'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='60' cy='60' r='60' fill='url(%23g)'/%3E%3Ccircle cx='60' cy='46' r='18' fill='white'/%3E%3Cpath d='M24 102c0-16.57 16.12-30 36-30s36 13.43 36 30' fill='white'/%3E%3C/svg%3E") + '" class="account-dropdown__avatar" referrerpolicy="no-referrer">' +
             '<div><strong>' + user.name + '</strong><br><span style="font-size:12px;color:var(--color-text-secondary);">' + (user.email || '') + '</span></div>' +
           '</div>' +
           '<div class="account-dropdown__divider"></div>' +
-          '<button class="account-dropdown__item" onclick="PortfolioDB.signOut().then(function(){location.reload();})">' +
-            '\ud83d\udeaa Sign Out' +
-          '</button>';
+          themeItem +
+          '<button class="account-dropdown__item" style="display:flex;align-items:center;color:var(--color-error);" onclick="PortfolioDB.signOut().then(function(){location.reload();})">' + signOutIcon + 'Sign Out</button>';
       } else {
         content.innerHTML = 
-          '<button class="account-dropdown__item" onclick="PortfolioDB.requireAuth().catch(function(){}); toggleProfileMenu();">' +
-            '\ud83d\udd11 Sign in with Google' +
-          '</button>';
+          themeItem +
+          '<button class="account-dropdown__item" style="display:flex;align-items:center;" onclick="PortfolioDB.requireAuth().catch(function(){}); toggleProfileMenu();">' + signInIcon + 'Sign in with Google</button>';
       }
       dropdown.style.display = 'block';
     } else {
@@ -1326,13 +1305,15 @@
   const origOpenChat = window.openChat;
   window.openChat = function(e) {
     if (e) e.preventDefault();
+    // Always run read-tracking logic
+    markChatAsRead();
+    askNotificationPerm();
     if (isMobileDevice()) {
       openMobileChat();
     } else {
       const widget = document.getElementById('chat-widget');
       if (widget) {
         widget.classList.add('open');
-        chatOpen = true;
         const fab = document.getElementById('chat-fab');
         if (fab) fab.style.display = 'none';
       }
@@ -1427,48 +1408,77 @@
 
   // ======================== Text Truncation See More/Less ========================
   window.initSeeMoreText = function() {
-    const charLimit = 160;
-    document.querySelectorAll('.js-see-more:not(.initialized-see-more)').forEach(el => {
+    document.querySelectorAll('.js-see-more:not(.initialized-see-more)').forEach(function(el) {
       el.classList.add('initialized-see-more');
       
-      const fullText = el.textContent.trim();
-      if (fullText.length > charLimit) {
-        const truncatedText = fullText.substring(0, charLimit).trim() + '...';
-        
-        const textNode = document.createElement('span');
-        textNode.textContent = truncatedText;
-        
-        el.dataset.fullText = fullText;
-        el.dataset.truncatedText = truncatedText;
-        el.innerHTML = '';
-        el.appendChild(textNode);
-        
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'see-more-toggle';
-        toggleBtn.textContent = 'see more';
-        toggleBtn.style.color = 'var(--color-text-secondary)';
-        toggleBtn.style.background = 'transparent';
-        toggleBtn.style.border = 'none';
-        toggleBtn.style.padding = '0 0 0 2px';
-        toggleBtn.style.cursor = 'pointer';
-        toggleBtn.style.fontWeight = '600';
-        toggleBtn.style.display = 'inline';
-        
-        toggleBtn.addEventListener('click', function(e) {
-          e.stopPropagation(); // prevent card clicks
-          const isTruncated = (textNode.textContent === el.dataset.truncatedText);
-          if (isTruncated) {
-            textNode.textContent = el.dataset.fullText;
-            this.textContent = 'see less';
-          } else {
-            textNode.textContent = el.dataset.truncatedText;
-            this.textContent = 'see more';
-          }
-        });
-        
-        // Append toggle inside the element right after the text
-        el.appendChild(toggleBtn);
+      var innerLink = el.querySelector('a');
+      var linkHref = innerLink ? innerLink.href : null;
+      var fullText = el.textContent.trim();
+      
+      // Line-based: 2 lines desktop, 3 lines mobile
+      var isMobile = window.innerWidth < 769;
+      var maxLines = isMobile ? 3 : 2;
+      
+      var computedStyle = window.getComputedStyle(el);
+      var lineHeight = parseFloat(computedStyle.lineHeight) || (parseFloat(computedStyle.fontSize) * 1.5);
+      var maxHeight = lineHeight * maxLines;
+      
+      el.style.overflow = 'hidden';
+      var actualHeight = el.scrollHeight;
+      
+      if (actualHeight <= maxHeight + 2) { el.style.overflow = ''; return; }
+      
+      el.dataset.fullText = fullText;
+      
+      // Binary search for cutoff — test with inline "... see more" placeholder
+      var lo = 0, hi = fullText.length;
+      var placeholder = '... see more';
+      
+      while (lo < hi) {
+        var mid = Math.floor((lo + hi) / 2);
+        el.textContent = fullText.substring(0, mid) + placeholder;
+        if (el.scrollHeight > maxHeight + 2) {
+          hi = mid;
+        } else {
+          lo = mid + 1;
+        }
       }
+      
+      var cutoff = Math.max(lo - 1, 20);
+      var truncated = fullText.substring(0, cutoff).trim();
+      el.dataset.truncatedText = truncated;
+      el.style.overflow = '';
+      
+      // Render: truncated text + inline "... see more" span
+      function renderTruncated() {
+        if (linkHref) {
+          el.innerHTML = '<a href="' + linkHref + '" class="feed-item__text-link">' + truncated + '...</a> <span class="see-more-toggle" role="button" tabindex="0">see more</span>';
+        } else {
+          el.innerHTML = truncated + '... <span class="see-more-toggle" role="button" tabindex="0">see more</span>';
+        }
+      }
+      
+      function renderFull() {
+        if (linkHref) {
+          el.innerHTML = '<a href="' + linkHref + '" class="feed-item__text-link">' + fullText + '</a> <span class="see-more-toggle" role="button" tabindex="0">see less</span>';
+        } else {
+          el.innerHTML = fullText + ' <span class="see-more-toggle" role="button" tabindex="0">see less</span>';
+        }
+      }
+      
+      renderTruncated();
+      
+      el.addEventListener('click', function(e) {
+        if (e.target.classList.contains('see-more-toggle')) {
+          e.stopPropagation();
+          e.preventDefault();
+          if (e.target.textContent === 'see more') {
+            renderFull();
+          } else {
+            renderTruncated();
+          }
+        }
+      });
     });
   };
   
@@ -1515,5 +1525,560 @@
     });
   };
   initDynamicDuration();
+
+  // ======================== Dark Mode Toggle ========================
+  function updateThemeColor() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const metas = document.querySelectorAll('meta[name="theme-color"]');
+    // Update both light and dark theme-color meta tags
+    if (metas.length >= 2) {
+      metas[0].content = isDark ? '#000000' : '#F2F2F7';
+      metas[1].content = isDark ? '#000000' : '#F2F2F7';
+    } else if (metas.length === 1) {
+      metas[0].content = isDark ? '#000000' : '#F2F2F7';
+    }
+  }
+
+  window.toggleTheme = function() {
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme');
+    const newTheme = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeColor();
+    updateThemeToggleIcons(newTheme);
+    
+    // Animate the toggle button
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+      btn.style.animation = 'none';
+      btn.offsetHeight;
+      btn.style.animation = 'iosBounce 0.4s ease';
+    }
+    const profileBtn = document.querySelector('.profile-full__theme-toggle');
+    if (profileBtn) {
+      profileBtn.style.animation = 'none';
+      profileBtn.offsetHeight;
+      profileBtn.style.animation = 'iosBounce 0.4s ease';
+    }
+  };
+
+  function updateThemeToggleIcons(theme) {
+    document.querySelectorAll('.theme-toggle__moon').forEach(el => {
+      el.style.display = theme === 'dark' ? 'none' : 'inline-flex';
+    });
+    document.querySelectorAll('.theme-toggle__sun').forEach(el => {
+      el.style.display = theme === 'dark' ? 'inline-flex' : 'none';
+    });
+  }
+  // Init on load
+  updateThemeToggleIcons(document.documentElement.getAttribute('data-theme') || 'light');
+
+  // Listen for system dark mode changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      // Only auto-switch if user hasn't set a manual preference
+      const stored = localStorage.getItem('theme');
+      if (!stored) {
+        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        updateThemeColor();
+      }
+    });
+  }
+
+  // ======================== NOTIFICATION SYSTEM ========================
+  window.toggleNotifications = function(e) {
+    if (e) e.preventDefault();
+    const panel = document.getElementById('notification-panel');
+    if (!panel) return;
+    const isOpen = panel.style.display === 'block';
+    panel.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) generateNotifications();
+  };
+
+  window.closeNotifications = function() {
+    const panel = document.getElementById('notification-panel');
+    if (panel) panel.style.display = 'none';
+  };
+
+  window.clearAllNotifications = function() {
+    const list = document.getElementById('notification-list');
+    const empty = document.getElementById('notif-empty');
+    if (list) {
+      list.querySelectorAll('.notification-item').forEach(function(item) { item.remove(); });
+    }
+    if (empty) empty.style.display = 'flex';
+    // Update badges
+    updateNotifBadge(0);
+  };
+
+  window.notifSignIn = function() {
+    if (typeof PortfolioDB !== 'undefined') {
+      PortfolioDB.requireAuth().then(function() {
+        generateNotifications();
+      });
+    }
+  };
+
+  window.requestBrowserNotifPermission = function() {
+    if ('Notification' in window) {
+      Notification.requestPermission().then(function(permission) {
+        if (permission === 'granted') {
+          showToast('Browser notifications enabled!');
+        }
+      });
+    }
+  };
+
+  function generateNotifications() {
+    const list = document.getElementById('notification-list');
+    const empty = document.getElementById('notif-empty');
+    const signinBtn = document.getElementById('notif-signin-btn');
+    const browserBtn = document.getElementById('notif-browser-btn');
+
+    if (!list) return;
+
+    // Remove old notification items
+    list.querySelectorAll('.notification-item').forEach(function(item) { item.remove(); });
+
+    const user = typeof PortfolioDB !== 'undefined' ? PortfolioDB.getCurrentUser() : null;
+
+    if (!user) {
+      // Not signed in
+      if (empty) {
+        empty.style.display = 'flex';
+        document.getElementById('notif-empty-text').textContent = 'Sign in to see your notifications.';
+      }
+      if (signinBtn) signinBtn.style.display = 'inline-flex';
+      if (browserBtn) browserBtn.style.display = 'none';
+      updateNotifBadge(0);
+      return;
+    }
+
+    // Signed in — check if first-time user
+    const lastSignedIn = localStorage.getItem('pp_last_signed_in');
+    const isNewUser = !lastSignedIn;
+
+    // Store current sign-in time for next session
+    localStorage.setItem('pp_last_signed_in', new Date().toISOString());
+
+    if (isNewUser) {
+      if (empty) {
+        empty.style.display = 'flex';
+        document.getElementById('notif-empty-text').textContent = 'No new notifications yet.';
+      }
+      if (signinBtn) signinBtn.style.display = 'none';
+      if (browserBtn) {
+        browserBtn.style.display = 'Notification' in window && Notification.permission !== 'granted' ? 'inline-flex' : 'none';
+      }
+      updateNotifBadge(0);
+      return;
+    }
+
+    // Returning user — build notifications from feed items
+    const lastDate = new Date(lastSignedIn);
+    const notifications = [];
+
+    document.querySelectorAll('.feed-item').forEach(function(item) {
+      const timeEl = item.querySelector('.feed-item__time');
+      if (!timeEl) return;
+
+      const dateText = timeEl.textContent.trim().split('·')[0].trim();
+      const itemDate = new Date(dateText);
+
+      if (itemDate > lastDate) {
+        const type = item.dataset.type || 'posts';
+        const id = item.dataset.id;
+        const category = item.dataset.category || '';
+        const title = item.querySelector('.post-card__title a, .feed-item__text, .feed-item__text-link');
+        const titleText = title ? title.textContent.trim().substring(0, 60) : 'New content';
+        const thumb = item.querySelector('.feed-item__image');
+        const permalink = item.querySelector('a[href]');
+
+        notifications.push({
+          type: type,
+          id: id,
+          title: titleText,
+          category: category,
+          thumb: thumb ? thumb.src : '',
+          link: permalink ? permalink.href : '#',
+          date: itemDate
+        });
+      }
+    });
+
+    // Check for unread messages
+    const unreadDot = document.getElementById('desktop-unread-dot');
+    if (unreadDot && unreadDot.style.display !== 'none') {
+      notifications.unshift({
+        type: 'message',
+        title: 'You have unread messages',
+        thumb: '',
+        link: '#',
+        date: new Date(),
+        isMessage: true
+      });
+    }
+
+    if (notifications.length === 0) {
+      if (empty) {
+        empty.style.display = 'flex';
+        document.getElementById('notif-empty-text').textContent = 'You\'re all caught up!';
+      }
+      if (signinBtn) signinBtn.style.display = 'none';
+      if (browserBtn) {
+        browserBtn.style.display = 'Notification' in window && Notification.permission !== 'granted' ? 'inline-flex' : 'none';
+      }
+      updateNotifBadge(0);
+      return;
+    }
+
+    // Hide empty state
+    if (empty) empty.style.display = 'none';
+    if (signinBtn) signinBtn.style.display = 'none';
+
+    notifications.forEach(function(n) {
+      const el = document.createElement('div');
+      el.className = 'notification-item notification-item--unread';
+
+      const typeIcons = { photos: '📸', videos: '🎥', posts: '📝', message: '💬' };
+
+      el.innerHTML = '<div class="notification-item__icon">' + (typeIcons[n.type] || '📢') + '</div>' +
+        '<div class="notification-item__content">' +
+          '<div class="notification-item__text"><strong>Pushpak Prabhat</strong> ' +
+            (n.isMessage ? n.title : 'added new ' + n.type + ': ' + n.title) +
+          '</div>' +
+          '<div class="notification-item__time">' + timeAgo(n.date) + '</div>' +
+        '</div>' +
+        (n.link !== '#' ? '<button class="notification-item__action" onclick="window.location.href=\'' + n.link + '\'">View</button>' : '');
+
+      el.addEventListener('click', function() {
+        if (n.isMessage) { openChat(); }
+        else if (n.link !== '#') { window.location.href = n.link; }
+      });
+
+      list.insertBefore(el, empty);
+    });
+
+    updateNotifBadge(notifications.length);
+  }
+
+  function updateNotifBadge(count) {
+    const desktopBadge = document.getElementById('desktop-notif-badge');
+    const mobileBadge = document.getElementById('mob-notif-badge');
+    [desktopBadge, mobileBadge].forEach(function(b) {
+      if (b) {
+        b.textContent = count > 9 ? '9+' : count;
+        b.style.display = count > 0 ? 'flex' : 'none';
+      }
+    });
+  }
+
+  function timeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+    return Math.floor(seconds / 86400) + 'd ago';
+  }
+
+  // ======================== ENHANCED SEARCH ========================
+  (function() {
+    const searchInput = document.getElementById('nav-search');
+    if (!searchInput) return;
+
+    let dropdown = document.querySelector('.search-dropdown');
+    if (!dropdown) {
+      dropdown = document.createElement('div');
+      dropdown.className = 'search-dropdown';
+      dropdown.style.display = 'none';
+      searchInput.parentElement.style.position = 'relative';
+      searchInput.parentElement.appendChild(dropdown);
+    }
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.trim().toLowerCase();
+      if (query.length < 2) {
+        dropdown.style.display = 'none';
+        return;
+      }
+
+      const results = [];
+      document.querySelectorAll('.feed-item').forEach(function(item) {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(query)) {
+          const title = item.querySelector('.post-card__title a, .feed-item__text, .feed-item__text-link');
+          const thumb = item.querySelector('.feed-item__image');
+          const desc = item.querySelector('.post-card__excerpt, .feed-item__text');
+          const link = item.querySelector('.post-card__title a, .feed-item__text-link');
+
+          results.push({
+            title: title ? title.textContent.trim().substring(0, 80) : 'Untitled',
+            thumb: thumb ? thumb.src : '',
+            desc: desc ? desc.textContent.trim().substring(0, 120) : '',
+            link: link ? link.href : '#',
+            type: item.dataset.type || 'post',
+            element: item
+          });
+        }
+      });
+
+      if (results.length === 0) {
+        dropdown.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--color-text-secondary); font-size: var(--font-size-footnote);">No results found</div>';
+      } else {
+        dropdown.innerHTML = results.slice(0, 8).map(function(r, i) {
+          return '<a href="' + r.link + '" class="search-result-item" data-index="' + i + '" style="display: flex; padding: 10px 16px; text-decoration: none; cursor: pointer;">' +
+            (r.thumb ? '<img src="' + r.thumb + '" class="search-result-item__thumb" alt="">' : '<div class="search-result-item__thumb" style="display:flex;align-items:center;justify-content:center;font-size:24px;background:transparent;">' + (r.type === 'videos' ? '🎥' : r.type === 'photos' ? '📸' : '📝') + '</div>') +
+            '<div class="search-result-item__info">' +
+              '<div class="search-result-item__title">' + r.title + '</div>' +
+              '<div class="search-result-item__desc">' + r.desc + '</div>' +
+            '</div>' +
+          '</a>';
+        }).join('');
+      }
+
+        // Bind click handlers to results
+        dropdown.querySelectorAll('.search-result-item').forEach(function(btn) {
+          btn.addEventListener('mousedown', function(e) {
+            // Prevent the search input from losing focus, which would hide the dropdown
+            // before the click registers!
+            e.preventDefault(); 
+          });
+          btn.addEventListener('click', function(e) {
+            dropdown.style.display = 'none';
+            searchInput.value = '';
+          });
+        });
+
+      dropdown.style.display = 'block';
+    });
+
+    searchInput.addEventListener('blur', function() {
+      setTimeout(function() { dropdown.style.display = 'none'; }, 200);
+    });
+
+    searchInput.addEventListener('focus', function() {
+      if (this.value.trim().length >= 2) dropdown.style.display = 'block';
+    });
+  })();
+
+  // ======================== CHAT IMPROVEMENTS ========================
+  // Scroll to bottom button
+  window.scrollChatToBottom = function() {
+    const msgs = document.getElementById('chat-messages');
+    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+  };
+
+  window.scrollMobileChatToBottom = function() {
+    const msgs = document.getElementById('mobile-chat-messages');
+    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+  };
+
+  // Auto-link URLs in chat text
+  window.linkifyText = function(text) {
+    if (!text) return text;
+    return text.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  };
+
+  // ======================== MOD TOOLS (inline) ========================
+  window.isMod = function() {
+    return typeof PortfolioDB !== 'undefined' && PortfolioDB.isAdmin && PortfolioDB.isAdmin();
+  };
+  window.addEventListener('authStateChanged', function(e) {
+    if (e.detail && e.detail.user) {
+      if (isMod()) { document.body.classList.add('mod-mode'); }
+      else { document.body.classList.remove('mod-mode'); }
+    }
+  });
+
+  // ======================== ADMIN INBOX (iMessage) ========================
+  let adminInboxOpen = false;
+  let adminCurrentConvId = null;
+  let adminConversations = [];
+  let adminPresenceUnsubs = {};
+  const _origOpenChat = window.openChat;
+  window.openChat = function(e) {
+    if (e) e.preventDefault();
+    if (typeof PortfolioDB !== 'undefined' && PortfolioDB.isAdmin && PortfolioDB.isAdmin()) { openAdminInbox(); return; }
+    _origOpenChat && _origOpenChat(e);
+  };
+  window.openAdminInbox = function() {
+    var inbox = document.getElementById('admin-inbox');
+    if (!inbox) return;
+    inbox.style.display = 'flex';
+    adminInboxOpen = true;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('admin-inbox-list-view').style.display = 'flex';
+    document.getElementById('admin-inbox-chat-view').style.display = 'none';
+    adminCurrentConvId = null;
+    if (typeof adminUpdateChatVisibility === 'function') adminUpdateChatVisibility();
+    PortfolioDB.listenToAllConversations(function(convs) { adminConversations = convs; renderAdminConvList(convs); });
+  };
+  window.closeAdminInbox = function() {
+    var inbox = document.getElementById('admin-inbox');
+    if (!inbox) return;
+    inbox.style.display = 'none';
+    adminInboxOpen = false;
+    document.body.style.overflow = '';
+    if (PortfolioDB.stopConversationListener) PortfolioDB.stopConversationListener();
+    Object.values(adminPresenceUnsubs).forEach(function(fn) { if (fn) fn(); });
+    adminPresenceUnsubs = {};
+  };
+  var _defAvatar = "data:image/svg+xml,%3Csvg viewBox='0 0 410 410' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M410 205C410 91.78 318.22 0 205 0 91.78 0 0 91.78 0 205s91.78 205 205 205 205-91.78 205-205z' fill='%23a5a5a5'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M83.16 332.25c27.63-38.28 72.63-63.19 123.44-63.19 50 0 94.38 24.12 122.11 61.37-31.81 31.38-75.5 50.74-123.71 50.74-47.27 0-90.2-18.62-121.84-48.92zm192.31-167.29c0 39.8-30.83 72.07-68.87 72.07s-68.87-32.27-68.87-72.07c0-39.8 30.83-72.07 68.87-72.07s68.87 32.27 68.87 72.07z' fill='white'/%3E%3C/svg%3E";
+  function renderAdminConvList(conversations) {
+    var container = document.getElementById('admin-inbox-conversations');
+    var emptyEl = document.getElementById('admin-inbox-empty');
+    if (!container) return;
+    var si = document.getElementById('admin-inbox-search');
+    var sq = si ? si.value.trim().toLowerCase() : '';
+    var filtered = conversations;
+    if (sq) { filtered = conversations.filter(function(c) { return c.userName.toLowerCase().indexOf(sq) >= 0 || c.lastMessage.toLowerCase().indexOf(sq) >= 0; }); }
+    if (filtered.length === 0) { container.innerHTML = ''; if (emptyEl) { emptyEl.style.display = 'flex'; emptyEl.querySelector('p').textContent = sq ? 'No results found' : 'No conversations yet'; } return; }
+    if (emptyEl) emptyEl.style.display = 'none';
+    var html = '';
+    filtered.forEach(function(conv) {
+      var photo = conv.userPhoto || _defAvatar;
+      var ts = _fmtConvTime(conv.lastTimestamp);
+      var prev = conv.lastMessage || '';
+      if (conv.lastMessageType === 'admin') prev = 'You: ' + prev;
+      if (prev.length > 60) prev = prev.substring(0, 60) + '...';
+      var ub = conv.unreadCount > 0 ? '<span class="admin-inbox__unread-badge">' + (conv.unreadCount > 9 ? '9+' : conv.unreadCount) + '</span>' : '';
+      var uc = conv.unreadCount > 0 ? ' admin-inbox__item--unread' : '';
+      html += '<div class="admin-inbox__item' + uc + '" onclick="openAdminConversation(\'' + conv.conversationId + '\')" data-conv-id="' + conv.conversationId + '">' +
+        '<div class="admin-inbox__item-avatar-wrapper"><img src="' + photo + '" class="admin-inbox__item-avatar" alt="' + conv.userName + '" referrerpolicy="no-referrer"><span class="admin-inbox__presence-dot" id="admin-presence-' + conv.conversationId + '"></span></div>' +
+        '<div class="admin-inbox__item-info"><div class="admin-inbox__item-top"><span class="admin-inbox__item-name">' + conv.userName + '</span><span class="admin-inbox__item-time">' + ts + '</span></div>' +
+        '<div class="admin-inbox__item-bottom"><span class="admin-inbox__item-preview">' + prev + '</span>' + ub + '</div></div>' +
+        '<span class="admin-inbox__item-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></span></div>';
+    });
+    container.innerHTML = html;
+    filtered.forEach(function(conv) { _watchConvP(conv.conversationId, conv.userUid); });
+  }
+  function adminUpdateChatVisibility() {
+    var p = document.getElementById('admin-inbox-chat-placeholder');
+    var h = document.getElementById('admin-inbox-chat-header');
+    var m = document.getElementById('admin-inbox-chat-messages');
+    var f = document.getElementById('admin-inbox-chat-footer');
+    var t = document.getElementById('admin-inbox-typing-indicator');
+    if (adminCurrentConvId) {
+      if (p) p.style.display = 'none';
+      if (h) h.style.display = 'flex';
+      if (m) m.style.display = 'flex';
+      if (f) f.style.display = 'flex';
+    } else {
+      if (p) p.style.display = 'flex';
+      if (h) h.style.display = 'none';
+      if (m) m.style.display = 'none';
+      if (f) f.style.display = 'none';
+      if (t) t.style.display = 'none';
+    }
+  }
+
+  function _watchConvP(cid, uid) {
+    if (!uid || adminPresenceUnsubs[cid]) return;
+    if (typeof PortfolioDB !== 'undefined' && PortfolioDB.watchPresence) {
+      adminPresenceUnsubs[cid] = PortfolioDB.watchPresence(uid, function(p) {
+        var dot = document.getElementById('admin-presence-' + cid);
+        if (dot) { dot.classList.toggle('online', !!(p && p.online)); dot.classList.toggle('offline', !(p && p.online)); }
+        if (adminCurrentConvId === cid) { 
+          var hd = document.getElementById('admin-inbox-chat-presence'); 
+          if (hd) { hd.classList.toggle('online', !!(p && p.online)); hd.classList.toggle('offline', !(p && p.online)); } 
+          var typ = document.getElementById('admin-inbox-typing-indicator');
+          if (typ) { typ.style.display = (p && p.typing) ? 'flex' : 'none'; }
+        }
+      });
+    }
+  }
+  function _fmtConvTime(d) {
+    if (!d) return '';
+    var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var yest = new Date(today); yest.setDate(today.getDate() - 1);
+    var wk = new Date(today); wk.setDate(today.getDate() - 7);
+    if (d >= today) return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    if (d >= yest) return 'Yesterday';
+    if (d >= wk) return d.toLocaleDateString([], { weekday: 'long' });
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  }
+  
+  var adminTypingTimer;
+  function handleAdminTyping() {
+    if (typeof PortfolioDB !== 'undefined' && PortfolioDB.setTyping) {
+      PortfolioDB.setTyping(true);
+      clearTimeout(adminTypingTimer);
+      adminTypingTimer = setTimeout(function() { PortfolioDB.setTyping(false); }, 3000);
+    }
+  }
+
+  window.openAdminConversation = function(cid) {
+    adminCurrentConvId = cid;
+    adminUpdateChatVisibility();
+    var conv = adminConversations.find(function(c) { return c.conversationId === cid; });
+    document.getElementById('admin-inbox-list-view').style.display = 'none';
+    document.getElementById('admin-inbox-chat-view').style.display = 'flex';
+    var ne = document.getElementById('admin-inbox-chat-user-name');
+    if (ne) ne.textContent = conv ? conv.userName : 'User';
+    var ui = document.getElementById('admin-inbox-chat-user-info');
+    if (ui && conv) {
+      var aw = ui.querySelector('.admin-inbox__chat-avatar-wrapper');
+      if (aw) aw.innerHTML = '<img src="' + (conv.userPhoto || _defAvatar) + '" class="admin-inbox__chat-avatar" referrerpolicy="no-referrer"><span class="admin-inbox__presence-dot admin-inbox__presence-dot--header" id="admin-inbox-chat-presence"></span>';
+    }
+    PortfolioDB.markAdminConversationRead(cid);
+    if (conv) _watchConvP(cid, conv.userUid);
+    PortfolioDB.listenToConversation(cid, function(msgs) { _renderAdminMsgs(msgs); });
+    setTimeout(function() { var inp = document.getElementById('admin-inbox-chat-input'); if (inp) inp.focus(); }, 100);
+  };
+  window.adminInboxBackToList = function() {
+    adminCurrentConvId = null;
+    if (typeof adminUpdateChatVisibility === 'function') adminUpdateChatVisibility();
+    if (PortfolioDB.stopConversationListener) PortfolioDB.stopConversationListener();
+    document.getElementById('admin-inbox-list-view').style.display = 'flex';
+    document.getElementById('admin-inbox-chat-view').style.display = 'none';
+  };
+  function _renderAdminMsgs(messages) {
+    var c = document.getElementById('admin-inbox-chat-messages');
+    if (!c) return;
+    var wasNear = (c.scrollHeight - c.scrollTop - c.clientHeight) < 50;
+    c.innerHTML = '';
+    var lds = '';
+    messages.forEach(function(m) {
+      var ia = m.type === 'admin';
+      var d = m.timestamp instanceof Date ? m.timestamp : new Date();
+      var ds = getDateLabel(d);
+      if (ds !== lds) {
+        var sep = document.createElement('div');
+        sep.className = 'admin-inbox__date-sep';
+        sep.textContent = ds + ' at ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        c.appendChild(sep);
+        lds = ds;
+      }
+      var b = document.createElement('div');
+      b.className = 'admin-inbox__bubble admin-inbox__bubble--' + (ia ? 'sent' : 'received');
+      var s = document.createElement('span');
+      s.innerHTML = linkifyText(m.text);
+      b.appendChild(s);
+      c.appendChild(b);
+    });
+    if (wasNear || messages.length <= 1) c.scrollTop = c.scrollHeight;
+  }
+  window.sendAdminInboxMessage = function() {
+    if (!adminCurrentConvId) return;
+    var inp = document.getElementById('admin-inbox-chat-input');
+    var txt = inp ? inp.value.trim() : '';
+    if (!txt) return;
+    PortfolioDB.sendAdminReply(adminCurrentConvId, txt);
+    inp.value = '';
+    inp.focus();
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    var si = document.getElementById('admin-inbox-search');
+    if (si) si.addEventListener('input', function() { renderAdminConvList(adminConversations); });
+    var ci = document.getElementById('admin-inbox-chat-input');
+    if (ci) ci.addEventListener('input', handleAdminTyping);
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && adminInboxOpen) {
+      if (adminCurrentConvId) adminInboxBackToList();
+      else closeAdminInbox();
+    }
+  });
 
 })();

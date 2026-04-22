@@ -3,10 +3,10 @@
 <article class="feed-item feed-item--photo" data-type="photos" data-category="{{ .Params.category }}" data-id="{{ $id }}" data-image="{{ .Params.image }}" id="item-{{ $id }}">
   <!-- Header -->
   <div class="feed-item__header">
-    <a href="/#profile">{{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}</a>
+    <a href="/profile/">{{ if .Site.Params.profileImage }}<img src="{{ .Site.Params.profileImage }}" alt="{{ $profile.name }}" class="feed-item__avatar" loading="lazy">{{ else }}{{ partial "icons.html" (dict "icon" "default-user" "class" "feed-item__avatar" "size" "48") }}{{ end }}</a>
     <div class="feed-item__meta">
       <div class="feed-item__author">
-        <a href="/#profile" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
+        <a href="/profile/" style="color: inherit; text-decoration: none;">{{ $profile.name }}</a>
         <span class="feed-item__author-badge">{{ partial "icons.html" (dict "icon" "verified" "size" "16") }}</span>
       </div>
       <div class="feed-item__author-subtitle">{{ $profile.headline }}</div>
@@ -15,11 +15,11 @@
       </div>
     </div>
     <div class="feed-item__menu-wrapper">
-      <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "dots" "size" "20") }}</button>
+      <button class="feed-item__menu-btn" onclick="toggleFeedMenu('{{ $id }}')" aria-label="More options">{{ partial "icons.html" (dict "icon" "ellipsis" "size" "20") }}</button>
       <div class="feed-menu" id="feed-menu-{{ $id }}">
         <button class="feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
         <button class="feed-menu__item" onclick="downloadImage('{{ .Params.image }}', '{{ $id }}')">{{ partial "icons.html" (dict "icon" "download" "size" "18") }} Download image</button>
-        <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "pdf" "size" "18") }} Save as PDF</button>
+        <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "doc" "size" "18") }} Save as PDF</button>
       </div>
     </div>
   </div>
@@ -27,7 +27,7 @@
   <!-- Content -->
   <div class="feed-item__content">
     <div class="feed-item__text js-see-more">
-      {{ .Content | plainify }}
+      <a href="{{ .Permalink }}" class="feed-item__text-link">{{ .Content | plainify }}</a>
     </div>
   </div>
   
@@ -42,4 +42,3 @@
   <!-- Interactions -->
   {{ partial "interactions.html" (dict "id" $id "type" "photo" "showSave" false "imageUrl" .Params.image "context" $) }}
 </article>
-

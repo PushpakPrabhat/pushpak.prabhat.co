@@ -1,0 +1,19 @@
+{{ define "main" }}
+<div class="layout layout--profile" id="main-layout">
+  <!-- Left Sidebar (hidden to match SPA /#profile state) -->
+  <div class="layout__sidebar-left" id="sidebar-left" style="display: none;">
+    {{ partial "profile-card.html" . }}
+  </div>
+  
+  <!-- Main Feed Area (expanded to full width) -->
+  <div class="layout__main" id="feed" style="max-width: 100%;">
+    <!-- Profile Section explicitly shown -->
+    <div id="profile-section" style="display: block;">
+      {{ partial "profile-full.html" . }}
+    </div>
+  </div>
+  
+  <!-- Right Sidebar (included to match SPA /#profile state) -->
+  {{ partial "sidebar-right.html" . }}
+</div>
+{{ end }}

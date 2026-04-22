@@ -4,13 +4,19 @@
     {{ partial "profile-card.html" . }}
   </div>
   <div class="layout__main">
-    {{ partial "feed-tabs.html" . }}
-    <div id="feed-items">
+    <div class="taxonomy-header">
+      <a href="/" class="btn btn--ghost" style="display: inline-flex; align-items: center; gap: 4px; margin-bottom: 16px;">
+        {{ partial "icons.html" (dict "icon" "chevron-left" "size" "16") }} Back
+      </a>
+      <h1 class="taxonomy-header__title">{{ .Data.Plural | humanize | title }}</h1>
+      <p class="taxonomy-header__count">{{ len .Pages }} {{ if eq (len .Pages) 1 }}topic{{ else }}topics{{ end }}</p>
+    </div>
+    <div class="taxonomy-grid">
       {{ range .Pages }}
-      <div class="feed-item" style="opacity:1; padding: 16px;">
-        <a href="{{ .Permalink }}" style="font-weight: 600;">{{ .Title }}</a>
-        <span style="color: #666; font-size: 0.8rem; margin-left: 8px;">{{ .Pages | len }} items</span>
-      </div>
+      <a href="{{ .Permalink }}" class="taxonomy-card">
+        <span class="taxonomy-card__name">{{ if eq $.Data.Plural "tags" }}#{{ end }}{{ .Title }}</span>
+        <span class="taxonomy-card__count">{{ .Pages | len }}</span>
+      </a>
       {{ end }}
     </div>
   </div>

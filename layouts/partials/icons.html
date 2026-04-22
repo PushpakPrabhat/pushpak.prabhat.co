@@ -1,70 +1,419 @@
-{{/* LinkedIn-style SVG Icons — reusable via partial calls */}}
+{{/* ===============================================
+SF Symbols 7 — iOS 26 Icon Library
+Consistent: 24px viewbox, 1.5pt stroke, round caps
+=============================================== */}}
+
 {{ $icon := .icon }}
-{{ $class := .class | default "" }}
 {{ $size := .size | default "24" }}
 
-{{ if eq $icon "home" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M23 9v2h-2v7a3 3 0 01-3 3h-4v-6h-4v6H6a3 3 0 01-3-3v-7H1V9l11-7 5 3.18V2h3v5.09z"/></svg>
-{{ else if eq $icon "home-outline" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M23 9v2h-2v7a3 3 0 01-3 3h-4v-6h-4v6H6a3 3 0 01-3-3v-7H1V9l11-7 5 3.18V2h3v5.09zM20 9.66V7h-1V4h-1v4.31l-6-3.82L5 9.13V18h4v-6h6v6h4v-8.34z"/></svg>
-{{ else if eq $icon "network" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M12 16v6H3v-6a3 3 0 013-3h3a3 3 0 013 3zm5.5-3A3.5 3.5 0 1014 9.5a3.5 3.5 0 003.5 3.5zm1 2h-2a2.5 2.5 0 00-2.5 2.5V22h7v-4.5a2.5 2.5 0 00-2.5-2.5zM7.5 2A4.5 4.5 0 1012 6.5 4.49 4.49 0 007.5 2z"/></svg>
-{{ else if eq $icon "briefcase" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M17 6V5a3 3 0 00-3-3h-4a3 3 0 00-3 3v1H2v4a3 3 0 003 3h14a3 3 0 003-3V6zm-8-1a1 1 0 011-1h4a1 1 0 011 1v1H9zm13 10v3a3 3 0 01-3 3H5a3 3 0 01-3-3v-3h7v1h6v-1z"/></svg>
-{{ else if eq $icon "messaging" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M16 4H8a7 7 0 000 14h4v4l8.16-5.39A6.78 6.78 0 0023 11a7 7 0 00-7-7zm-8 8.5A1.5 1.5 0 119.5 11 1.5 1.5 0 018 12.5zm4 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zm4 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5z"/></svg>
-{{ else if eq $icon "notifications" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M22 19h-8.28a2 2 0 11-3.44 0H2v-1a4.52 4.52 0 011.17-2.83l1-1.17h15.7l1 1.17A4.42 4.42 0 0122 18zM18.21 7.44A6.27 6.27 0 0012 2a6.27 6.27 0 00-6.21 5.44L5 13h14z"/></svg>
-{{ else if eq $icon "like" }}
-<svg xmlns="http://www.w3.org/2000/svg" id="thumbs-up-outline-small" fill="currentColor" aria-hidden="true" data-supported-dps="16x16" viewBox="0 0 16 16" data-token-id="289" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}" role="img" aria-label=""><path d="m12.91 7-2.25-2.57a8.2 8.2 0 0 1-1.5-2.55L9 1.37A2.08 2.08 0 0 0 7 0a2.08 2.08 0 0 0-2.06 2.08v1.17a5.8 5.8 0 0 0 .31 1.89l.28.86H2.38A1.47 1.47 0 0 0 1 7.47a1.45 1.45 0 0 0 .64 1.21 1.48 1.48 0 0 0-.37 2.06 1.54 1.54 0 0 0 .62.51h.05a1.6 1.6 0 0 0-.19.71A1.47 1.47 0 0 0 3 13.42v.1A1.46 1.46 0 0 0 4.4 15h4.83a5.6 5.6 0 0 0 2.48-.58l1-.42H14V7zM12 12.11l-1.19.52a3.6 3.6 0 0 1-1.58.37H5.1a.55.55 0 0 1-.53-.4l-.14-.48-.49-.21a.56.56 0 0 1-.34-.6l.09-.56-.42-.42a.56.56 0 0 1-.09-.68L3.55 9l-.4-.61A.28.28 0 0 1 3.3 8h5L7.14 4.51a4.2 4.2 0 0 1-.2-1.26V2.08A.09.09 0 0 1 7 2a.1.1 0 0 1 .08 0l.18.51a10 10 0 0 0 1.9 3.24l2.84 3z"></path></svg>
-{{ else if eq $icon "like-filled" }}
-<svg xmlns="http://www.w3.org/2000/svg" id="like-consumption-small" width="{{ $size }}" height="{{ $size }}" aria-hidden="true" data-supported-dps="16x16" viewBox="0 0 16 16" data-token-id="32" class="{{ $class }}" role="img" aria-label=""><path fill="none" d="M8 0a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8"></path><circle cx="8" cy="8" r="7" fill="#378fe9"></circle><path fill="#d0e8ff" fill-rule="evenodd" d="M11.93 7.25h-.55c-.05 0-.15-.19-.4-.46-.37-.4-.78-.91-1.07-1.19a7.1 7.1 0 0 1-1.73-2.24c-.24-.51-.26-.74-.75-.74a.78.78 0 0 0-.67.81c0 .14.07.63.1.8a7.5 7.5 0 0 0 1 2.2H4.12a.88.88 0 0 0-.65.28.84.84 0 0 0-.23.66.91.91 0 0 0 .93.85h.16a.82.82 0 0 0-.55.24.77.77 0 0 0-.21.54.81.81 0 0 0 .74.8.8.8 0 0 0 .33 1.42.76.76 0 0 0-.09.55.87.87 0 0 0 .85.63h2.29a3.8 3.8 0 0 0 .89-.11l1.42-.4h1.9c1.02-.04 1.29-4.64.03-4.64"></path><path fill="none" stroke="#004182" stroke-linecap="round" stroke-linejoin="round" d="M7.43 6.43H4.11a.88.88 0 0 0-.88 1 .92.92 0 0 0 .93.84h.16a.82.82 0 0 0-.55.24.77.77 0 0 0-.21.56.83.83 0 0 0 .74.81.81.81 0 0 0-.31.63.81.81 0 0 0 .65.8.78.78 0 0 0-.09.56.86.86 0 0 0 .85.62h2.29a3.8 3.8 0 0 0 .89-.11l1.42-.47h1.9c1 0 1.27-4.64 0-4.64a5 5 0 0 1-.55 0s-.15-.19-.4-.46h0c-.37-.4-.78-.91-1.07-1.19a7.1 7.1 0 0 1-1.7-2.25 2.1 2.1 0 0 0-.32-.52.83.83 0 0 0-1.16.09 1.4 1.4 0 0 0-.25.38 1.7 1.7 0 0 0-.09.3 2.4 2.4 0 0 0 .07.84 4 4 0 0 0 .27.84 6.7 6.7 0 0 0 .66 1 .2.2 0 0 1 .07.08"></path></svg>
-{{ else if eq $icon "comment" }}
-<svg xmlns="http://www.w3.org/2000/svg" id="comment-small" fill="currentColor" aria-hidden="true" data-supported-dps="16x16" viewBox="0 0 16 16" data-token-id="202" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}" role="img" aria-label=""><path d="M5 8h5v1H5zm11-.5v.08a6 6 0 0 1-2.75 5L8 16v-3H5.5A5.51 5.51 0 0 1 0 7.5 5.62 5.62 0 0 1 5.74 2h4.76A5.5 5.5 0 0 1 16 7.5m-2 0A3.5 3.5 0 0 0 10.5 4H5.74A3.62 3.62 0 0 0 2 7.5 3.53 3.53 0 0 0 5.5 11H10v1.33l2.17-1.39A4 4 0 0 0 14 7.58zM5 7h6V6H5z"></path></svg>
-{{ else if eq $icon "share" }}
-<svg xmlns="http://www.w3.org/2000/svg" id="send-privately-small" fill="currentColor" aria-hidden="true" data-rtl="true" data-supported-dps="16x16" viewBox="0 0 16 16" data-token-id="232" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}" role="img" aria-label=""><path d="M14 2 0 6.67l5 2.64 5.67-3.98L6.7 11l2.63 5z"></path></svg>
-{{ else if eq $icon "save" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M12 3.5l1.77 5.44H20l-5 3.63 1.9 5.85L12 14.79l-4.9 3.63 1.9-5.85-5-3.63h6.23z"/></svg>
-{{ else if eq $icon "download" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M12 16l-6-6h4V4h4v6h4zm-8 2v2h16v-2z"/></svg>
-{{ else if eq $icon "verified" }}
-<svg xmlns="http://www.w3.org/2000/svg" id="linkedin-bug-small" fill="#c37d16" aria-hidden="true" data-supported-dps="16x16" viewBox="0 0 16 16" data-token-id="459" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}" role="img"><path d="M15 2v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1M5 6H3v7h2zm.25-2A1.25 1.25 0 1 0 4 5.25 1.25 1.25 0 0 0 5.25 4M13 9.29c0-2.2-.73-3.49-2.86-3.49A2.71 2.71 0 0 0 7.89 7V6H6v7h2V9.73a1.73 1.73 0 0 1 1.54-1.92h.12C10.82 7.8 11 8.94 11 9.73V13h2z"></path></svg>
-{{ else if eq $icon "globe" }}
-<svg xmlns="http://www.w3.org/2000/svg" id="globe-americas-small" fill="currentColor" aria-hidden="false" data-supported-dps="16x16" viewBox="0 0 16 16" data-token-id="182" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}" role="img" aria-label="Visibility: Global"><path d="M8 1a7 7 0 1 0 7 7 7 7 0 0 0-7-7M3 8a5 5 0 0 1 1-3l.55.55A1.5 1.5 0 0 1 5 6.62v1.07a.75.75 0 0 0 .22.53l.56.56a.75.75 0 0 0 .53.22H7v.69a.75.75 0 0 0 .22.53l.56.56a.75.75 0 0 1 .22.53V13a5 5 0 0 1-5-5m6.24 4.83 2-2.46a.75.75 0 0 0 .09-.8l-.58-1.16A.76.76 0 0 0 10 8H7v-.19a.51.51 0 0 1 .28-.45l.38-.19a.74.74 0 0 1 .68 0L9 7.5l.38-.7a1 1 0 0 0 .12-.48v-.85a.78.78 0 0 1 .21-.53l1.07-1.09a5 5 0 0 1-1.54 9z"></path></svg>
-{{ else if eq $icon "dots" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+{{ if eq $icon "app-logo" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true">
+  <rect x="1" y="1" width="34" height="34" rx="8" fill="currentColor" fill-opacity="0.1" stroke="currentColor"
+    stroke-width="1.5" />
+  <text x="18" y="23" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor"
+    font-family="-apple-system, system-ui, sans-serif">P</text>
+</svg>
+
+{{ else if eq $icon "home" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M3 10.5L12 3l9 7.5" />
+  <path d="M5 9.5V19a1 1 0 001 1h3.5v-5a1.5 1.5 0 011.5-1.5h2a1.5 1.5 0 011.5 1.5v5H18a1 1 0 001-1V9.5" />
+</svg>
+
 {{ else if eq $icon "search" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
-{{ else if eq $icon "close" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M13.42 12l4.79-4.8a1 1 0 00-1.41-1.41L12 10.58 7.21 5.79A1 1 0 005.8 7.2l4.79 4.8-4.79 4.79a1 1 0 101.41 1.41L12 13.41l4.8 4.8a1 1 0 001.41-1.42z"/></svg>
-{{ else if eq $icon "chevron-left" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-{{ else if eq $icon "arrow-left" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" data-supported-dps="16x16" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M4.55 3 1 8l3.55 5H7l-2.84-4H14V7H4.16L7 3z"/></svg>
-{{ else if eq $icon "arrow-right" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" data-supported-dps="16x16" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M11.45 3 15 8l-3.55 5H9l2.84-4H2V7h9.84L9 3z"/></svg>
-{{ else if eq $icon "chevron-right" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-{{ else if eq $icon "fullscreen" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-{{ else if eq $icon "zoom-in" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z"/></svg>
-{{ else if eq $icon "zoom-out" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z"/></svg>
-{{ else if eq $icon "post-plus" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M21 13h-8v8h-2v-8H3v-2h8V3h2v8h8z"/></svg>
-{{ else if eq $icon "link" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-supported-dps="24x24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M19.83 4.17a4 4 0 00-5.66 0l-2 2A4 4 0 0011 9a4 4 0 00.56 2l-.54.54a4 4 0 00-4.85.63l-2 2a4 4 0 005.66 5.66l2-2A4 4 0 0013 15a4 4 0 00-.56-2l.54-.54a4 4 0 004.85-.63l2-2a4 4 0 000-5.66zM11 15a2 2 0 01-.59 1.41l-2 2a2 2 0 11-3-2.6l.22-.22 2-2A2 2 0 019 13a2.24 2.24 0 01.51.07l-1.22 1.22a1 1 0 000 1.41 1 1 0 001.41 0l1.22-1.22A2.24 2.24 0 0111 15zm7.41-6.59l-2 2A2 2 0 0115 11a2.24 2.24 0 01-.51-.07l1.22-1.22A1 1 0 0016 9a1 1 0 00-.29-.7A1 1 0 0015 8a1 1 0 00-.7.29l-1.23 1.22A2.24 2.24 0 0113 9a2 2 0 01.59-1.41l2-2a2 2 0 013 2.6z"></path></svg>
-{{ else if eq $icon "pdf" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-5 9h8v1H8v-1zm0 2h5v1H8v-1zm0-4h8v1H8v-1z"/></svg>
-{{ else if eq $icon "external-link" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1h6zm11-3v8h-2V6.41l-7.3 7.3-1.41-1.42L17.59 5H13V3h8z"/></svg>
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="10.5" cy="10.5" r="6.5" />
+  <path d="M15.5 15.5L20 20" />
+</svg>
+
+{{ else if eq $icon "person" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="8" r="4" />
+  <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" />
+</svg>
+
+{{ else if eq $icon "network" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="9" cy="8" r="3.5" />
+  <path d="M2 19c0-2.761 3.134-5 7-5s7 2.239 7 5" />
+  <circle cx="17.5" cy="9" r="2.5" />
+  <path d="M17 14c2.21 0 5 1.343 5 3.5" />
+</svg>
+
+{{ else if eq $icon "briefcase" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect x="2" y="7" width="20" height="13" rx="2" />
+  <path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
+  <path d="M2 13h20" />
+</svg>
+
+{{ else if eq $icon "messaging" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path
+    d="M20 12c0 4.418-3.582 8-8 8a8.6 8.6 0 01-3.2-.6L4 21l1.6-4.8A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
+</svg>
+
+{{ else if eq $icon "notifications" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+  <path d="M13.73 21a2 2 0 01-3.46 0" />
+</svg>
+
+{{ else if eq $icon "heart" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path
+    d="M12 21C12 21 4 15.5 4 9.5 4 6.5 6.5 4 9 4c1.74 0 3 1.24 3 1.24S13.26 4 15 4c2.5 0 5 2.5 5 5.5 0 6-8 11.5-8 11.5z" />
+</svg>
+
+{{ else if eq $icon "heart-fill" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+  <path
+    d="M12 21C12 21 4 15.5 4 9.5 4 6.5 6.5 4 9 4c1.74 0 3 1.24 3 1.24S13.26 4 15 4c2.5 0 5 2.5 5 5.5 0 6-8 11.5-8 11.5z" />
+</svg>
+
+{{/* Aliases for backward compat */}}
+{{ else if eq $icon "like" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path
+    d="M12 21C12 21 4 15.5 4 9.5 4 6.5 6.5 4 9 4c1.74 0 3 1.24 3 1.24S13.26 4 15 4c2.5 0 5 2.5 5 5.5 0 6-8 11.5-8 11.5z" />
+</svg>
+
+{{ else if eq $icon "like-filled" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+  <path
+    d="M12 21C12 21 4 15.5 4 9.5 4 6.5 6.5 4 9 4c1.74 0 3 1.24 3 1.24S13.26 4 15 4c2.5 0 5 2.5 5 5.5 0 6-8 11.5-8 11.5z" />
+</svg>
+
+{{ else if eq $icon "comment" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path
+    d="M20 12c0 4.418-3.582 8-8 8a8.6 8.6 0 01-3.2-.6L4 21l1.6-4.8A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
+  <path d="M8 11h8" />
+  <path d="M8 14h5" />
+</svg>
+
+{{ else if eq $icon "share" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M12 3v12" />
+  <path d="M8 7l4-4 4 4" />
+  <path d="M20 14v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5" />
+</svg>
+
 {{ else if eq $icon "send" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/></svg>
-{{ else if eq $icon "linkedin-logo" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><rect width="34" height="34" rx="4" fill="#0a66c2"/><text x="6" y="25" font-family="Arial, sans-serif" font-weight="800" font-size="24" fill="#fff">in</text></svg>
-{{ else if eq $icon "profile" }}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="{{ $size }}" height="{{ $size }}" class="{{ $class }}"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2a7.2 7.2 0 01-6-3.22c.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08a7.2 7.2 0 01-6 3.22z"/></svg>
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M21 3L10 14" />
+  <path d="M21 3l-7 18-4-8-8-4 18-7z" />
+</svg>
+
+{{ else if eq $icon "paperplane" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M21 3L10 14" />
+  <path d="M21 3l-7 18-4-8-8-4 18-7z" />
+</svg>
+
+{{ else if eq $icon "ellipsis" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <circle cx="5" cy="12" r="1.5" />
+  <circle cx="12" cy="12" r="1.5" />
+  <circle cx="19" cy="12" r="1.5" />
+</svg>
+
+{{ else if eq $icon "dots" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <circle cx="5" cy="12" r="1.5" />
+  <circle cx="12" cy="12" r="1.5" />
+  <circle cx="19" cy="12" r="1.5" />
+</svg>
+
+{{ else if eq $icon "close" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M6 6l12 12" />
+  <path d="M18 6L6 18" />
+</svg>
+
+{{ else if eq $icon "arrow-left" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M15 6l-6 6 6 6" />
+</svg>
+
+{{ else if eq $icon "arrow-right" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M9 6l6 6-6 6" />
+</svg>
+
+{{ else if eq $icon "chevron-left" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M15 6l-6 6 6 6" />
+</svg>
+
+{{ else if eq $icon "chevron-right" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M9 6l6 6-6 6" />
+</svg>
+
+{{ else if eq $icon "chevron-down" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M6 9l6 6 6-6" />
+</svg>
+
+{{ else if eq $icon "chevron-up" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M6 15l6-6 6 6" />
+</svg>
+
+{{ else if eq $icon "plus" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" aria-hidden="true">
+  <path d="M12 5v14" />
+  <path d="M5 12h14" />
+</svg>
+
 {{ else if eq $icon "add-small" }}
-<svg role="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="{{ $size }}" height="{{ $size }}" viewBox="0 0 16 16" data-supported-dps="16x16" class="{{ $class }}" fill="currentColor"><path d="M14 9H9v5H7V9H2V7h5V2h2v5h5z"></path></svg>
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <path d="M12 8v8" />
+  <path d="M8 12h8" />
+</svg>
+
+{{ else if eq $icon "moon" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+</svg>
+
+{{ else if eq $icon "sun" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="4" />
+  <path
+    d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+</svg>
+
+{{ else if eq $icon "verified" }}
+{{/* Apple-style checkmark.seal.fill — clean circular badge */}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true">
+  <circle cx="12" cy="12" r="10" fill="#007AFF" />
+  <path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round" />
+</svg>
+
+{{ else if eq $icon "zoom-in" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="10.5" cy="10.5" r="6.5" />
+  <path d="M15.5 15.5L20 20" />
+  <path d="M10.5 7.5v6M7.5 10.5h6" />
+</svg>
+
+{{ else if eq $icon "zoom-out" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="10.5" cy="10.5" r="6.5" />
+  <path d="M15.5 15.5L20 20" />
+  <path d="M7.5 10.5h6" />
+</svg>
+
+{{ else if eq $icon "download" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <path d="M12 8v8" />
+  <path d="M8 13l4 4 4-4" />
+</svg>
+
+{{ else if eq $icon "fullscreen" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M4 14v6h6" />
+  <path d="M20 10V4h-6" />
+  <path d="M14 10l6-6" />
+  <path d="M10 14l-6 6" />
+</svg>
+
+{{ else if eq $icon "link" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M10 13a4 4 0 005.66 0l3-3a4 4 0 00-5.66-5.66l-1.5 1.5" />
+  <path d="M14 11a4 4 0 00-5.66 0l-3 3a4 4 0 005.66 5.66l1.5-1.5" />
+</svg>
+
+{{ else if eq $icon "photo" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect x="3" y="3" width="18" height="18" rx="2.5" />
+  <circle cx="8.5" cy="8.5" r="1.5" />
+  <path d="M21 15l-5-5-8 8" />
+</svg>
+
+{{ else if eq $icon "doc" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+  <path d="M14 2v6h6" />
+  <path d="M8 13h8M8 17h5" />
+</svg>
+
+{{ else if eq $icon "pdf" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+  <path d="M14 2v6h6" />
+  <path d="M8 13h8M8 17h5" />
+</svg>
+
+{{ else if eq $icon "external-link" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+  <path d="M15 3h6v6" />
+  <path d="M10 14L21 3" />
+</svg>
+
+{{ else if eq $icon "play" }}
+{{/* SF Symbol: play.fill — custom Apple-style filled play triangle */}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <path d="M8 5.14v13.72a1 1 0 001.5.86l11.2-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z" />
+</svg>
+
+{{ else if eq $icon "play-circle" }}
+{{/* Play button in circle — for video overlays */}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="10" />
+  <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
+</svg>
+
+{{ else if eq $icon "trash" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M3 6h18" />
+  <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+  <path d="M10 11v6M14 11v6" />
+</svg>
+
+{{ else if eq $icon "pencil" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+</svg>
+
+{{ else if eq $icon "globe" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <path d="M3 12h18" />
+  <path d="M12 3a15 15 0 014 9 15 15 0 01-4 9 15 15 0 01-4-9 15 15 0 014-9z" />
+</svg>
+
+{{ else if eq $icon "arrow-up" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M12 19V5" />
+  <path d="M5 12l7-7 7 7" />
+</svg>
+
+{{ else if eq $icon "arrow-down" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M12 5v14" />
+  <path d="M19 12l-7 7-7-7" />
+</svg>
+
+{{ else if eq $icon "default-user" }}
+<svg class="{{ .class }}" width="{{ $size }}" height="{{ $size }}" viewBox="0 0 410 410" fill="none"
+  xmlns="http://www.w3.org/2000/svg" aria-hidden="true" {{ if .id }}id="{{ .id }}" {{ end }}>
+  <path
+    d="M410 205C410 91.7816 318.218 0 205 0C91.7816 0 0 91.7816 0 205C0 318.218 91.7816 410 205 410C318.218 410 410 318.218 410 205Z"
+    fill="url(#paint0_linear_12_4)" style="fill: #a5a5a5;"></path>
+  <path fill-rule="evenodd" clip-rule="evenodd"
+    d="M83.1602 332.247C110.793 293.972 155.788 269.062 206.602 269.062C256.606 269.062 300.977 293.185 328.711 330.428C296.9 361.806 253.212 381.172 205 381.172C157.727 381.172 114.802 362.552 83.1602 332.247ZM275.469 164.961C275.469 204.764 244.636 237.031 206.602 237.031C168.567 237.031 137.734 204.764 137.734 164.961C137.734 125.158 168.567 92.8906 206.602 92.8906C244.636 92.8906 275.469 125.158 275.469 164.961Z"
+    fill="white"></path>
+  <defs>
+    <linearGradient id="paint0_linear_12_4" x1="205" y1="0" x2="205" y2="410" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A5ABB7"></stop>
+      <stop offset="1" stop-color="#848B94"></stop>
+    </linearGradient>
+  </defs>
+</svg>
+
+{{ else if eq $icon "linkedin-logo" }}
+{{/* App Logo — "P" monogram in a glass-like rounded square */}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true">
+  <rect x="1" y="1" width="34" height="34" rx="8" fill="currentColor" fill-opacity="0.08" stroke="currentColor"
+    stroke-width="1" />
+  <text x="18" y="23.5" text-anchor="middle" font-size="17" font-weight="700" fill="currentColor"
+    font-family="-apple-system, system-ui, sans-serif">P</text>
+</svg>
+
+{{ else if eq $icon "bell-badge" }}
+{{/* Bell with notification dot */}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+  <path d="M13.73 21a2 2 0 01-3.46 0" />
+  <circle cx="18" cy="4" r="3" fill="#FF3B30" stroke="none" />
+</svg>
+
+{{ else if eq $icon "checkmark" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M5 13l4 4L19 7" />
+</svg>
+
+{{ else if eq $icon "xmark-circle" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <path d="M9 9l6 6M15 9l-6 6" />
+</svg>
+
+{{ else if eq $icon "eye" }}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+  <circle cx="12" cy="12" r="3" />
+</svg>
+
+{{ else if eq $icon "moon" }}
+{{/* SF Symbol: moon.fill — crescent moon */}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true">
+  <path d="M21.75 15.5a9.72 9.72 0 01-4.49 1.08A9.75 9.75 0 017.43 2.25 9.75 9.75 0 1021.75 15.5z" />
+</svg>
+
+{{ else if eq $icon "sun" }}
+{{/* SF Symbol: sun.max.fill */}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true">
+  <circle cx="12" cy="12" r="4" />
+  <path
+    d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+</svg>
+
 {{ end }}

@@ -1,29 +1,118 @@
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+<!-- Apple Web App -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="{{ .Site.Params.author }}">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
-<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}">
+
+{{/* Build description from page, params, or content */}}
+{{ $desc := "" }}
+{{ if .Description }}
+  {{ $desc = .Description }}
+{{ else if .Params.summary }}
+  {{ $desc = .Params.summary }}
+{{ else if .IsPage }}
+  {{ $desc = .Summary | plainify | truncate 160 }}
+{{ else }}
+  {{ $desc = .Site.Params.description }}
+{{ end }}
+<meta name="description" content="{{ $desc }}">
 <meta name="author" content="{{ .Site.Params.author }}">
+
+{{/* Determine thumbnail image */}}
+{{ $ogImage := "" }}
+{{ with .Params.image }}{{ $ogImage = . }}{{ end }}
+{{ with .Params.featured_image }}{{ $ogImage = . }}{{ end }}
+{{ with .Params.thumbnail }}{{ $ogImage = . }}{{ end }}
+{{ if and (not $ogImage) .Site.Params.profileImage }}{{ $ogImage = .Site.Params.profileImage }}{{ end }}
 
 <!-- Open Graph -->
 <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
-<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}">
+<meta property="og:description" content="{{ $desc }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
-{{ with .Params.image }}<meta property="og:image" content="{{ . }}">{{ end }}
-{{ with .Params.featured_image }}<meta property="og:image" content="{{ . }}">{{ end }}
+<meta property="og:site_name" content="{{ .Site.Title }}">
+{{ with $ogImage }}<meta property="og:image" content="{{ . }}">{{ end }}
+{{ if .IsPage }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+<meta property="article:author" content="{{ .Site.Params.author }}">
+{{ with .Params.tags }}{{ range . }}<meta property="article:tag" content="{{ . }}">{{ end }}{{ end }}
+{{ end }}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
-<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}">
+<meta name="twitter:description" content="{{ $desc }}">
+{{ with $ogImage }}<meta name="twitter:image" content="{{ . }}">{{ end }}
 
 <!-- Canonical -->
 <link rel="canonical" href="{{ .Permalink }}">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+
+<!-- Person Schema (JSON-LD) — appears on all pages -->
+{{ $profile := .Site.Data.profile }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ $profile.name }}",
+  "url": "{{ .Site.BaseURL }}",
+  "jobTitle": "{{ $profile.headline }}",
+  "description": "{{ $profile.about | plainify | truncate 300 }}",
+  {{ with .Site.Params.profileImage }}"image": "{{ . }}",{{ end }}
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "{{ $profile.location }}"
+  },
+  "sameAs": [
+    {{ with .Site.Params.social }}
+    {{ with .linkedin }}"{{ . }}"{{ end }}
+    {{ end }}
+  ]
+  {{ if .IsPage }},
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ .Permalink }}"
+  }
+  {{ end }}
+}
+</script>
+
+{{ if .IsPage }}
+<!-- Article Schema for individual posts -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ .Title }}",
+  "description": "{{ $desc }}",
+  {{ with $ogImage }}"image": "{{ . }}",{{ end }}
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  {{ with .Lastmod }}"dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+  "author": {
+    "@type": "Person",
+    "name": "{{ $profile.name }}",
+    "url": "{{ $.Site.BaseURL }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ $profile.name }}"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ .Permalink }}"
+  }
+}
+</script>
+{{ end }}
 
 <!-- CSS -->
 {{ $mainCSS := resources.Get "css/main.css" | minify | fingerprint }}
@@ -34,6 +123,18 @@
 
 {{ $responsiveCSS := resources.Get "css/responsive.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $responsiveCSS.RelPermalink }}">
+
+<!-- Dark Mode — prevent flash of wrong theme -->
+<script>
+  (function() {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    else if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
 
 <!-- Firebase Config Meta Tags -->
 {{ with .Site.Params.firebase }}
