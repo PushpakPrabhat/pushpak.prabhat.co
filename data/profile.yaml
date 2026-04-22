@@ -14,7 +14,7 @@ about: >
   Looking for new opportunities to create and collaborate. Feel free to reach out!
 experience:
   - endDate: Present
-    logo: 💲
+    logo: /images/uploads/et_money_logo.jpeg
     startDate: Jan 2024
     duration: 4 mos
     location: Gurugram, Haryana, India · On-site
@@ -27,8 +27,8 @@ experience:
       content that drives user engagement.
     company: ET Money
     roles: []
-  - endDate: Present
-    logo: 🎬
+  - endDate: Jan 2026
+    logo: /images/uploads/adda_logo.png
     startDate: Jun 2025
     duration: 11 mos
     location: Gurugram, Haryana, India · On-site
@@ -38,7 +38,7 @@ experience:
     description: Leading a team of designers to create educational content
       animations, promotional videos, and interactive visual experiences for
       PrepInsta's platform.
-    company: PrepInsta
+    company: Adda247
     roles:
       - title: Lead Motion Designer
         startDate: Jun 2025
@@ -46,7 +46,7 @@ experience:
         description: Managing end-to-end motion design pipeline. Created over 100+
           educational animation assets for the platform.
   - endDate: Present
-    logo: https://pushpunk.com/Kitty.svg
+    logo: /images/uploads/1758915309027.jpeg
     startDate: Jun 2025
     companyUrl: https://pushpunk.com/
     duration: 11 mos
@@ -58,21 +58,9 @@ experience:
       and interactive web experiences. Working with clients across
       entertainment, education, and tech industries.
     company: pushpunk.com
-  - skills: JavaScript, HTML5 and +2 skills
-    endDate: Present
-    logo: 💻
-    startDate: Feb 2019
-    duration: 7 yrs 3 mos
-    location: Remote
-    title: Frontend Web Developer
-    type: Freelance
-    description: Building responsive websites, interactive web applications, and
-      creative coding projects. Specializing in portfolio sites, landing pages,
-      and interactive experiences using modern web technologies.
-    company: Freelance
   - skills: Motion Graphics, Animation and +2 skills
     endDate: Jun 2025
-    logo: 🎓
+    logo: /images/uploads/unacademy_logo.jpg
     startDate: Jul 2022
     duration: 3 yrs
     location: Chandigarh, India · On-site
@@ -88,20 +76,32 @@ experience:
         endDate: Jun 2025
         description: Led animation projects for key educational verticals. Mentored
           junior animators and established animation guidelines for the team.
-      - title: Motion Graphics Designer
+      - title: Animator
         startDate: Jul 2022
         endDate: Dec 2023
         description: Created motion graphics content for marketing campaigns and
           educational content. Produced 200+ animated assets.
+  - skills: JavaScript, HTML5 and +2 skills
+    endDate: Present
+    logo: /images/uploads/freelancer_logo.png
+    startDate: Feb 2019
+    duration: 7 yrs 3 mos
+    location: Remote
+    title: Frontend Web Developer
+    type: Freelance
+    description: Building responsive websites, interactive web applications, and
+      creative coding projects. Specializing in portfolio sites, landing pages,
+      and interactive experiences using modern web technologies.
+    company: Freelance
 education:
   - school: Chandigarh University
-    degree: Bachelor of Computer Applications (BCA)
-    year: 2019 - 2022
-    logo: 🏫
-  - school: KV Dharmshala
+    degree: Bachelor of Computer Applications (Dropout)
+    year: 2018 - 2021
+    logo: /images/uploads/cu_logo.png
+  - school: JAC
     degree: Higher Secondary (12th)
     year: 2017 - 2019
-    logo: 📚
+    logo: /images/uploads/jac_logo.webp
 interests:
   - name: Motion Design
     icon: 🎬
