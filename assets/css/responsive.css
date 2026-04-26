@@ -67,29 +67,19 @@
   .layout { padding: 0; margin-top: var(--space-8); }
   .layout__main { max-width: 100%; }
 
-  /* Cards edge-to-edge on mobile with Liquid Glass */
+  /* Cards — keep rounded on mobile like inspiration */
   .feed-item, .feed-tabs, .category-filter, .profile-full, .profile-section, .featured-section {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    box-shadow: none;
-    border-bottom: 0.5px solid var(--color-border-light);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    margin-left: var(--space-8);
+    margin-right: var(--space-8);
   }
 
   .feed-item::before, .profile-full::before, .profile-section::before, .featured-section::before {
     display: none;
   }
 
-  [data-theme="dark"] .feed-item,
-  [data-theme="dark"] .feed-tabs,
-  [data-theme="dark"] .category-filter,
-  [data-theme="dark"] .profile-full,
-  [data-theme="dark"] .profile-section,
-  [data-theme="dark"] .featured-section {
-    background: var(--color-surface-secondary);
+  .feed-item::after {
+    display: none;
   }
 
   .feed-tabs {
@@ -99,7 +89,6 @@
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    border-radius: 0;
   }
   .feed-tabs::-webkit-scrollbar { display: none; }
   .feed-tabs__label { display: none; }
@@ -110,7 +99,6 @@
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    border-radius: 0;
   }
   .category-filter::-webkit-scrollbar { display: none; }
 

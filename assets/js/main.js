@@ -367,7 +367,7 @@
       const m1 = item.url.match(/v=([a-zA-Z0-9_-]+)/);
       const m2 = item.url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
       vid = m1 ? m1[1] : (m2 ? m2[1] : '');
-      html = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;"></iframe>`;
+      html = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;"></iframe>`;
     } else if (item.type === 'gdrive') {
       html = `<iframe src="${item.url}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;"></iframe>`;
     } else {
@@ -486,14 +486,20 @@
     applyReaction(contentId, 'like');
   }
 
-  // Reaction image URLs (Apple-style emoji SVGs)
+  // Reaction image URLs (Facebook-style SVGs)
   const reactionImages = {
-    'like': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23FF2D55%22%2F%3E%3Cpath%20d%3D%22M20%2029s-7-4.5-7-9.5c0-2.5%202-4.5%203.5-4.5%201.2%200%202.2.8%203.5%202%201.3-1.2%202.3-2%203.5-2%201.5%200%203.5%202%203.5%204.5%200%205-7%209.5-7%209.5z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E',
-    'celebrate': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23FF9500%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%91%8F%3C%2Ftext%3E%3C%2Fsvg%3E',
-    'support': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23FF3B30%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%94%A5%3C%2Ftext%3E%3C%2Fsvg%3E',
-    'love': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%235856D6%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%98%AE%3C%2Ftext%3E%3C%2Fsvg%3E',
-    'insightful': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%2334C759%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%98%82%3C%2Ftext%3E%3C%2Fsvg%3E',
-    'funny': 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2220%22%20fill%3D%22%23007AFF%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2227%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%3E%F0%9F%98%A2%3C%2Ftext%3E%3C%2Fsvg%3E'
+    'like': '/images/reactions/like.svg',
+    'love': '/images/reactions/love.svg',
+    'care': '/images/reactions/care.svg',
+    'haha': '/images/reactions/haha.svg',
+    'wow': '/images/reactions/wow.svg',
+    'sad': '/images/reactions/sad.svg',
+    'angry': '/images/reactions/angry.svg',
+    // Legacy fallbacks
+    'celebrate': '/images/reactions/haha.svg',
+    'support': '/images/reactions/care.svg',
+    'insightful': '/images/reactions/wow.svg',
+    'funny': '/images/reactions/haha.svg'
   };
   // Expose globally for firebase.js sync
   window._reactionImages = reactionImages;
@@ -520,27 +526,24 @@
         const textEl = btn.querySelector('.interaction-btn__text');
         const customIconEl = btn.querySelector('.like-icon-custom');
         
-        if (reaction === 'like') {
-          btn.classList.remove('has-custom');
-          if (textEl) { textEl.textContent = 'Like'; textEl.style.color = ''; }
-        } else {
-          btn.classList.add('has-custom');
-          if (customIconEl) {
-            const imgUrl = reactionImages[reaction];
-            customIconEl.innerHTML = `<img src="${imgUrl}" width="20" height="20" alt="${reaction}" style="display:block;">`;
-          }
-          if (textEl) {
-            const displayNames = { 
-              celebrate: 'Clap', support: 'Fire', 
-              love: 'Wow', insightful: 'Laugh', funny: 'Sad' 
-            };
-            textEl.textContent = displayNames[reaction] || reaction.charAt(0).toUpperCase() + reaction.slice(1);
-            const colors = { 
-              celebrate: '#FF9500', support: '#FF3B30', 
-              love: '#5856D6', insightful: '#34C759', funny: '#007AFF' 
-            };
-            textEl.style.color = colors[reaction] || '';
-          }
+        btn.classList.add('has-custom');
+        if (customIconEl) {
+          const imgUrl = reactionImages[reaction];
+          customIconEl.innerHTML = `<img src="${imgUrl}" width="20" height="20" alt="${reaction}" style="display:block;">`;
+        }
+        if (textEl) {
+          const displayNames = { 
+            like: 'Like', love: 'Love', care: 'Care', haha: 'Haha',
+            wow: 'Wow', sad: 'Sad', angry: 'Angry',
+            celebrate: 'Haha', support: 'Care', insightful: 'Wow', funny: 'Sad'
+          };
+          textEl.textContent = displayNames[reaction] || reaction.charAt(0).toUpperCase() + reaction.slice(1);
+          const colors = { 
+            like: '#0571ED', love: '#F02849', care: '#F7B125',
+            haha: '#F7B125', wow: '#F7B125', sad: '#F7B125', angry: '#E84A3B',
+            celebrate: '#F7B125', support: '#F7B125', insightful: '#F7B125', funny: '#F7B125'
+          };
+          textEl.style.color = colors[reaction] || '';
         }
         
         const icon = btn.querySelector('.interaction-btn__icon');
@@ -549,7 +552,7 @@
           icon.offsetHeight;
           icon.style.animation = 'likeHeart 0.35s ease';
         }
-        const _dn = {celebrate:'Clap',support:'Fire',love:'Wow',insightful:'Laugh',funny:'Sad',like:'Like'};
+        const _dn = {like:'Like', love:'Love', care:'Care', haha:'Haha', wow:'Wow', sad:'Sad', angry:'Angry', celebrate:'Haha', support:'Care', insightful:'Wow', funny:'Sad'};
         showToast(`You reacted with ${_dn[reaction] || reaction}!`);
       } else {
         btn.classList.remove('interaction-btn--active');
@@ -627,7 +630,7 @@
                  </div>
                  <div>
                    <div class="reactions-modal__user-name">${pName}</div>
-                   <div class="reactions-modal__user-desc">Reacted with ${({celebrate:'Clap',support:'Fire',love:'Wow',insightful:'Laugh',funny:'Sad',like:'Like'}[r]) || r} on this post</div>
+                   <div class="reactions-modal__user-desc">Reacted with ${({like:'Like', love:'Love', care:'Care', haha:'Haha', wow:'Wow', sad:'Sad', angry:'Angry', celebrate:'Haha', support:'Care', insightful:'Wow', funny:'Sad'}[r]) || r} on this post</div>
                  </div>
                </div>
              `;
@@ -1253,11 +1256,30 @@
   window.addEventListener('authStateChanged', function(e) {
     var user = e.detail.user;
     if (user) {
-      // Update profile pics in header to show user's Google profile pic
-      var desktopPic = document.getElementById('desktop-profile-pic');
-      var mobilePic = document.getElementById('mobile-profile-pic');
-      if (desktopPic && user.photo) desktopPic.src = user.photo;
-      if (mobilePic && user.photo) mobilePic.src = user.photo;
+      // Update profile pics in header and comments to show user's Google profile pic
+      function updateAvatar(el, photoUrl) {
+        if (!el || !photoUrl) return;
+        if (el.tagName.toLowerCase() === 'svg') {
+          var img = document.createElement('img');
+          img.src = photoUrl;
+          if (el.id) img.id = el.id;
+          img.className = el.className.baseVal || el.className;
+          if (el.getAttribute('width')) img.setAttribute('width', el.getAttribute('width'));
+          if (el.getAttribute('height')) img.setAttribute('height', el.getAttribute('height'));
+          img.setAttribute('referrerpolicy', 'no-referrer');
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '50%';
+          el.parentNode.replaceChild(img, el);
+        } else if (el.tagName.toLowerCase() === 'img') {
+          el.src = photoUrl;
+        }
+      }
+
+      updateAvatar(document.getElementById('desktop-profile-pic'), user.photo);
+      updateAvatar(document.getElementById('mobile-profile-pic'), user.photo);
+      document.querySelectorAll('.comment-avatar').forEach(function(el) {
+        updateAvatar(el, user.photo);
+      });
 
       // Update Me label
       var meLabel = document.getElementById('desktop-me-label');

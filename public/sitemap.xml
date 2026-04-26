@@ -2,10 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>//localhost:1313/videos/et-money-promo/</loc>
-    <lastmod>2026-03-30T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>//localhost:1313/</loc>
+    <lastmod>2026-04-16T22:39:00+05:30</lastmod>
+  </url><url>
+    <loc>//localhost:1313/photos/</loc>
+    <lastmod>2026-04-16T22:39:00+05:30</lastmod>
+  </url><url>
+    <loc>//localhost:1313/photos/sketch-16-april-2026/</loc>
+    <lastmod>2026-04-16T22:39:00+05:30</lastmod>
+  </url><url>
+    <loc>//localhost:1313/videos/et-money-promo/</loc>
     <lastmod>2026-03-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>//localhost:1313/videos/</loc>
@@ -30,9 +36,6 @@
     <lastmod>2026-03-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>//localhost:1313/photos/fantasy-character-sketch/</loc>
-    <lastmod>2026-03-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/photos/</loc>
     <lastmod>2026-03-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>//localhost:1313/videos/data-viz-motion/</loc>

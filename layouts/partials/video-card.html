@@ -44,13 +44,13 @@
       {{ else if findRE `youtu\.be/([a-zA-Z0-9_-]+)` $videoUrl }}
         {{ $videoID = replaceRE `.*youtu\.be/([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
       {{ end }}
-      <iframe 
-        src="https://www.youtube.com/embed/{{ $videoID }}" 
-        title="{{ .Title }}"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen
-        loading="lazy"
-      ></iframe>
+      <img 
+        src="https://img.youtube.com/vi/{{ $videoID }}/maxresdefault.jpg" 
+        onerror="this.src='https://img.youtube.com/vi/{{ $videoID }}/hqdefault.jpg'" 
+        alt="{{ .Title }}" 
+        class="feed-item__video-thumbnail"
+        style="width: 100%; height: 100%; object-fit: cover;"
+      >
     {{ else if eq $videoType "gdrive" }}
       <iframe 
         src="{{ $videoUrl }}" 
