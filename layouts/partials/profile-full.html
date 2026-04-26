@@ -199,21 +199,20 @@
 <!-- Skills (mobile-only, desktop shows in sidebar) -->
 <section class="profile-section profile-section--mobile-only" id="skills-section">
   <h2 class="profile-section__title">Skills</h2>
-  {{ range $profile.skills }}
-  <div class="sidebar-widget__item">
-    <span class="sidebar-widget__item-icon">
-      {{ if .icon }}
-      <img src="{{ .icon }}" alt="Icon" style="width:24px;height:24px;object-fit:contain;border-radius:4px;">
-      {{ else }}
-      <span style="font-size: 20px; display: inline-block; width: 24px; text-align: center;">⚡</span>
-      {{ end }}
+  <div class="interests-grid" style="padding-top: 8px;">
+    {{ range $profile.skills }}
+    <span class="interest-tag">
+      <span class="interest-tag__icon">
+        {{ if .icon }}
+        <img src="{{ .icon }}" alt="Icon" style="width:16px;height:16px;object-fit:contain;border-radius:2px;">
+        {{ else }}
+        ⚡
+        {{ end }}
+      </span>
+      {{ .name }}
     </span>
-    <div>
-      <div class="sidebar-widget__item-text">{{ .name }}</div>
-      <div class="sidebar-widget__item-sub">{{ .endorsements }} endorsements</div>
-    </div>
+    {{ end }}
   </div>
-  {{ end }}
 </section>
 
 <!-- Quick Links (mobile-only, desktop shows in sidebar) -->

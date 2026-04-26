@@ -125,24 +125,16 @@ interests:
     icon: 📷
 skills:
   - name: After Effects
-    endorsements: 12
     icon: /images/uploads/unnamed.jpg
   - name: Premiere Pro
-    endorsements: 8
     icon: /images/uploads/unnamed.jpg
   - name: Blender
-    endorsements: 6
     icon: /images/uploads/adda_logo.png
   - name: Figma
-    endorsements: 10
   - name: JavaScript
-    endorsements: 7
   - name: HTML/CSS
-    endorsements: 9
   - name: Photoshop
-    endorsements: 5
   - name: Illustrator
-    endorsements: 4
 quickLinks:
   - title: LinkedIn Profile
     url: https://linkedin.com/in/pushpunk
