@@ -265,6 +265,17 @@
     </div>
   </nav>
 
+  <script>
+  window.__OWNER = {
+    name: "{{ .Site.Data.profile.name }}",
+    links: [
+      {{ range .Site.Data.profile.ownerLinks }}
+      { title: "{{ .title }}", url: "{{ .url }}", icon: "{{ .icon }}" },
+      {{ end }}
+    ]
+  };
+  </script>
+
   {{ $firebaseJS := resources.Get "js/firebase.js" | minify | fingerprint }}
   <script src="{{ $firebaseJS.RelPermalink }}"></script>
 

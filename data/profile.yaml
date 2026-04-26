@@ -153,3 +153,13 @@ quickLinks:
   - title: Email Me
     url: mailto:prabhat.pushpak@gmail.com
     icon: /images/uploads/unnamed.jpg
+ownerLinks:
+  - title: Pushpak's Profile
+    url: https://www.linkedin.com/in/pushpunk/
+    icon: person
+  - title: Pushpak's Portfolio
+    url: https://pushpunk.com/
+    icon: briefcase
+  - title: Pushpak's Mail
+    url: mailto:prabhat.pushpak@gmail.com
+    icon: mail

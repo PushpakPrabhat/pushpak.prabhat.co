@@ -47,7 +47,10 @@
     <p class="profile-full__location" style="margin-bottom:10px;">{{ $profile.location }}</p>
     
     <div class="profile-full__actions">
-      <a href="{{ .Site.Params.social.linkedin }}" target="_blank" rel="noopener" class="btn btn--primary" id="btn-follow">
+      {{ $followUrl := "" }}
+      {{ with (index .Site.Data.profile.ownerLinks 0) }}{{ $followUrl = .url }}{{ end }}
+      {{ if not $followUrl }}{{ $followUrl = .Site.Params.social.linkedin }}{{ end }}
+      <a href="{{ $followUrl }}" target="_blank" rel="noopener" class="btn btn--primary" id="btn-follow">
         {{ partial "icons.html" (dict "icon" "add-small" "size" "16") }} Follow
       </a>
       <button class="btn btn--outline" id="btn-message" onclick="openChat(event)">
