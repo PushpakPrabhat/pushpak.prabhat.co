@@ -651,11 +651,11 @@
 .comments-section { padding: 0 var(--space-16) var(--space-16); display: none; position: relative; z-index: 1; }
 .comments-section.open { display: block; animation: slideDown 0.3s var(--ease-default); padding-top: var(--space-12); }
 
-.comment-input-wrapper { display: flex; gap: var(--space-8); margin-bottom: var(--space-12); }
+.comment-input-wrapper { display: flex; gap: var(--space-8); margin-bottom: var(--space-12); align-items: center; }
 .comment-input-wrapper .comment-avatar { width: 32px; height: 32px; border-radius: var(--radius-full); object-fit: cover; flex-shrink: 0; }
 
 .comment-input {
-  flex: 1; padding: 10px 16px;
+  flex: 1; padding: 10px 16px; min-width: 0;
   border: 0.5px solid var(--color-border); border-radius: var(--radius-xl);
   font-family: var(--font-family); font-size: var(--font-size-footnote); color: var(--color-text-primary);
   background: var(--color-surface-hover); transition: all var(--transition-fast);
@@ -672,7 +672,9 @@
   font-size: var(--font-size-caption);
   font-weight: 600;
   transition: all var(--transition-fast);
-  align-self: flex-end;
+  border: none;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 .comment-submit-btn:hover { background: var(--color-primary-hover); }
 .comment-submit-btn:active { transform: scale(0.95); }
@@ -716,12 +718,13 @@
 .comment__reply-input {
   flex: 1; padding: 6px 14px; border: 0.5px solid var(--color-border); border-radius: var(--radius-xl);
   font-size: var(--font-size-caption); font-family: var(--font-family); color: var(--color-text-primary);
-  background: var(--color-surface-hover); min-height: 32px;
+  background: var(--color-surface-hover); min-height: 32px; min-width: 0;
 }
 .comment__reply-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0,122,255,0.12); }
 .comment__reply-btn {
   padding: 4px 12px; background: var(--color-primary); color: white; border: none;
   border-radius: var(--radius-xl); font-size: var(--font-size-caption); font-weight: 600; cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* ========== PROFILE FULL ========== */
