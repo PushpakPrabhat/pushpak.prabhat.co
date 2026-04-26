@@ -265,10 +265,20 @@
                 if (customIconEl && textEl) {
                   var imgUrl = window._reactionImages && window._reactionImages[userReaction];
                   customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + userReaction + '" style="display:block;">';
-                  customIconEl.style.display = 'inline-block';
+                  customIconEl.style.display = ''; // Let CSS handle visibility
                   textEl.textContent = ({like:'Like', love:'Love', care:'Care', haha:'Haha', wow:'Wow', sad:'Sad', angry:'Angry', celebrate:'Haha', support:'Care', insightful:'Wow', funny:'Sad'})[userReaction] || userReaction.charAt(0).toUpperCase() + userReaction.slice(1);
                   var colors = { like: '#0571ED', love: '#F02849', care: '#F7B125', haha: '#F7B125', wow: '#F7B125', sad: '#F7B125', angry: '#E84A3B', celebrate: '#F7B125', support: '#F7B125', insightful: '#F7B125', funny: '#F7B125' };
                   textEl.style.color = colors[userReaction] || '';
+                }
+              } else if (!userReaction && likeBtn) {
+                likeBtn.classList.remove('interaction-btn--active');
+                likeBtn.classList.remove('has-custom');
+                var textEl = likeBtn.querySelector('.interaction-btn__text');
+                var customIconEl = likeBtn.querySelector('.like-icon-custom');
+                if (customIconEl) customIconEl.style.display = 'none';
+                if (textEl) {
+                  textEl.textContent = 'Like';
+                  textEl.style.color = '';
                 }
               }
             }
@@ -873,7 +883,7 @@
           if (customIconEl && textEl) {
             var imgUrl = window._reactionImages && window._reactionImages[reaction];
             customIconEl.innerHTML = '<img src="' + imgUrl + '" width="20" height="20" alt="' + reaction + '" style="display:block;">';
-            customIconEl.style.display = 'inline-block';
+            customIconEl.style.display = ''; // Let CSS handle visibility
             textEl.textContent = ({like:'Like', love:'Love', care:'Care', haha:'Haha', wow:'Wow', sad:'Sad', angry:'Angry', celebrate:'Haha', support:'Care', insightful:'Wow', funny:'Sad'})[reaction] || reaction.charAt(0).toUpperCase() + reaction.slice(1);
             var colors = { like: '#0571ED', love: '#F02849', care: '#F7B125', haha: '#F7B125', wow: '#F7B125', sad: '#F7B125', angry: '#E84A3B', celebrate: '#F7B125', support: '#F7B125', insightful: '#F7B125', funny: '#F7B125' };
             textEl.style.color = colors[reaction] || '';
