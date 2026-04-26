@@ -44,8 +44,7 @@
       <span style="font-weight: 600;">{{ .Site.Params.company }}</span>
     </div>
     {{ end }}
-    <p class="profile-full__location">{{ $profile.location }} · <a class="profile-full__contact" href="#">{{ $profile.contactInfo }}</a></p>
-    <p class="profile-full__connections"><span>{{ $profile.followers }} followers</span> · <span>{{ $profile.connections }} connections</span></p>
+    <p class="profile-full__location" style="margin-bottom:10px;">{{ $profile.location }}</p>
     
     <div class="profile-full__actions">
       <a href="{{ .Site.Params.social.linkedin }}" target="_blank" rel="noopener" class="btn btn--primary" id="btn-follow">
@@ -54,7 +53,7 @@
       <button class="btn btn--outline" id="btn-message" onclick="openChat(event)">
         {{ partial "icons.html" (dict "icon" "messaging" "size" "18") }} Message
       </button>
-      <button class="btn btn--ghost" id="btn-more">More</button>
+
     </div>
   </div>
 </section>
@@ -187,7 +186,7 @@
   <div class="interests-grid">
     {{ range $profile.interests }}
     <span class="interest-tag">
-      <span class="interest-tag__icon">{{ .icon }}</span>
+      <span class="interest-tag__icon">{{ if hasPrefix .icon "/" }}<img src="{{ .icon }}" alt="{{ .name }}" style="width:20px;height:20px;object-fit:contain;border-radius:4px;">{{ else }}{{ .icon }}{{ end }}</span>
       {{ .name }}
     </span>
     {{ end }}

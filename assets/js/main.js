@@ -1233,15 +1233,12 @@
           '<div class="account-dropdown__header">' +
             '<img src="' + (user.photo || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='60' y1='0' x2='60' y2='120' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23C8C8CC'/%3E%3Cstop offset='1' stop-color='%238E8E93'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='60' cy='60' r='60' fill='url(%23g)'/%3E%3Ccircle cx='60' cy='46' r='18' fill='white'/%3E%3Cpath d='M24 102c0-16.57 16.12-30 36-30s36 13.43 36 30' fill='white'/%3E%3C/svg%3E") + '" class="account-dropdown__header-avatar" referrerpolicy="no-referrer">' +
             '<div class="account-dropdown__header-info">' +
-              '<div style="display:flex;align-items:center;gap:6px;"><strong>' + user.name + '</strong><span class="account-dropdown__pro-badge">PRO</span></div>' +
+              '<div style="display:flex;align-items:center;gap:6px;"><strong>' + user.name + '</strong></div>' +
               '<span class="account-dropdown__header-email">' + (user.email || '') + '</span>' +
             '</div>' +
           '</div>' +
           '<div class="account-dropdown__divider"></div>' +
-          '<button class="account-dropdown__item">' + settingsIcon + '<span>Account Settings</span></button>' +
           '<button class="account-dropdown__item" onclick="toggleTheme(); toggleProfileMenu();">' + moonIcon + '<span style="flex:1;">Dark mode</span>' + toggleHtml + '</button>' +
-          '<button class="account-dropdown__item">' + analyticsIcon + '<span>View Analytics</span></button>' +
-          '<button class="account-dropdown__item">' + invoiceIcon + '<span>Invoice Manager</span></button>' +
           '<div class="account-dropdown__divider"></div>' +
           '<button class="account-dropdown__item" onclick="PortfolioDB.signOut().then(function(){location.reload();})">' + signOutIcon + '<span>Logout</span></button>';
       } else {
@@ -1786,8 +1783,18 @@
         (n.link !== '#' ? '<button class="notification-item__action" onclick="window.location.href=\'' + n.link + '\'">View</button>' : '');
 
       el.addEventListener('click', function() {
-        if (n.isMessage) { openChat(); }
-        else if (n.link !== '#') { window.location.href = n.link; }
+        closeNotifications();
+        if (n.isMessage) { openChat(); return; }
+        // Try to find and scroll to the feed item on current page
+        var feedItem = n.id ? document.querySelector('.feed-item[data-id="' + n.id + '"]') : null;
+        if (feedItem) {
+          feedItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          feedItem.style.transition = 'box-shadow 0.3s ease';
+          feedItem.style.boxShadow = '0 0 0 2px var(--color-primary)';
+          setTimeout(function() { feedItem.style.boxShadow = ''; }, 2000);
+        } else if (n.link !== '#') {
+          window.location.href = n.link;
+        }
       });
 
       list.insertBefore(el, empty);

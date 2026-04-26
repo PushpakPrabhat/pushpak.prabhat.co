@@ -42,12 +42,7 @@
       
       <div class="nav__divider"></div>
       
-      <!-- Dark Mode Toggle -->
-      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle appearance">
-        <span class="theme-toggle__moon">{{ partial "icons.html" (dict "icon" "moon" "size" "18") }}</span>
-        <span class="theme-toggle__sun">{{ partial "icons.html" (dict "icon" "sun" "size" "18") }}</span>
-      </button>
-      
+
       <!-- Me — just avatar, no label -->
       <a href="#" class="nav__item" id="nav-me" onclick="toggleProfileMenu(event)" title="Account">
         {{ partial "icons.html" (dict "icon" "default-user" "class" "nav__profile-pic" "size" "24" "id" "desktop-profile-pic") }}
