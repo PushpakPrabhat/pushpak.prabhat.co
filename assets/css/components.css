@@ -1557,29 +1557,74 @@
 
 /* ========== ACCOUNT DROPDOWN ========== */
 .account-dropdown {
-  position: fixed; top: 52px; right: 16px; z-index: 9999;
+  position: fixed; top: calc(var(--nav-height) + 8px); right: 16px; z-index: 9999;
   background: var(--glass-bg-thick);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border: 0.5px solid var(--glass-border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-float), var(--glass-inner-shadow);
-  min-width: 260px; overflow: hidden;
+  min-width: 280px; max-width: calc(100vw - 32px); overflow: hidden;
   animation: scaleIn 0.2s var(--ease-spring);
+  padding-bottom: 8px;
+}
+
+.account-dropdown__header {
+  display: flex; align-items: center; gap: 12px; padding: 20px 20px 16px;
+}
+.account-dropdown__header-avatar {
+  width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+}
+.account-dropdown__header-info {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.account-dropdown__header-info strong {
+  font-size: var(--font-size-body); font-weight: 600; color: var(--color-text-primary);
+}
+.account-dropdown__pro-badge {
+  background: transparent; color: var(--color-primary);
+  border: 1px solid var(--color-primary); border-radius: 4px;
+  font-size: 10px; font-weight: 700; padding: 2px 6px; letter-spacing: 0.5px;
+}
+.account-dropdown__header-email {
+  font-size: var(--font-size-caption); color: var(--color-text-secondary);
 }
 
 .account-dropdown__item {
-  display: flex; align-items: center; gap: 12px; padding: 14px 20px;
+  display: flex; align-items: center; padding: 12px 20px;
   cursor: pointer; border: none; background: none; width: 100%; text-align: left;
   color: var(--color-text-primary); font-size: var(--font-size-subhead); font-family: inherit;
   transition: background 0.15s var(--ease-default);
 }
 .account-dropdown__item:hover { background: var(--color-surface-hover); }
-.account-dropdown__avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.account-dropdown__divider { height: 0.5px; background: var(--color-border-light); }
+.account-dropdown__item span { font-weight: 500; }
+
+.account-dropdown__toggle {
+  width: 40px; height: 24px; border-radius: 12px;
+  background: var(--color-surface-hover); border: 1px solid var(--color-border);
+  position: relative; transition: all 0.3s var(--ease-default);
+}
+.account-dropdown__toggle.active {
+  background: var(--color-primary); border-color: var(--color-primary);
+}
+.account-dropdown__toggle-knob {
+  width: 18px; height: 18px; border-radius: 50%; background: white;
+  position: absolute; top: 2px; left: 2px; transition: all 0.3s var(--ease-default);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.account-dropdown__toggle.active .account-dropdown__toggle-knob {
+  transform: translateX(16px);
+}
+
+.account-dropdown__divider { height: 1px; background: var(--color-border-light); margin: 8px 20px; opacity: 0.5; }
 
 @media (max-width: 767px) {
-  .account-dropdown { top: 52px; right: auto; left: 8px; min-width: 240px; }
+  .account-dropdown { 
+    top: calc(var(--nav-height) + 8px); 
+    right: auto; left: 16px; 
+    min-width: 280px; max-width: calc(100vw - 32px);
+    transform-origin: top left;
+  }
 }
 
 /* ========== SVG ALIGNMENT ========== */
@@ -1587,22 +1632,32 @@
 .feed-item__author-badge svg, .feed-item__time svg { display: block; }
 
 /* ========== NOTIFICATION PANEL — Liquid Glass ========== */
-.notification-panel { position: fixed; inset: 0; z-index: 4000; display: none; }
+.notification-panel { position: absolute; z-index: 9999; display: none; }
 .notification-panel[style*="display: block"], .notification-panel[style*="display:block"] { display: block !important; }
 
-.notification-panel__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.25); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); cursor: pointer; }
+/* Invisible overlay to catch outside clicks without darkening the screen */
+.notification-panel__overlay { position: fixed; inset: 0; background: transparent; cursor: default; z-index: -1; }
 
 .notification-panel__content {
-  position: absolute; top: calc(var(--nav-height) + 8px); right: 16px;
-  width: 380px; max-height: calc(100vh - var(--nav-height) - 32px);
+  position: fixed; top: calc(var(--nav-height) + 8px); right: 16px;
+  width: 380px; max-width: calc(100vw - 32px);
+  max-height: calc(100vh - var(--nav-height) - 32px);
   background: var(--glass-bg-thick);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
-  border-radius: var(--radius-xl);
   border: 0.5px solid var(--glass-border);
+  border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-float), var(--glass-inner-shadow);
-  overflow: hidden; display: flex; flex-direction: column;
-  animation: scaleIn 0.25s var(--ease-spring);
+  display: flex; flex-direction: column; overflow: hidden;
+  animation: scaleIn 0.2s var(--ease-spring);
+}
+
+@media (max-width: 767px) {
+  .notification-panel__content {
+    top: auto; bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 8px); right: 16px;
+    max-height: calc(100vh - 80px - env(safe-area-inset-bottom, 0px));
+    transform-origin: bottom right;
+  }
 }
 
 .notification-panel__header {
@@ -1663,13 +1718,7 @@
 .notification-panel__signin-btn { margin-top: 12px; }
 .notification-panel__browser-btn { margin-top: 8px; }
 
-@media (max-width: 767px) {
-  .notification-panel__content {
-    top: 0; right: 0; left: 0; bottom: 0;
-    width: 100%; max-height: 100vh; border-radius: 0;
-  }
-  .notification-panel__overlay { display: none; }
-}
+
 
 /* ========== SEARCH — Glass Blur Background ========== */
 .search-dropdown {
