@@ -104,7 +104,7 @@ education:
     logo: /images/uploads/jac_logo.webp
 interests:
   - name: Motion Design
-    icon: 🎬
+    icon: /images/uploads/cu_logo.jpeg
   - name: 3D Animation
     icon: 🧊
   - name: UI/UX Design
@@ -132,6 +132,7 @@ skills:
     icon: /images/uploads/unnamed.jpg
   - name: Blender
     endorsements: 6
+    icon: /images/uploads/adda_logo.png
   - name: Figma
     endorsements: 10
   - name: JavaScript
