@@ -1,3 +1,38 @@
+skills:
+  - name: After Effects
+    icon: /images/uploads/logos-adobe-after-effects.svg
+    endorsements: 1
+  - name: Premiere Pro
+    icon: /images/uploads/logos-adobe-premiere.svg
+    endorsements: -2
+  - name: Blender
+    icon: /images/uploads/logos-blender.svg
+    endorsements: -1
+  - name: Figma
+    icon: /images/uploads/logos-figma.svg
+    endorsements: -1
+  - name: JavaScript
+    icon: /images/uploads/logos-javascript.svg
+    endorsements: -3
+  - name: HTML/CSS
+    icon: /images/uploads/logos-html-5.svg
+    endorsements: -1
+  - name: Photoshop
+    icon: /images/uploads/logos-adobe-photoshop.svg
+    endorsements: -3
+  - name: Illustrator
+    icon: /images/uploads/logos-adobe-illustrator.svg
+    endorsements: 1
+ownerLinks:
+  - title: Pushpak's Profile
+    url: https://www.linkedin.com/in/pushpunk/
+    icon: person
+  - title: Pushpak's Portfolio
+    url: https://pushpunk.com/
+    icon: briefcase
+  - title: Pushpak's Mail
+    url: mailto:prabhat.pushpak@gmail.com
+    icon: mail
 name: Pushpak Prabhat
 headline: Animation | Interactive Technology
 location: Gurugram, Haryana, India
@@ -123,35 +158,13 @@ interests:
     icon: 🧪
   - name: Photography
     icon: 📷
-skills:
-  - name: After Effects
-    icon: /images/uploads/unnamed.jpg
-  - name: Premiere Pro
-    icon: /images/uploads/unnamed.jpg
-  - name: Blender
-    icon: /images/uploads/adda_logo.png
-  - name: Figma
-  - name: JavaScript
-  - name: HTML/CSS
-  - name: Photoshop
-  - name: Illustrator
 quickLinks:
   - title: LinkedIn Profile
     url: https://linkedin.com/in/pushpunk
-    icon: /images/uploads/unnamed.jpg
+    icon: /images/uploads/skill-icons-linkedin.svg
   - title: GitHub
     url: https://github.com/pushpunk
-    icon: /images/uploads/unnamed.jpg
+    icon: /images/uploads/skill-icons-github-light.svg
   - title: Email Me
     url: mailto:prabhat.pushpak@gmail.com
-    icon: /images/uploads/unnamed.jpg
-ownerLinks:
-  - title: Pushpak's Profile
-    url: https://www.linkedin.com/in/pushpunk/
-    icon: person
-  - title: Pushpak's Portfolio
-    url: https://pushpunk.com/
-    icon: briefcase
-  - title: Pushpak's Mail
-    url: mailto:prabhat.pushpak@gmail.com
-    icon: mail
+    icon: /images/uploads/skill-icons-gmail-light.svg
