@@ -8,4 +8,4 @@ image: "/images/uploads/guru.webp"
 description: ""
 ---
 
-Pencil Sketch of Man
+sketch#005

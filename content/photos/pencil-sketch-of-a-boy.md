@@ -8,4 +8,4 @@ image: "/images/uploads/boy.webp"
 description: ""
 ---
 
-Pencil sketch of a boy
+sketch#006

@@ -7,8 +7,5 @@ category: "sketches"
 image: "/images/uploads/bro.webp"
 description: ""
 ---
-Pencil Sketch of Amal
-sf
-.
-.
 
+sketch#004
