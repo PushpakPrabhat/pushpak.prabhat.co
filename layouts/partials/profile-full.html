@@ -67,14 +67,15 @@
   <p class="profile-section__text">{{ $profile.about }}</p>
 </section>
 
-<!-- Featured -->
+{{ $allPhotos := where .Site.RegularPages "Type" "photos" }}
+{{ $allVideos := where .Site.RegularPages "Type" "videos" }}
+{{ $allPosts := where .Site.RegularPages "Type" "posts" }}
+{{ $all := $allPhotos | append $allVideos | append $allPosts }}
+{{ $featuredOnly := where $all ".Params.featured" true }}
+{{ $sorted := sort $featuredOnly "Date" "desc" }}
+{{ if gt (len $sorted) 0 }}
 <section class="featured-section" id="featured-section">
   <h2 class="featured-section__title">Featured</h2>
-  {{ $allPhotos := where .Site.RegularPages "Type" "photos" }}
-  {{ $allVideos := where .Site.RegularPages "Type" "videos" }}
-  {{ $allPosts := where .Site.RegularPages "Type" "posts" }}
-  {{ $all := $allPhotos | append $allVideos | append $allPosts }}
-  {{ $sorted := sort $all "Date" "desc" }}
   {{ $featured := first 1 $sorted }}
   {{ range $featured }}
   <div class="featured-card" onclick="window.location.href='{{ .Permalink }}'">
@@ -112,8 +113,8 @@
     </div>
   </div>
   {{ end }}
-  <button class="featured-section__see-all" onclick="showAllFeatured()">Show all featured →</button>
 </section>
+{{ end }}
 
 <!-- Experience -->
 <section class="profile-section" id="experience-section">

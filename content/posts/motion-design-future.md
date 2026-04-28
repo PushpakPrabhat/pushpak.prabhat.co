@@ -1,7 +1,7 @@
 ---
 title: "Why Motion Design is the Future of Brand Communication"
 date: 2026-03-29
-draft: false
+draft: true
 type: "posts"
 summary: "In an era of shrinking attention spans, motion design has become the most powerful tool for brand storytelling. Here's why every brand needs to invest in motion."
 tags: ["motion design", "branding", "creative"]

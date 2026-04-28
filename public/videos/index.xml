@@ -2,60 +2,151 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Videos on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
-    <link>//localhost:1313/videos/</link>
+    <link>/videos/</link>
     <description>Recent content in Videos on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="//localhost:1313/videos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/videos/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>ET Money Brand Promo</title>
-      <link>//localhost:1313/videos/et-money-promo/</link>
-      <pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/videos/et-money-promo/</guid>
-      <description>&lt;p&gt;Just finished this promotional piece for ET Money! The challenge was to make investment features feel exciting and accessible. Used After Effects and Cinema 4D for the 3D elements. 🎬💰&lt;/p&gt;</description>
+      <title>Acute Appendicitis (treatment_algorithm)</title>
+      <link>/videos/acute-appendicitis-treatment_algorithm/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/acute-appendicitis-treatment_algorithm/</guid>
+      <description>&lt;p&gt;Acute Appendicitis (treatment_algorithm)&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Data Visualization Motion Graphics</title>
-      <link>//localhost:1313/videos/data-viz-motion/</link>
-      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/videos/data-viz-motion/</guid>
-      <description>&lt;p&gt;Created this data visualization animation for a client presentation. Transforming numbers into visual stories is what I love doing most. After Effects + custom expressions = magic ✨📊&lt;/p&gt;</description>
+      <title>Am-Ex Card</title>
+      <link>/videos/am-ex-card/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/am-ex-card/</guid>
+      <description>&lt;p&gt;Am-Ex Card&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Abstract 3D Loop Animation</title>
-      <link>//localhost:1313/videos/abstract-3d-loop/</link>
-      <pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/videos/abstract-3d-loop/</guid>
-      <description>&lt;p&gt;Another satisfying loop! This 3D animation explores organic forms meeting geometric precision. Rendered in Blender Cycles with custom shader nodes. 🧊🎨&lt;/p&gt;</description>
+      <title>Bargain Box</title>
+      <link>/videos/bargain-box/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/bargain-box/</guid>
+      <description>&lt;p&gt;Bargain Box&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Educational Explainer Animation</title>
-      <link>//localhost:1313/videos/educational-explainer/</link>
-      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/videos/educational-explainer/</guid>
-      <description>&lt;p&gt;Created this 2D explainer for an ed-tech platform. The character animation was done frame-by-frame to give it that hand-crafted feel. Some things AI can&amp;rsquo;t replace! ✌️🎞️&lt;/p&gt;</description>
+      <title>Black death documentary</title>
+      <link>/videos/black-death-documentary/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/black-death-documentary/</guid>
+      <description>&lt;p&gt;Black death documentary&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Movie Poster Motion Design</title>
-      <link>//localhost:1313/videos/movie-motion-poster/</link>
-      <pubDate>Sun, 08 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/videos/movie-motion-poster/</guid>
-      <description>&lt;p&gt;Motion posters are one of my favorite things to create. Taking a static image and adding subtle parallax, particles, and lighting effects to bring it to life. This one has a cinematic dark mood. 🎬🌙&lt;/p&gt;</description>
+      <title>Career247_Ad 01</title>
+      <link>/videos/career247_ad-01/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/career247_ad-01/</guid>
+      <description>&lt;p&gt;Career247_Ad 01&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Quick Tips: After Effects Expressions</title>
-      <link>//localhost:1313/videos/ae-expressions-short/</link>
-      <pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/videos/ae-expressions-short/</guid>
-      <description>&lt;p&gt;Quick tip! 5 After Effects expressions every motion designer should know. Save this for later! 💡⚡&lt;/p&gt;&#xA;&lt;p&gt;#MotionDesign #AfterEffects #Tutorial&lt;/p&gt;</description>
+      <title>Cholera documentary</title>
+      <link>/videos/cholera-documentary/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/cholera-documentary/</guid>
+      <description>&lt;p&gt;Cholera documentary&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Logo Reveal 3D Animation</title>
-      <link>//localhost:1313/videos/logo-reveal-3d/</link>
-      <pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/videos/logo-reveal-3d/</guid>
-      <description>&lt;p&gt;This 3D logo reveal was a fun project combining Blender and After Effects. The metallic shader work was particularly challenging but rewarding! 🎯&lt;/p&gt;</description>
+      <title>Generative AI for Placements 2025 with Atulya Kaushik X Kush Khurana</title>
+      <link>/videos/generative-ai-for-placements-2025-with-atulya-kaushik-x-kush-khurana/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/generative-ai-for-placements-2025-with-atulya-kaushik-x-kush-khurana/</guid>
+      <description>&lt;p&gt;Generative AI for Placements 2025 with Atulya Kaushik X Kush Khurana&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Head Injury (treatment_algorithm)</title>
+      <link>/videos/head-injury-treatment_algorithm/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/head-injury-treatment_algorithm/</guid>
+      <description>&lt;p&gt;Head Injury (treatment_algorithm)&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Introducing PrepLadder QBank 6.0</title>
+      <link>/videos/introducing-prepladder-qbank-60/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/introducing-prepladder-qbank-60/</guid>
+      <description>&lt;p&gt;Introducing PrepLadder QBank 6.0&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Lakers</title>
+      <link>/videos/lakers/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/lakers/</guid>
+      <description>&lt;p&gt;Lakers&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Monkey Pox documentary</title>
+      <link>/videos/monkey-pox-documentary/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/monkey-pox-documentary/</guid>
+      <description>&lt;p&gt;Monkey Pox documentary&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Mother Sparsh</title>
+      <link>/videos/mother-sparsh/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/mother-sparsh/</guid>
+      <description>&lt;p&gt;Mother Sparsh&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Nescafe</title>
+      <link>/videos/nescafe/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/nescafe/</guid>
+      <description>&lt;p&gt;Nescafe&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>NEUROS by PrepLadder</title>
+      <link>/videos/neuros-by-prepladder/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/neuros-by-prepladder/</guid>
+      <description>&lt;p&gt;NEUROS by PrepLadder&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Neuros Promo</title>
+      <link>/videos/neuros-promo/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/neuros-promo/</guid>
+      <description>&lt;p&gt;Neuros Promo&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pneumothorax</title>
+      <link>/videos/pneumothorax/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/pneumothorax/</guid>
+      <description>&lt;p&gt;Pneumothorax&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Prep Intro</title>
+      <link>/videos/prep-intro/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/prep-intro/</guid>
+      <description>&lt;p&gt;Prep Intro&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>PrepAI</title>
+      <link>/videos/prepai/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/prepai/</guid>
+      <description>&lt;p&gt;PrepAI&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Samsung</title>
+      <link>/videos/samsung/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/samsung/</guid>
+      <description>&lt;p&gt;Samsung&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Total</title>
+      <link>/videos/total/</link>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/videos/total/</guid>
+      <description>&lt;p&gt;Total&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

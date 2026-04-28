@@ -1,0 +1,11 @@
+---
+title: "Pencil Sketch of a Lady"
+date: 2026-04-28T16:48:00.000Z
+draft: false
+type: "photos"
+category: "sketches"
+image: "/images/uploads/lady.webp"
+description: ""
+---
+
+Pencil Sketch of a Lady

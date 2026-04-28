@@ -11,7 +11,7 @@
       </div>
       <div class="feed-item__author-subtitle">{{ $profile.headline }}</div>
       <div class="feed-item__time">
-        {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}
+        {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}{{ if .Params.featured }} · <span class="feed-item__featured-badge">Featured</span>{{ end }}
       </div>
     </div>
     <div class="feed-item__menu-wrapper">

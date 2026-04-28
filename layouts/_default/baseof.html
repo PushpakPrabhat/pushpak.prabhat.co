@@ -251,7 +251,9 @@
           {{ partial "icons.html" (dict "icon" "person" "size" "24") }}
         </span>
       </a>
-      <a href="/#feed" class="mobile-nav__item" id="mob-nav-post">
+      {{ $portfolioUrl := "/#feed" }}
+      {{ range .Site.Data.profile.ownerLinks }}{{ if eq .icon "briefcase" }}{{ $portfolioUrl = .url }}{{ end }}{{ end }}
+      <a href="{{ $portfolioUrl }}" target="_blank" rel="noopener" class="mobile-nav__item" id="mob-nav-post">
         <span class="mobile-nav__item-icon">
           {{ partial "icons.html" (dict "icon" "briefcase" "size" "24") }}
         </span>

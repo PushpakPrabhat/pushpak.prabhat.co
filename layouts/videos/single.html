@@ -28,7 +28,7 @@
         {{ if eq .Params.videoType "youtube" }}
           {{ $videoID := replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" .Params.videoUrl }}
           <iframe src="https://www.youtube.com/embed/{{ $videoID }}" title="{{ .Title }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        {{ else if eq .Params.videoType "gdrive" }}
+        {{ else if or (eq .Params.videoType "gdrive") (eq .Params.videoType "drive") }}
           <iframe src="{{ .Params.videoUrl }}" title="{{ .Title }}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         {{ else }}
           <video controls poster="{{ .Params.thumbnail }}"><source src="{{ .Params.videoUrl }}" type="video/mp4">Your browser does not support the video tag.</video>

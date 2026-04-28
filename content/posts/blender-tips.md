@@ -1,7 +1,7 @@
 ---
 title: "5 Blender Tips That Changed My 3D Workflow"
 date: 2026-02-28
-draft: false
+draft: true
 type: "posts"
 summary: "After years of working with Blender for 3D animation, these five tips completely transformed my productivity and output quality."
 tags: ["blender", "3d", "tips", "workflow"]

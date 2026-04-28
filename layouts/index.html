@@ -23,11 +23,28 @@
         {{ $allVideos := where .Site.RegularPages "Type" "videos" }}
         {{ $allPosts := where .Site.RegularPages "Type" "posts" }}
         
-        {{/* Merge all into one collection sorted by date */}}
+        {{/* Merge all into one collection */}}
         {{ $all := $allPhotos | append $allVideos | append $allPosts }}
-        {{ $sorted := sort $all "Date" "desc" }}
         
-        {{ range $index, $item := $sorted }}
+        {{/* Featured posts first, then rest by date */}}
+        {{ $featuredItems := where $all ".Params.featured" true }}
+        {{ $featuredSorted := sort $featuredItems "Date" "desc" }}
+        {{ $nonFeatured := where $all ".Params.featured" "!=" true }}
+        {{ $nonFeaturedSorted := sort $nonFeatured "Date" "desc" }}
+        
+        {{/* Render featured (pinned) posts first */}}
+        {{ range $index, $item := $featuredSorted }}
+          {{ if eq .Type "photos" }}
+            {{ partial "photo-card.html" . }}
+          {{ else if eq .Type "videos" }}
+            {{ partial "video-card.html" . }}
+          {{ else if eq .Type "posts" }}
+            {{ partial "post-card.html" . }}
+          {{ end }}
+        {{ end }}
+        
+        {{/* Then render the rest */}}
+        {{ range $index, $item := $nonFeaturedSorted }}
           {{ if eq .Type "photos" }}
             {{ partial "photo-card.html" . }}
           {{ else if eq .Type "videos" }}

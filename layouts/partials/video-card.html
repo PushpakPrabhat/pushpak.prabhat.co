@@ -13,7 +13,7 @@
       </div>
       <div class="feed-item__author-subtitle">{{ $profile.headline }}</div>
       <div class="feed-item__time">
-        {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}
+        {{ .Date.Format "Jan 2, 2006" }} · {{ partial "icons.html" (dict "icon" "globe" "size" "12") }}{{ if .Params.featured }} · <span class="feed-item__featured-badge">Featured</span>{{ end }}
       </div>
     </div>
     <div class="feed-item__menu-wrapper">
@@ -21,7 +21,7 @@
       <div class="feed-menu" id="feed-menu-{{ $id }}">
         <button class="feed-menu__item" onclick="copyPostLink('{{ .Permalink }}')">{{ partial "icons.html" (dict "icon" "link" "size" "18") }} Copy link to post</button>
         <button class="feed-menu__item" onclick="downloadAsPdf('{{ $id }}')">{{ partial "icons.html" (dict "icon" "doc" "size" "18") }} Save as PDF</button>
-        {{ if or (eq $videoType "youtube") (eq $videoType "gdrive") }}
+        {{ if or (eq $videoType "youtube") (eq $videoType "gdrive") (eq $videoType "drive") }}
         <button class="feed-menu__item" onclick="window.open('{{ $videoUrl }}', '_blank')">{{ partial "icons.html" (dict "icon" "external-link" "size" "18") }} Open original video</button>
         {{ end }}
       </div>
@@ -37,7 +37,17 @@
   
   <!-- Video with Apple-style play overlay -->
   <div class="feed-item__video-wrapper" onclick="openVideoViewer('videos', '{{ .Params.category }}', '{{ $id }}')">
-    {{ if eq $videoType "youtube" }}
+    {{ if and .Params.thumbnail (ne .Params.thumbnail "") }}
+      {{/* Priority 1: Use uploaded/custom thumbnail */}}
+      <img 
+        src="{{ .Params.thumbnail }}" 
+        alt="{{ .Title }}" 
+        class="feed-item__video-thumbnail"
+        style="width: 100%; height: 100%; object-fit: cover;"
+        loading="lazy"
+      >
+    {{ else if eq $videoType "youtube" }}
+      {{/* Fallback: YouTube auto-thumbnail */}}
       {{ $videoID := "" }}
       {{ if findRE `v=([a-zA-Z0-9_-]+)` $videoUrl }}
         {{ $videoID = replaceRE `.*v=([a-zA-Z0-9_-]+).*` "$1" $videoUrl }}
@@ -51,7 +61,7 @@
         class="feed-item__video-thumbnail"
         style="width: 100%; height: 100%; object-fit: cover;"
       >
-    {{ else if eq $videoType "gdrive" }}
+    {{ else if or (eq $videoType "gdrive") (eq $videoType "drive") }}
       <iframe 
         src="{{ $videoUrl }}" 
         title="{{ .Title }}"
@@ -60,7 +70,7 @@
         loading="lazy"
       ></iframe>
     {{ else }}
-      <video controls preload="metadata" poster="{{ .Params.thumbnail }}">
+      <video controls preload="metadata">
         <source src="{{ $videoUrl }}" type="video/mp4">
         Your browser does not support the video tag.
       </video>

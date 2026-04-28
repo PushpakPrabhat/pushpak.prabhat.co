@@ -176,6 +176,11 @@
 
     viewer.querySelector('.media-viewer__overlay').addEventListener('click', closeMediaViewer);
 
+    // Close when clicking empty space around the image
+    document.getElementById('mv-content').addEventListener('click', function(e) {
+      if (e.target === this) closeMediaViewer();
+    });
+
     // Keyboard
     document.addEventListener('keydown', function(e) {
       if (!viewer.classList.contains('open')) return;
@@ -330,6 +335,11 @@
     document.getElementById('vv-fullscreen').addEventListener('click', toggleVVFullscreen);
     viewer.querySelector('.media-viewer__overlay').addEventListener('click', closeVideoViewer);
 
+    // Close when clicking empty space around the video
+    document.getElementById('vv-content').addEventListener('click', function(e) {
+      if (e.target === this) closeVideoViewer();
+    });
+
     document.addEventListener('keydown', function(e) {
       if (!viewer.classList.contains('open')) return;
       if (e.key === 'Escape') closeVideoViewer();
@@ -368,7 +378,7 @@
       const m2 = item.url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
       vid = m1 ? m1[1] : (m2 ? m2[1] : '');
       html = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;"></iframe>`;
-    } else if (item.type === 'gdrive') {
+    } else if (item.type === 'gdrive' || item.type === 'drive') {
       html = `<iframe src="${item.url}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;"></iframe>`;
     } else {
       html = `<video controls autoplay style="width:100%;max-height:80vh;"><source src="${item.url}" type="video/mp4"></video>`;

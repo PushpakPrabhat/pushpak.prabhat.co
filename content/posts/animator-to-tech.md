@@ -1,7 +1,7 @@
 ---
 title: "From Animator to Tech: My Journey into Interactive Technology"
 date: 2026-03-15
-draft: false
+draft: true
 type: "posts"
 summary: "How I transitioned from traditional animation to interactive technology and why I believe the two fields are converging faster than ever."
 tags: ["career", "animation", "technology", "interactive"]

@@ -24,7 +24,9 @@
       <a href="/profile/" class="nav__item" id="nav-network" title="Profile">
         <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "person" "size" "22") }}</span>
       </a>
-      <a href="/#feed" class="nav__item" id="nav-jobs" title="Portfolio">
+      {{ $portfolioUrl := "/#feed" }}
+      {{ range .Site.Data.profile.ownerLinks }}{{ if eq .icon "briefcase" }}{{ $portfolioUrl = .url }}{{ end }}{{ end }}
+      <a href="{{ $portfolioUrl }}" target="_blank" rel="noopener" class="nav__item" id="nav-jobs" title="Portfolio">
         <span class="nav__item-icon">{{ partial "icons.html" (dict "icon" "briefcase" "size" "22") }}</span>
       </a>
       <a href="#" class="nav__item" id="nav-messaging" onclick="openChat(event)" title="Messages">

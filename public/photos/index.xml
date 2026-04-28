@@ -2,74 +2,95 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Photos on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
-    <link>//localhost:1313/photos/</link>
+    <link>/photos/</link>
     <description>Recent content in Photos on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Apr 2026 22:06:00 +0530</lastBuildDate>
-    <atom:link href="//localhost:1313/photos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Apr 2026 16:49:15 +0000</lastBuildDate>
+    <atom:link href="/photos/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Ppp</title>
-      <link>//localhost:1313/photos/ppp/</link>
-      <pubDate>Sun, 26 Apr 2026 22:06:00 +0530</pubDate>
-      <guid>//localhost:1313/photos/ppp/</guid>
-      <description>&lt;p&gt;H&lt;/p&gt;</description>
+      <title>Pencil Sketch of Man</title>
+      <link>/photos/pencil-sketch-of-man/</link>
+      <pubDate>Tue, 28 Apr 2026 16:49:15 +0000</pubDate>
+      <guid>/photos/pencil-sketch-of-man/</guid>
+      <description>&lt;p&gt;Pencil Sketch of Man&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Sketch 16 April, 2026</title>
-      <link>//localhost:1313/photos/sketch-16-april-2026/</link>
-      <pubDate>Thu, 16 Apr 2026 22:39:00 +0530</pubDate>
-      <guid>//localhost:1313/photos/sketch-16-april-2026/</guid>
-      <description>&lt;p&gt;Sketch 16 April, 2026&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;//localhost:1313/images/uploads/1758915309027.jpeg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+      <title>Mermaid Illustration</title>
+      <link>/photos/mermaid-illustration/</link>
+      <pubDate>Tue, 28 Apr 2026 16:49:07 +0000</pubDate>
+      <guid>/photos/mermaid-illustration/</guid>
+      <description>&lt;p&gt;Mermaid Illustration&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Fantasy Character Sketch</title>
-      <link>//localhost:1313/photos/fantasy-character-sketch/</link>
-      <pubDate>Sat, 28 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/photos/fantasy-character-sketch/</guid>
-      <description>&lt;p&gt;Working on some fantasy character concepts. This sketch explores dynamic poses and intricate armor details. Part of a 30-day character design challenge! 🎨✏️&lt;/p&gt;</description>
+      <title>Pencil Sketch of a lady</title>
+      <link>/photos/pencil-sketch-of-a-lady/</link>
+      <pubDate>Tue, 28 Apr 2026 16:49:00 +0000</pubDate>
+      <guid>/photos/pencil-sketch-of-a-lady/</guid>
+      <description>&lt;p&gt;Pencil Sketch of a lady&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Cyberpunk City Digital Painting</title>
-      <link>//localhost:1313/photos/cyberpunk-city-painting/</link>
-      <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/photos/cyberpunk-city-painting/</guid>
-      <description>&lt;p&gt;Exploring cyberpunk aesthetics with this digital painting. Love how the neon lights create depth in the composition. Created using Photoshop and Procreate. 🌃💜&lt;/p&gt;</description>
+      <title>Star Lord Illustration</title>
+      <link>/photos/star-lord-illustration/</link>
+      <pubDate>Tue, 28 Apr 2026 16:48:54 +0000</pubDate>
+      <guid>/photos/star-lord-illustration/</guid>
+      <description>&lt;p&gt;Star Lord Illustration&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Brand Identity Illustration Set</title>
-      <link>//localhost:1313/photos/brand-identity-illustration/</link>
-      <pubDate>Sun, 22 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/photos/brand-identity-illustration/</guid>
-      <description>&lt;p&gt;Just completed this illustration set for a brand identity project. The brief was to create modern, inclusive visuals that resonate with Gen Z. Super happy with how the color palette turned out! 🎨&lt;/p&gt;</description>
+      <title>Pencil Sketch of Peacocks</title>
+      <link>/photos/pencil-sketch-of-peacocks/</link>
+      <pubDate>Tue, 28 Apr 2026 16:48:05 +0000</pubDate>
+      <guid>/photos/pencil-sketch-of-peacocks/</guid>
+      <description>&lt;p&gt;Pencil Sketch of Peacocks&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Fintech App Dashboard Redesign</title>
-      <link>//localhost:1313/photos/fintech-dashboard-redesign/</link>
-      <pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/photos/fintech-dashboard-redesign/</guid>
-      <description>&lt;p&gt;Excited to share my latest UI/UX project — a dashboard redesign for a fintech application. The focus was on making complex financial data easy to understand at a glance. Used Figma for prototyping. 📊💡&lt;/p&gt;</description>
+      <title>Pencil Sketch of a Lady</title>
+      <link>/photos/pencil-sketch-of-a-lady-2/</link>
+      <pubDate>Tue, 28 Apr 2026 16:48:00 +0000</pubDate>
+      <guid>/photos/pencil-sketch-of-a-lady-2/</guid>
+      <description>&lt;p&gt;Pencil Sketch of a Lady&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Urban Architecture Pencil Study</title>
-      <link>//localhost:1313/photos/urban-architecture-sketch/</link>
-      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/photos/urban-architecture-sketch/</guid>
-      <description>&lt;p&gt;Quick urban sketching session during lunch break. Really enjoying the perspective challenges of modern architecture. 🏗️&lt;/p&gt;</description>
+      <title>Digital Painting of Alita: Battle Angel</title>
+      <link>/photos/digital-painting-of-alita-battle-angel/</link>
+      <pubDate>Tue, 28 Apr 2026 16:47:52 +0000</pubDate>
+      <guid>/photos/digital-painting-of-alita-battle-angel/</guid>
+      <description>&lt;p&gt;Digital Painting of Alita: Battle Angel&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Mountain Sunset Digital Art</title>
-      <link>//localhost:1313/photos/mountain-sunset-art/</link>
-      <pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/photos/mountain-sunset-art/</guid>
-      <description>&lt;p&gt;Painted this during a relaxing weekend session. Mountains and sunsets never get old as subjects! 🏔️🌅&lt;/p&gt;</description>
+      <title>Digital Painting of a girl</title>
+      <link>/photos/digital-painting-of-a-girl/</link>
+      <pubDate>Tue, 28 Apr 2026 16:47:50 +0000</pubDate>
+      <guid>/photos/digital-painting-of-a-girl/</guid>
+      <description>&lt;p&gt;Digital Painting of a girl&lt;/p&gt;</description>
     </item>
     <item>
-      <title>E-commerce Mobile App UI</title>
-      <link>//localhost:1313/photos/ecommerce-mobile-ui/</link>
-      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/photos/ecommerce-mobile-ui/</guid>
-      <description>&lt;p&gt;Designed this e-commerce mobile experience with a focus on micro-interactions. Every swipe and tap should feel delightful! 📱✨&lt;/p&gt;</description>
+      <title>Pencil Sketch of Amal</title>
+      <link>/photos/pencil-sketch-of-amal/</link>
+      <pubDate>Tue, 28 Apr 2026 16:47:35 +0000</pubDate>
+      <guid>/photos/pencil-sketch-of-amal/</guid>
+      <description>&lt;p&gt;Pencil Sketch of Amal&#xA;sf&#xA;.&#xA;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pencil sketch of a boy</title>
+      <link>/photos/pencil-sketch-of-a-boy/</link>
+      <pubDate>Tue, 28 Apr 2026 16:47:28 +0000</pubDate>
+      <guid>/photos/pencil-sketch-of-a-boy/</guid>
+      <description>&lt;p&gt;Pencil sketch of a boy&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Joker&amp;#39;s Digital Painting</title>
+      <link>/photos/joker-39-s-digital-painting/</link>
+      <pubDate>Tue, 28 Apr 2026 16:47:26 +0000</pubDate>
+      <guid>/photos/joker-39-s-digital-painting/</guid>
+      <description>&lt;p&gt;Joker&#39;s Digital Painting&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Quiet Gaze</title>
+      <link>/photos/quiet-gaze/</link>
+      <pubDate>Tue, 28 Apr 2026 16:47:20 +0000</pubDate>
+      <guid>/photos/quiet-gaze/</guid>
+      <description>&lt;p&gt;Quiet Gaze&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

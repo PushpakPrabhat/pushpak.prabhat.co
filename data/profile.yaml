@@ -25,10 +25,10 @@ skills:
     endorsements: 1
 ownerLinks:
   - title: Pushpak's Profile
-    url: https://www.linkedin.com/in/pushpunk/
+    url: https://www.linkedin.com/in/pushpakprabhat/
     icon: person
   - title: Pushpak's Portfolio
-    url: https://pushpunk.com/
+    url: https://pushpak.prabhat.co/
     icon: briefcase
   - title: Pushpak's Mail
     url: mailto:prabhat.pushpak@gmail.com
@@ -160,10 +160,10 @@ interests:
     icon: 📷
 quickLinks:
   - title: LinkedIn Profile
-    url: https://linkedin.com/in/pushpunk
+    url: https://linkedin.com/in/pushpakprabhat
     icon: /images/uploads/skill-icons-linkedin.svg
   - title: GitHub
-    url: https://github.com/pushpunk
+    url: https://github.com/pushpakprabhat
     icon: /images/uploads/skill-icons-github-light.svg
   - title: Email Me
     url: mailto:prabhat.pushpak@gmail.com
