@@ -1799,9 +1799,15 @@
       const el = document.createElement('div');
       el.className = 'notification-item notification-item--unread';
 
-      const typeIcons = { photos: '📸', videos: '🎥', posts: '📝', message: '💬' };
+      const svgPlay = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 001.5.86l11.2-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z"/></svg>';
+      const svgPhoto = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-8 8"/></svg>';
+      const svgDoc = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>';
+      const svgMessage = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12c0 4.418-3.582 8-8 8a8.6 8.6 0 01-3.2-.6L4 21l1.6-4.8A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"/><path d="M8 11h8"/><path d="M8 14h5"/></svg>';
+      const svgDefault = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>';
 
-      el.innerHTML = '<div class="notification-item__icon">' + (typeIcons[n.type] || '📢') + '</div>' +
+      const typeIcons = { photos: svgPhoto, videos: svgPlay, posts: svgDoc, message: svgMessage };
+
+      el.innerHTML = '<div class="notification-item__icon" style="color:var(--color-text-primary); display:flex; align-items:center; justify-content:center;">' + (typeIcons[n.type] || svgDefault) + '</div>' +
         '<div class="notification-item__content">' +
           '<div class="notification-item__text"><strong>Pushpak Prabhat</strong> ' +
             (n.isMessage ? n.title : 'added new ' + n.type + ': ' + n.title) +
@@ -1895,8 +1901,13 @@
         dropdown.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--color-text-secondary); font-size: var(--font-size-footnote);">No results found</div>';
       } else {
         dropdown.innerHTML = results.slice(0, 8).map(function(r, i) {
+          const svgPlay = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 001.5.86l11.2-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z"/></svg>';
+          const svgPhoto = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-8 8"/></svg>';
+          const svgDoc = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>';
+          const defaultIcon = r.type === 'videos' ? svgPlay : (r.type === 'photos' ? svgPhoto : svgDoc);
+
           return '<a href="' + r.link + '" class="search-result-item" data-index="' + i + '" style="display: flex; padding: 10px 16px; text-decoration: none; cursor: pointer;">' +
-            (r.thumb ? '<img src="' + r.thumb + '" class="search-result-item__thumb" alt="">' : '<div class="search-result-item__thumb" style="display:flex;align-items:center;justify-content:center;font-size:24px;background:transparent;">' + (r.type === 'videos' ? '🎥' : r.type === 'photos' ? '📸' : '📝') + '</div>') +
+            (r.thumb ? '<img src="' + r.thumb + '" class="search-result-item__thumb" alt="">' : '<div class="search-result-item__thumb" style="display:flex;align-items:center;justify-content:center;background:var(--color-surface-hover);border-radius:8px;color:var(--color-text-primary);">' + defaultIcon + '</div>') +
             '<div class="search-result-item__info">' +
               '<div class="search-result-item__title">' + r.title + '</div>' +
               '<div class="search-result-item__desc">' + r.desc + '</div>' +

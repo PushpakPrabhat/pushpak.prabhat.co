@@ -2,88 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
-    <link>//localhost:1314/tags/</link>
+    <link>//localhost:1313/tags/</link>
     <description>Recent content in Tags on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="//localhost:1314/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Branding</title>
-      <link>//localhost:1314/tags/branding/</link>
-      <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/branding/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Creative</title>
-      <link>//localhost:1314/tags/creative/</link>
-      <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/creative/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Motion Design</title>
-      <link>//localhost:1314/tags/motion-design/</link>
-      <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/motion-design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Animation</title>
-      <link>//localhost:1314/tags/animation/</link>
-      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/animation/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Career</title>
-      <link>//localhost:1314/tags/career/</link>
-      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/career/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Interactive</title>
-      <link>//localhost:1314/tags/interactive/</link>
-      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/interactive/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Technology</title>
-      <link>//localhost:1314/tags/technology/</link>
-      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/technology/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>3d</title>
-      <link>//localhost:1314/tags/3d/</link>
-      <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/3d/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Blender</title>
-      <link>//localhost:1314/tags/blender/</link>
-      <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/blender/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Tips</title>
-      <link>//localhost:1314/tags/tips/</link>
-      <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/tips/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Workflow</title>
-      <link>//localhost:1314/tags/workflow/</link>
-      <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>//localhost:1314/tags/workflow/</guid>
-      <description></description>
-    </item>
+    <atom:link href="//localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
