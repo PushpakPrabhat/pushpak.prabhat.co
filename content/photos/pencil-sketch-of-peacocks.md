@@ -1,5 +1,5 @@
 ---
-title: "Pencil Sketch of Peacocks"
+title: "sketch#007"
 date: 2026-04-28T16:48:05.942Z
 draft: false
 type: "photos"

@@ -5,13 +5,8 @@
 </head>
 <body>
   {{- partial "header.html" . -}}
-  
-  <!-- Ambient background blobs — Liquid Glass -->
-  <div class="ambient-bg" aria-hidden="true">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-  </div>
+
+
   
   <main id="main-content">
     {{ block "main" . }}{{ end }}

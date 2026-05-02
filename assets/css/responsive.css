@@ -1,5 +1,5 @@
 /* ============================================
-   iOS 26 — Liquid Glass Responsive
+   iOS 18 — Flat Minimal Responsive
    ============================================ */
 
 /* Large Desktop */
@@ -61,7 +61,7 @@
   }
   .nav__mobile-msg:hover { background: var(--color-surface-hover); }
 
-  /* Show floating pill tab bar */
+  /* Show docked tab bar */
   .mobile-nav { display: block; }
 
   .layout { padding: 0; margin-top: var(--space-8); }
@@ -144,7 +144,7 @@
     padding: 10px 16px;
     border-radius: var(--radius-2xl);
     z-index: 2100;
-    box-shadow: var(--shadow-float), var(--glass-inner-shadow);
+    box-shadow: var(--shadow-float);
     margin-bottom: 0;
   }
 

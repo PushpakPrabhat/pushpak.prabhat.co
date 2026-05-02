@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Motion Design on Pushpak Prabhat | Animation &amp; Interactive Technology</title>
-    <link>/tags/motion-design/</link>
+    <link>//localhost:1314/tags/motion-design/</link>
     <description>Recent content in Motion Design on Pushpak Prabhat | Animation &amp; Interactive Technology</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 29 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/motion-design/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="//localhost:1314/tags/motion-design/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Why Motion Design is the Future of Brand Communication</title>
-      <link>/posts/motion-design-future/</link>
+      <link>//localhost:1314/posts/motion-design-future/</link>
       <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>/posts/motion-design-future/</guid>
+      <guid>//localhost:1314/posts/motion-design-future/</guid>
       <description>In an era of shrinking attention spans, motion design has become the most powerful tool for brand storytelling. Here&amp;rsquo;s why every brand needs to invest in motion.</description>
     </item>
   </channel>

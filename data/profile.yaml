@@ -139,25 +139,25 @@ education:
     logo: /images/uploads/jac_logo.webp
 interests:
   - name: Motion Design
-    icon: /images/uploads/cu_logo.jpeg
+    icon: /images/uploads/interest-motion-design.svg
   - name: 3D Animation
-    icon: 🧊
+    icon: /images/uploads/interest-3d-animation.svg
   - name: UI/UX Design
-    icon: 🎨
+    icon: /images/uploads/interest-uiux-design.svg
   - name: Web Development
-    icon: 💻
+    icon: /images/uploads/interest-web-development.svg
   - name: Visual Storytelling
-    icon: 📖
+    icon: /images/uploads/interest-visual-storytelling.svg
   - name: Interactive Technology
-    icon: ⚡
+    icon: /images/uploads/interest-interactive-tech.svg
   - name: Digital Art
-    icon: 🖌️
+    icon: /images/uploads/interest-digital-art.svg
   - name: Video Editing
-    icon: 🎥
+    icon: /images/uploads/interest-video-editing.svg
   - name: Creative Coding
-    icon: 🧪
+    icon: /images/uploads/interest-creative-coding.svg
   - name: Photography
-    icon: 📷
+    icon: /images/uploads/interest-photography.svg
 quickLinks:
   - title: LinkedIn Profile
     url: https://linkedin.com/in/pushpakprabhat

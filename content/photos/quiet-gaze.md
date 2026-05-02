@@ -1,5 +1,5 @@
 ---
-title: "Quiet Gaze"
+title: "sketch#001"
 date: 2026-04-28T16:47:20.531Z
 draft: false
 type: "photos"
